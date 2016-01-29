@@ -14,10 +14,17 @@ Ext.define('MobileJudge.view.people.Judges', {
 	bind: '{judges}',
 
 	dockedItems: [
+
+
 		{
 			xtype: 'toolbar',
 			dock: 'top',
 			items: [
+				{
+					xtype: 'checkboxfield',
+					checked   : true,
+					id :'checkbox'
+				},
 				{
 					xtype: 'dataview',
 					cls: 'stateSelector',

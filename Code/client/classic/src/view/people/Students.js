@@ -16,9 +16,15 @@ Ext.define('MobileJudge.view.people.Students', {
 
 	dockedItems: [
 		{
+
 			xtype: 'toolbar',
 			dock: 'top',
 			items: [
+				{
+					xtype: 'checkboxfield',
+					checked   : true,
+					id :'checkbox'
+				},
 				{
 					xtype: 'dataview',
 					cls: 'stateSelector',
