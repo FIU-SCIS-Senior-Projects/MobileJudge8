@@ -18,6 +18,22 @@ Ext.define('MobileJudge.view.people.Controller', {
 	onFilterChange: function(selModel, selections) {
 		var filter = selections.map(function(r) { return r.get('abbr'); });
 		this.model.getStore(selModel.storeId).filter('abbr', Ext.isEmpty(filter) ? 'XX' : filter);
+		// update intermediate state
+
+	},
+
+	onCheckChange: function(checkbox) {
+		var model = checkbox.up('toolbar').down('dataview').getSelectionModel();
+		if (checkbox.checked == true)
+		{
+			console.log("checking select call ");
+			model.selectAll();
+		}
+		else
+		{
+			console.log("checking unselect call ");
+			model.deselectAll();
+		}
 	},
 
 	onUserDelete: function(grid, rowIndex) {

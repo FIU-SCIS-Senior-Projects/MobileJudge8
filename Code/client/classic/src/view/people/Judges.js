@@ -23,7 +23,8 @@ Ext.define('MobileJudge.view.people.Judges', {
 				{
 					xtype: 'checkboxfield',
 					checked   : true,
-					id :'checkbox'
+					handler:'onCheckChange'
+
 				},
 				{
 					xtype: 'dataview',
@@ -47,7 +48,8 @@ Ext.define('MobileJudge.view.people.Judges', {
 						store: '{judgeStates}'
 					},
 					listeners: {
-						selectionchange: 'onFilterChange'
+						selectionchange: 'onFilterChange',
+
 					}
 				},
 				'->',

@@ -23,7 +23,8 @@ Ext.define('MobileJudge.view.people.Students', {
 				{
 					xtype: 'checkboxfield',
 					checked   : true,
-					id :'checkbox'
+					handler:'onCheckChange'
+
 				},
 				{
 					xtype: 'dataview',
