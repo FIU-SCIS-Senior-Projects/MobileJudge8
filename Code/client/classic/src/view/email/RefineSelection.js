@@ -92,7 +92,6 @@ Ext.define('MobileJudge.view.email.RefineSelection', {
 					}
 				}
 			]
-
 		}
 	]
 

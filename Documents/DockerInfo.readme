@@ -1,0 +1,111 @@
+DOCKER
+
+Suggested videos: https://training.docker.com/self-paced-training
+
+
+//main commands
+docker login
+docker run
+docker ps
+docker images
+docker commit
+docker build
+docker exec
+docker inspect
+docker attach
+
+
+docker run [image]:[tag(optional)] [command(optional)] [parameter(optional)] = runs a docker container with the image
+-d = detached mode, will run in background
+
+-P = map container ports to host ports
+
+-i = maps to stdIN of container
+
+-t = pseudo terminal
+
+docker images = shows the images that are stored locally
+
+docker ps = shows currently running containers
+-a = shows containers that have stopped
+
+docker logs [container ID] = shows output from the container
+-f = gives a stream of input similar to cat -f
+
+docker commit [options] [container ID] [repository:tag] = command saves changes in a container as a new image
+
+
+DOCKER FILE
+
+docker build [options] [path] = path is the context (directory for docker file)
+
+FROM = instruction specifies what the base image should be
+RUN = instruction specifies a command to execute
+CMD = defines a default command to execute when a container is created, performs no action during the image build, only when container is made (can only be used 1 time in docker file ), can be overridden at run time (has shell format and exec format which is a JSON array)
+ENTRY POINT = defines the command that will run when a container is executed, (like CMD, but cannot be overridden at runtime), shell and EXEC form, EXEC preferred as shell form can’t accept arguments at runtime, container becomes essentially an executable
+VOLUME = creates a mount point, cannot map volumes to host directories, can specify arguments JSON array to string
+EXPOSE = configures which ports a container will listen on at runtime, ports still need to be mapped when container is executed
+
+IN-Depth
+
+RUN = instruction will execute the command on top of writable layer and perform a commit of the image, 1 commit for every RUN instruction
+&& = aggregates multiple RUN instructions (not sure if they can be dependent on each other?)
+
+docker build = builds image using the docker file
+-t = tags the image, specified [repository:tag]
+
+
+START AND STOPPING CONTAINERS
+run docker ps to get ID’s
+docker start <container ID>
+docker stop <container ID>
+
+Getting Terminal Access
+docker exec = starts another process within a container
+
+docker exec -i -t [containerID] /bin/bash
+docker rm [ID or name]= can only delete stopped containers, 
+docker rmi = delete local images, if tagged multiple times, remove each tag
+docker rmi [image ID]
+docker rmi [repo:tag] 
+docker push [repo:tag = the repo you want to push to
+
+docker tag [image ID] [repo:tag]
+OR
+docker tag [local repo:tag] [Docker Hub repo:tag]
+
+
+VOLUMES
+volume = is a designated directory in a container, which is designed to persist data, independent of the containers life cycle, volume changes are excluded when updating image, persist when container is deleted, and volume can be mapped to host folder, and share volumes between containers
+PROS = decouple the data that is stored from the container which created the data, good for sharing data between containers, mounting folders from host is good for testing but not prod usage
+
+docker run -v /myvolume nginx:1.7 = will allow a volume mount of my volume
+OR
+docker run i -t -v /data/src:/test/src nginx:1.7 = maps the folder from the host to the container
+
+NETWORKING WITH CONTAINERS
+containers have their own network and IP address
+map exposed container ports to ports on host machine
+Ports can be manually mapped or auto mapped
+use -p(manual) and -P(automatic, and chooses high port numbers on the host) parameters in docker run
+
+docker run -d -p 8080:80 nginx:1.7 = maps port 80 on container to 8080 on host
+
+Linking containers = is a communication method between containers which allow them to securely transfer data from one another
+process = create and run source container first, then create recipient container and use link option
+pros = containers can talk to each other without having to expose ports to host, essential for micro service application architecture
+
+—link (double dash)
+
+docker run -d —name database postgres(source container)
+THEN
+docker run -d -P —name website —link database:db nginx
+
+docker inspect = helps find IP Address of container, command displays all the details about a container, outputs details in json array
+
+
+DOCKER CONTINUOUS INTEGRATION
+3 methods to do this
+prob using auto build = it detects commits to repo, and builds image in docker hub, container is run during the image build, and all testing is done inside container
+
+
