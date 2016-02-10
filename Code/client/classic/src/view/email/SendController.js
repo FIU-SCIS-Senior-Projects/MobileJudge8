@@ -59,6 +59,7 @@ Ext.define('MobileJudge.view.email.SendController', {
 	},
 
 	onStudentsLoaded: function(store, records) {
+		console.log(store);
 		this.model.set('selectedStudents', records);
 	},
 
@@ -230,8 +231,10 @@ Ext.define('MobileJudge.view.email.SendController', {
 
 			students.removeAll(); judges.removeAll(); extra.removeAll();
 
-			if (!Ext.Object.isEmpty(stdParams)) students.load({ params: { 'filter': Ext.encode(stdParams) } });
-			if (!Ext.Object.isEmpty(judParams)) judges.load({ params: { 'filter': Ext.encode(judParams) } });
+			if (!Ext.Object.isEmpty(stdParams)) students.proxy.extraParams = { 'filter': Ext.encode(stdParams) };
+			if (!Ext.Object.isEmpty(judParams)) judges.proxy.extraParams = { 'filter': Ext.encode(judParams) };
+			students.load();
+			judges.load();
 
 			var extraEmails = this.model.get('extraEmailArray');
 			if (extraEmails.length > 0)	{

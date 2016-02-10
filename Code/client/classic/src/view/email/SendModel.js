@@ -41,7 +41,9 @@ Ext.define('MobileJudge.view.email.SendModel', {
 
 		filters: [],
 		extraEmailText: '',
-
+                
+		fullStudents: [],
+		fullJudges: [],
 		selectedStudents: [],
 		selectedJudges: [],
 		selectedExtra: [],
@@ -56,6 +58,10 @@ Ext.define('MobileJudge.view.email.SendModel', {
 	formulas: {
 		caption: function(get) { return get('atEnd') ? 'Send' : 'Next'; },
 		studentsSelection: function(get) { return get('selectedStudents'); },
+	
+		fullStudentsSelection: function(get) { return get('fullStudents');},
+		fullJudgesSelection: function(get) { return get('fullJudges');},
+
 		judgesSelection: function(get) { return get('selectedJudges'); },
 		extraSelection: function(get) { return get('selectedExtra'); },
 		importJudges: {
