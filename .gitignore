@@ -1,0 +1,16 @@
+#API Ignores
+Code/api/config/
+
+#Client Ignores
+Code/client/build/
+Code/client/classic.json
+Code/client/modern.json
+Code/client/sass/example/bootstrap.json
+Code/oauthd/
+
+#Node Modules
+Code/api/node_modules/
+Code/oauthd/node_modules/
+
+#Webstorm IDEA ignore
+.idea/
