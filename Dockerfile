@@ -91,7 +91,8 @@ RUN unzip /SenchaCmd-6.0.2-linux-amd64.sh.zip
 RUN apt-get install default-jre -y
 RUN sh SenchaCmd-6.0.2.14-linux-amd64.sh -q 
 
-RUN sudo sh /configFiles/sencha_configure.sh
+
+#RUN sudo sh /configFiles/sencha_configure.sh
 RUN sudo cp -rf /MobileJudge8/api /usr/share/nginx/html/
 RUN wget -qO- http://install.keymetrics.io/install.sh | SECRET_ID=c4oqalvhmicddmz PUBLIC_ID=7wu2tbb2eyc6sh1 sudo bash
 RUN sudo pm2 link c4oqalvhmicddmz 7wu2tbb2eyc6sh1 mj.cis.fiu.edu
@@ -101,8 +102,8 @@ RUN sudo pm2 install pm2-redis
 RUN sudo pm2 set pm2:passwd Judge2016
 RUN cd /usr/share/nginx/html/api  && npm install
 RUN cd /usr/share/nginx/html/api && sudo pm2 start index.js -i 0 --watch --name "mj-api"
-RUN cp -rf /MobileJudge8/oauthd /usr/share/nginx/html/
-RUN cd /usr/share/nginx/html/oauthd && sudo pm2 start index.js -i 0 watch --name "mj-oauthd" && sudo pm2 save && sudo pm2 startup ubuntu
+#RUN cp -rf /MobileJudge8/oauthd /usr/share/nginx/html/
+#RUN cd /usr/share/nginx/html/oauthd && sudo pm2 start index.js -i 0 watch --name "mj-oauthd" && sudo pm2 save && sudo pm2 startup ubuntu
 
 RUN sudo apt-get install redis-server -y
 
