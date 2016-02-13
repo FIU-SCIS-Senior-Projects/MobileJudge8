@@ -16,7 +16,6 @@ Ext.define('MobileJudge.view.people.Students', {
 
 	dockedItems: [
 		{
-
 			xtype: 'toolbar',
 			dock: 'top',
 			items: [
@@ -40,7 +39,7 @@ Ext.define('MobileJudge.view.people.Students', {
 					},
 					tpl: [
 						'<tpl for=".">',
-							'<button type="button" title="{name}">{abbr}</button>',
+						'<button type="button" title="{name}">{abbr}</button>',
 						'</tpl>'
 					],
 					bind: {
@@ -68,6 +67,14 @@ Ext.define('MobileJudge.view.people.Students', {
 					iconCls: 'x-fa fa-cloud-download',
 					text: 'Sync',
 					handler: 'onStudentsLoad'
+				},
+
+				{
+					ui: 'soft-blue',
+					glyph:'',
+					iconCls: 'x-fa fa-cloud-download',
+					text: 'Export Grades',
+					handler: 'doExport'
 				}
 			]
 		},
@@ -81,10 +88,10 @@ Ext.define('MobileJudge.view.people.Students', {
 	columns: [
 		{
 			xtype: 'gridcolumn',
-			width: 75,
+			width: 85,
 			dataIndex: 'id',
 			hideable: false,
-			text: ''
+			text: 'PantherID'
 		},
 		{
 			xtype: 'gridcolumn',
@@ -125,6 +132,11 @@ Ext.define('MobileJudge.view.people.Students', {
 			xtype: 'gridcolumn',
 			dataIndex: 'state',
 			text: 'State',
+			width: 80
+		},{
+			xtype: 'gridcolumn',
+			dataIndex: 'grade',
+			text: 'Grade',
 			width: 80
 		},
 		{
