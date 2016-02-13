@@ -15,7 +15,7 @@ Ext.define('MobileJudge.view.email.SendModel', {
 			type: 'contacts',
 			storeId: 'studentcontacts',
 			listeners: {
-				load: 'onPageLoad'
+				load: 'onStudentPageLoad'
 			}
 		},
 
@@ -23,7 +23,7 @@ Ext.define('MobileJudge.view.email.SendModel', {
 			type: 'contacts',
 			storeId: 'judgecontacts',
 			listeners: {
-				load: 'onJudgesLoaded'
+				load: 'onJudgePageLoad'
 			}
 		},
 
@@ -45,13 +45,11 @@ Ext.define('MobileJudge.view.email.SendModel', {
 		fullStudents: [],
 		fullJudges: [],
 		uncheckedStudents: [],
-		checkedStudents: [],
 		uncheckedJudges: [],
-		checkedJudges: [],
 		selectedStudents: [],
 		selectedJudges: [],
 		selectedExtra: [],
-
+		
 		template: '',
 		preview: {
 			subject: '',
@@ -100,7 +98,8 @@ Ext.define('MobileJudge.view.email.SendModel', {
 					checked.push(get('selectedJudges')[i]);
 				}
 			}
-		
+			console.log('checked: ' + checked);
+			console.log("selected:" + get('selectedJudges'));	
 			return checked;
 		},
 		judgesSelection: function(get) { return get('selectedJudges'); },

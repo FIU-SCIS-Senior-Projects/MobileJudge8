@@ -73,15 +73,15 @@ Ext.define('MobileJudge.view.email.SendController', {
 			this.model.set('uncheckedStudents', arr);
 		}
 		
-		objectIndex = -1
+		var judgeIndex = -1
 		for(i=0; i<this.model.get('uncheckedJudges').length; i++){
 			if(index.id === this.model.get('uncheckedJudges')[i].id){
-				objectIndex = 1;
+				judgeIndex = i;
 			}
 		}
-		if(objectIndex >=0){
+		if(judgeIndex >=0){
 			var arr = this.model.get('uncheckedJudges');
-			var removed = arr.splice(objectIndex, 1);
+			var removed = arr.splice(judgeIndex, 1);
 			this.model.set('uncheckedJudges', arr);
 		}
 	},
@@ -89,37 +89,20 @@ Ext.define('MobileJudge.view.email.SendController', {
 	onUnchecked: function(record, index){
 		this.model.get('uncheckedStudents').push(index);
 		this.model.get('uncheckedJudges').push(index);
+		console.log("uncheckedJudge: " + record);
 	},
 
-	//when search is done or grid is refreshed, this is called
-	onPageLoad: function (store, records) {
-		this.model.set('pageChange', true);
+	onJudgePageLoad: function(store, records) {
+		this.model.set('selectedJudges', records);
+	},
+	
+	onStudentPageLoad: function (store, records) {
 		this.model.set('selectedStudents', records);
-
 
 		//need to uncheck the students that should be checked...
 	},
 
 	onStudentsLoaded: function(selModel, records) {
-		var s = selModel.view.ownerCt;
-		var seen = [];
-		JSON.stringify(s, function (key, val) {
-			if(val!=null && typeof val == 'object'){
-				return;
-			}
-			seen.push(val)
-			return val;
-		});
-		console.log(seen);
-
-//		for(i =0; i<this.model.get('uncheckedStudents'); i++){
-//			deselect(this.model.get('uncheckedStudents')[i], true);
-//		}
-
-
-
-		//will ensure that the state of the student is pulled from the students list, and that we can know who all
-		//the students for the semester are
 		this.model.set('selectedStudents', records);
 	},
 
@@ -323,11 +306,17 @@ Ext.define('MobileJudge.view.email.SendController', {
 					importJudges: this.model.get('importJudges'),
 					emails: Ext.Array.merge(
 						this.model.get('checkedStudentsSelection').map(getRecord),
-						this.model.get('checkedStudentsSelection').map(getRecord),
+						this.model.get('checkedJudgesSelection').map(getRecord),
 						this.model.get('selectedExtra').map(getRecord)
 					)
 				};
-			console.log('emails: ' + emails);
+			for(i =0; i<batch.emails.length; i++){
+			//	console.log(batch.emails[i].getRecord());
+			}
+			for(i=0; i<this.model.get('uncheckedJudges').length; i++){
+				console.log(this.model.get('uncheckedJudges')[i].id);
+			}
+			console.log('emails: ' + JSON.stringify(batch.emails));
 			Ext.getBody().mask();
 			panel.up('window').close();
 			Ext.Ajax.request({
