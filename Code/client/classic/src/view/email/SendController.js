@@ -274,10 +274,15 @@ Ext.define('MobileJudge.view.email.SendController', {
 
 			students.removeAll(); judges.removeAll(); extra.removeAll();
 
-			if (!Ext.Object.isEmpty(stdParams)) students.proxy.extraParams = { 'filter': Ext.encode(stdParams) };
-			if (!Ext.Object.isEmpty(judParams)) judges.proxy.extraParams = { 'filter': Ext.encode(judParams) };
-			students.load();
-			judges.load();
+			if (!Ext.Object.isEmpty(stdParams)){
+			       	students.proxy.extraParams = { 'filter': Ext.encode(stdParams) };
+				students.load();
+			}
+			if (!Ext.Object.isEmpty(judParams)){
+			       	judges.proxy.extraParams = { 'filter': Ext.encode(judParams) };
+				judges.load();
+			}
+			
 
 			var extraEmails = this.model.get('extraEmailArray');
 			if (extraEmails.length > 0)	{
