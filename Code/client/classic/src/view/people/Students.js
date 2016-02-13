@@ -74,7 +74,7 @@ Ext.define('MobileJudge.view.people.Students', {
 					glyph:'',
 					iconCls: 'x-fa fa-cloud-download',
 					text: 'Export Grades',
-					handler: 'doExport'
+					handler: 'doExportStudents'
 				}
 			]
 		},

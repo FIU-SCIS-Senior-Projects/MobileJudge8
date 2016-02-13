@@ -82,7 +82,15 @@ Ext.define('MobileJudge.view.people.Judges', {
 							}
 						}
 					]
+				},
+				{
+					ui: 'soft-blue',
+					glyph:'',
+					iconCls: 'x-fa fa-cloud-download',
+					text: 'Export Judges',
+					handler: 'doExportJudges'
 				}
+
 			]
 		},
 		{
