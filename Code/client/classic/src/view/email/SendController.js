@@ -338,9 +338,14 @@ Ext.define('MobileJudge.view.email.SendController', {
 	},
 
 	onPreviousClick: function(button) {
+		var me = this;
+		Ext.Msg.confirm('Previous','Navigating to previous tab will remove all changes made to this tab, Continue?',
+				function(choice){
+					if(choice !='yes') return;
 		var panel = button.up('panel');
-		this.model.set('atEnd', false);
-		this.navigate(button, panel, 'prev');
+		me.model.set('atEnd', false);
+		me.navigate(button, panel, 'prev');
+	});
 	},
 
 	navigate: function(button, panel, direction) {
