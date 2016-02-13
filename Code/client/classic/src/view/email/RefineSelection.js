@@ -34,13 +34,18 @@ Ext.define('MobileJudge.view.email.RefineSelection', {
 				iconCls:'x-fa fa-caret-down',
 				selModel: {
 					selType: 'checkboxmodel',
-					mode: 'SIMPLE'
+					mode: 'SIMPLE',
+					listeners: {
+						select: 'onChecked',
+						deselect: 'onUnchecked'
+					}
 				},
 				enableColumnMove: false,
 				enableColumnHide: false,
 				enableColumnResize: false,
 				viewConfig: {
-					loadMask: false
+					loadMask: false,
+					filter: true
 				},
 				columns: [
 					{
@@ -61,12 +66,11 @@ Ext.define('MobileJudge.view.email.RefineSelection', {
 
 					bind: {
 						store: '{students}',
-						selection: '{studentsSelection}',
+						selection: '{checkedStudentsSelection}',
 						title: 'Students ({selectedStudents.length})'
 					},
 					listeners: {
 						selectionchange: 'onStudentsLoaded'
-
 					}
 				},
 				{

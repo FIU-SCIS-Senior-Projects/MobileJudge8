@@ -58,8 +58,74 @@ Ext.define('MobileJudge.view.email.SendController', {
 		if (this.selectListLoaded) this.setupTask();
 	},
 
-	onStudentsLoaded: function(store, records) {
-		console.log(store);
+	onChecked: function(record, index){
+		//still needs to work for judges as well
+		//find where this person is in the unchecked array, and then delete him from it
+		var objectIndex = -1 ;
+		for(i=0; i<this.model.get('uncheckedStudents').length; i++){
+			if(index.id === this.model.get('uncheckedStudents')[i].id){
+				objectIndex = i;
+			}
+		}
+		if (objectIndex >=0){
+			var arr = this.model.get('uncheckedStudents');
+			var removed = arr.splice(objectIndex, 1);
+			this.model.set('uncheckedStudents', arr);
+		}
+	},
+
+	onUnchecked: function(record, index){
+		this.model.get('uncheckedStudents').push(index.data);
+	},
+
+	//when search is done or grid is refreshed, this is called
+	onPageLoad: function (store, records) {
+		console.log('loadedinitial students');
+		this.model.set('pageChange', true);
+		this.model.set('selectedStudents', records);
+
+
+		//need to uncheck the students that should be checked...
+		for(j=0; j<this.model.get('selectedStudents'); j++){
+			if(this.model.get('uncheckedStudents')[i].id === this.model.get('selectedStudents')[j].id);
+			{
+				//uncheck the student!!!!
+			}
+		}
+	},
+
+	onStudentsLoaded: function(selModel, records) {
+		if(this.model.get('pageChange')){
+			this.model.set('pageChange', false);
+			return;
+		}
+		console.log('printing the studentload');
+		var s = selModel.view.ownerCt;
+		console.log('s: ' + s);
+		var seen = [];
+		JSON.stringify(s, function (key, val) {
+			if(val!=null && typeof val == 'object'){
+				return;
+			}
+			seen.push(val)
+			return val;
+		});
+		console.log(seen);
+//		var selected = [];
+//		Ext.each(s, function (item) {
+//			selected.push(item.data.id);
+//		});
+//		console.log("selection: " + s);
+
+
+		for(i =0; i<this.model.get('uncheckedStudents'); i++){
+			deselect(this.model.get('uncheckedStudents')[i], true);
+		}
+
+
+
+		//will ensure that the state of the student is pulled from the students list, and that we can know who all
+		//the students for the semester are
 		this.model.set('selectedStudents', records);
 	},
 
@@ -95,9 +161,9 @@ Ext.define('MobileJudge.view.email.SendController', {
 					if (old != value) {
 						parent.update(); header.update();
 						var filters = model.get('filters').reduce(function(dic, i) {
-								dic[i] = true;
-								return dic;
-							}, {});
+							dic[i] = true;
+							return dic;
+						}, {});
 						delete filters[button.dom.dataset.filter];
 						if (value) filters[button.dom.dataset.filter] = true;
 
@@ -176,8 +242,8 @@ Ext.define('MobileJudge.view.email.SendController', {
 
 		table.query('thead input[type="checkbox"]', false).forEach(function(chk) {
 			cols.push(!me.rootCheckBox
-					? (me.rootCheckBox = new ChkNode(chk))
-					: me.rootCheckBox.addChkChild(chk));
+				? (me.rootCheckBox = new ChkNode(chk))
+				: me.rootCheckBox.addChkChild(chk));
 		});
 
 		table.query('tbody tr', false).forEach(function(tr) {
