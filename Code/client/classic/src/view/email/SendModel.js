@@ -41,13 +41,13 @@ Ext.define('MobileJudge.view.email.SendModel', {
 
 		filters: [],
 		extraEmailText: '',
-
+	
 		fullStudents: [],
 		fullJudges: [],
 		uncheckedStudents: [],
 		checkedStudents: [],
-		pageChange: false,
-
+		uncheckedJudges: [],
+		checkedJudges: [],
 		selectedStudents: [],
 		selectedJudges: [],
 		selectedExtra: [],
@@ -68,7 +68,7 @@ Ext.define('MobileJudge.view.email.SendModel', {
 		uncheckedStudentsSelection: function(get) { return get('uncheckedStudents');},
 		checkedStudentsSelection: function(get) {
 			var checked = [];
-			console.log('selected' + get('selectedStudents'));
+			//console.log('selected' + get('selectedStudents'));
 			for(i=0; i<get('selectedStudents').length; i++){
 				var found = false;
 				for(j=0; j<get('uncheckedStudents').length;j++){
@@ -85,7 +85,24 @@ Ext.define('MobileJudge.view.email.SendModel', {
 			return checked;
 
 		},
-
+		checkedJudgesSelection: function(get) {
+			var checked = [];
+			for(i=0; i<get('selectedJudges').length; i++){
+				var found = false;
+				for(j=0; j<get('uncheckedJudges').length;j++){
+					if(get('selectedJudges')[i].id
+							 === get('uncheckedJudges')[j].id){
+						found = true;
+					}
+				
+				}
+				if(!found){
+					checked.push(get('selectedJudges')[i]);
+				}
+			}
+		
+			return checked;
+		},
 		judgesSelection: function(get) { return get('selectedJudges'); },
 		extraSelection: function(get) { return get('selectedExtra'); },
 		importJudges: {
