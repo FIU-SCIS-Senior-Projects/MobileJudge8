@@ -15,6 +15,14 @@ Ext.define('MobileJudge.view.main.Index', {
 		type: 'vbox',
 		align: 'stretch'
 	},
+	
+	routes: {
+		'profile' : 'goToProfile'
+	},
+	
+	goToProfile: function() {
+		this.redirectTo('profile');
+	},
 
 	items: [
 		{
@@ -48,18 +56,17 @@ Ext.define('MobileJudge.view.main.Index', {
 				{
 					xtype: 'tbtext',
 					bind: {
-						text: '{userName}'
+						html: '<a href="#profile">{userName}</a>'
 					},
 					cls: 'top-user-name'
 				},
 				{
-					xtype: 'image',
-					cls: 'header-right-profile-image',
+					xtype: 'component',
 					height: 35,
 					width: 35,
 					alt: 'current user image',
 					bind: {
-						src: '{profilePic}'
+						html: '<a href="#profile"><img class="header-right-profile-image" width="35" height="35" src={profilePic}></a>'
 					}
 				},
 				{
