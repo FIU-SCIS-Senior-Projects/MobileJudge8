@@ -112,6 +112,56 @@ module.exports = function(server, db) {
 			});
 	});
 
+
+	server.post(apiPrefix + '/students/exportCSV', function(req, res, next) {
+		db.term.getActiveTerm()
+			.then(getStudentsFromSpws)
+			.then(function (students) {
+				students = _.reject(students, 'projectID', '');
+				var termId,
+					ids = _.map(students, 'id').map(parseId),
+					projects = _.uniq(_.map(students, function(s) {
+						return {
+							id: parseInt(s.projectID),
+							name: s.projectTitle,
+							termId: (termId = s.termId)
+						};
+					}), 'id');
+
+				return Promise.map(projects, function(p) { return db.project.upsert(p);	})
+					.then(function() {
+						return Promise.all([
+							db.user.update({state: 10}, {
+								where: {
+									role: 1,
+									termId: termId,
+									id: {$notIn: ids}
+								}
+							}),
+							Promise.map(students, function (s) {
+								return db.user.upsert({
+									id: parseInt(s.id),
+									email: s.email + '@fiu.edu',
+									firstName: s.firstName,
+									lastName: s.lastName,
+									termId: s.termId,
+									role: 1,
+									state: s.valid ? 9 : 11,
+									location: 1,
+									//profileImgUrl: s.image, // <- TODO: get image from spws
+									projectId: parseInt(s.projectID)
+								});
+							})
+						]);
+					});
+			})
+			.then(function() {
+				res.send(true);
+				next();
+			});
+	});
+
+
 	/*server.put(apiPrefix + '/students/:id', function(req, res, next) {
 
 	});*/

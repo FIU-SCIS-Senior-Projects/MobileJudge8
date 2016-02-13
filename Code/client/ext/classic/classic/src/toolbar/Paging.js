@@ -15,7 +15,7 @@
  * Paging Toolbar is typically used as one of the Grid's toolbars:
  *
  *     var itemsPerPage = 2; // set the number of items you want per page
- * 
+ *
  *     Ext.create('Ext.data.Store', {
  *         id: 'simpsonsStore',
  *         autoLoad: false,
@@ -31,7 +31,7 @@
  *             }
  *         }
  *     });
- * 
+ *
  *     // specify segment of data you want to load using params
  *     store.load({
  *         params: {
@@ -39,7 +39,7 @@
  *             limit: itemsPerPage
  *         }
  *     });
- * 
+ *
  *     Ext.create('Ext.grid.Panel', {
  *         title: 'Simpsons',
  *         store: 'simpsonsStore',
@@ -121,7 +121,7 @@ Ext.define('Ext.toolbar.Paging', {
 
     /**
      * @cfg {Ext.data.Store/String} store (required)
-     * The data source to which the paging toolbar is bound (must be the same store instance 
+     * The data source to which the paging toolbar is bound (must be the same store instance
      * used in the grid / tree). Acceptable values for this property are:
      *
      *   - **any {@link Ext.data.Store Store} class / subclass**
@@ -285,9 +285,9 @@ Ext.define('Ext.toolbar.Paging', {
                 scope: me,
                 blur: me.onPagingBlur
             };
-        
+
         inputListeners[Ext.supports.SpecialKeyDownRepeat ? 'keydown' : 'keypress'] = me.onPagingKeyDown;
-        
+
         return [{
             itemId: 'first',
             tooltip: me.firstText,
@@ -356,7 +356,28 @@ Ext.define('Ext.toolbar.Paging', {
             disabled: me.store.isLoading(),
             handler: me.doRefresh,
             scope: me
-        }];
+        },
+        '-',
+        {
+            xtype:'combo' ,
+            editable: false,
+            hidden: !(me.showPageCombo),
+            value: 25,
+            store : new Ext.data.SimpleStore({
+                fields:['text','value'],
+                data:[['10',10], ['25',25], ['50', 50], ['All', 'All']]
+
+            }),
+            queryMode:'local',
+            displayField:'text',
+            valueField:'value',
+            listeners:{
+                change:function(my, newVal, oldVal){
+                    me.reloadPageConfig(newVal);
+                }
+            }
+        }
+        ];
     },
 
     initComponent : function(){
@@ -380,19 +401,19 @@ Ext.define('Ext.toolbar.Paging', {
 
         me.callParent();
     },
-    
+
     beforeRender: function() {
         this.callParent(arguments);
-        this.updateBarInfo();  
+        this.updateBarInfo();
     },
 
     updateBarInfo: function() {
         var me = this;
         if (!me.store.isLoading()) {
             me.calledInternal = true;
-            me.onLoad();    
+            me.onLoad();
             me.calledInternal = false;
-        }  
+        }
     },
 
     /**
@@ -440,7 +461,7 @@ Ext.define('Ext.toolbar.Paging', {
             pageData = me.getPageData();
             currPage = pageData.currentPage;
             pageCount = pageData.pageCount;
-            
+
              // Check for invalid current page.
             if (currPage > pageCount) {
                 // If the surrent page is beyond the loaded end,
@@ -454,7 +475,7 @@ Ext.define('Ext.toolbar.Paging', {
                 }
                 return;
             }
-            
+
             afterText = Ext.String.format(me.afterPageText, isNaN(pageCount) ? 1 : pageCount);
         } else {
             currPage = 0;
@@ -483,7 +504,7 @@ Ext.define('Ext.toolbar.Paging', {
             me.fireEvent('change', me, pageData || me.emptyPageData);
         }
     },
-    
+
     setChildDisabled: function(selector, disabled){
         var item = this.child(selector);
         if (item) {
@@ -508,13 +529,35 @@ Ext.define('Ext.toolbar.Paging', {
         };
     },
 
+    /* This methdod reloads the grid with selected pagesize. If the value
+     * selected is all
+     * then all the records of the grid are shown on a single page. Otherwise
+     * correctly the
+     * pagesize is reloadedand the grid is refreshed.
+     * */
+
+
+    reloadPageConfig : function(newVal){
+
+        if(newVal=='All'){
+            this.moveFirst();
+            this.store.setPageSize(this.store.totalCount);
+            this.doRefresh();
+        }
+        else {
+            this.moveFirst();
+            this.store.setPageSize(newVal);
+            this.doRefresh();
+        }
+    },
+
     /**
      * @private
      */
     onLoadError : function(){
         this.setChildDisabled('#refresh', false);
     },
-    
+
     getInputItem: function(){
         return this.child('#inputItem');
     },
@@ -544,7 +587,7 @@ Ext.define('Ext.toolbar.Paging', {
     onPagingBlur : function(e){
         var inputItem = this.getInputItem(),
             curPage;
-            
+
         if (inputItem) {
             curPage = this.getPageData().currentPage;
             inputItem.setValue(curPage);
@@ -557,7 +600,7 @@ Ext.define('Ext.toolbar.Paging', {
     onPagingKeyDown : function(field, e){
         this.processKeyEvent(field, e);
     },
-    
+
     processKeyEvent: function(field, e) {
         var me = this,
             key = e.getKey(),
@@ -590,7 +633,7 @@ Ext.define('Ext.toolbar.Paging', {
                     field.setValue(pageNum);
                 }
             }
-        }    
+        }
     },
 
     /**
@@ -689,7 +732,7 @@ Ext.define('Ext.toolbar.Paging', {
         }
         return false;
     },
-    
+
     getStoreListeners: function() {
         return {
             beforeload: this.beforeLoad,

@@ -82,7 +82,8 @@ Ext.define('MobileJudge.view.people.Students', {
 			xtype: 'pagingtoolbar',
 			dock: 'bottom',
 			displayInfo: true,
-			bind: '{students}'
+			bind: '{students}',
+			showPageCombo: true //This config enables the page size select combo box
 		}
 	],
 	columns: [
