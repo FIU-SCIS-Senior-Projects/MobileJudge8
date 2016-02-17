@@ -12,9 +12,12 @@ Ext.define('MobileJudge.view.email.SendController', {
 	selectListTask: null,
 	rootCheckBox: null,
 	model: null,
+	view: null,
 
 	init: function(view) {
 		this.model = view.getViewModel();
+		console.log('testing init call');
+		this.view = view;
 		view.on('show', this.onEmailWizardShow, this);
 	},
 
@@ -248,6 +251,18 @@ Ext.define('MobileJudge.view.email.SendController', {
 				extra = me.model.getStore('extraEmails');
 
 			var filters = {}, stdParams = {}, judParams = {};
+
+
+
+
+			this.model.set('uncheckedStudents', []);
+			this.model.set('selectedStudents', []);
+			this.model.set('uncheckedJudges', []);
+			this.model.set('selectedJudges', []);
+			this.model.set('fullStudents', []);
+			this.model.set('fullJudges', []);
+			this.view.down('searchfilterwizard').onClearClick();
+			
 
 			me.model.get('filters').forEach(function(f){
 				var fs = f.split(','),
