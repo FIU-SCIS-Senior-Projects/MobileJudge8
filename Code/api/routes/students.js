@@ -169,11 +169,11 @@ module.exports = function(server, db) {
 	return epilogue.resource({
 		model: db.student,
 		excludeAttributes: ['password','oauth'],
-		actions: ['list'],
+		//actions: ['list'],
 		search: {
 			param: 'query',
 			attributes: [ 'fullName', 'project', 'email' ]
 		},
-		endpoints: [apiPrefix + '/students']
+		endpoints: [apiPrefix + '/students', apiPrefix + '/students/:id']
 	});
 };

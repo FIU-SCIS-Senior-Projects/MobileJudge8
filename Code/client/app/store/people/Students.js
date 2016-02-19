@@ -9,6 +9,8 @@ Ext.define('MobileJudge.store.people.Students', {
 		url: '/api/students'
 	},
 
+    autoSync: true,
+    autoLoad: true,
 	remoteSort: true,
 	remoteFilter: true,
 	pageSize: 25

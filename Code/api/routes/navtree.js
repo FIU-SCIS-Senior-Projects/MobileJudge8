@@ -75,6 +75,13 @@ module.exports = function(server, db) {
 							leaf: true
 						},
 						{
+							text: 'Grade',
+							iconCls: 'x-fa fa-bar-chart',
+							viewType: 'grade',
+							routeId: 'grade',
+							leaf: true
+						},
+                        {
 							text: 'Stats',
 							iconCls: 'x-fa fa-bar-chart',
 							viewType: 'pageblank', //'charts',
