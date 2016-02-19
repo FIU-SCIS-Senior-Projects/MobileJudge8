@@ -64,9 +64,7 @@ Ext.define('MobileJudge.view.email.SendModel', {
 		fullJudgesSelection: function(get) { return get('fullJudges');},
 		uncheckedStudentsSelection: function(get) { return get('uncheckedStudents');},
 		checkedStudentsSelection: function(get) {
-			console.log('printingChecked');
 			var checked = [];
-			//console.log('selected' + get('selectedStudents'));
 			for(i=0; i<get('selectedStudents').length; i++){
 				var found = false;
 				for(j=0; j<get('uncheckedStudents').length;j++){
@@ -98,8 +96,6 @@ Ext.define('MobileJudge.view.email.SendModel', {
 					checked.push(get('selectedJudges')[i]);
 				}
 			}
-			console.log('checked: ' + checked);
-			console.log("selected:" + get('selectedJudges'));	
 			return checked;
 		},
 		judgesSelection: function(get) { return get('selectedJudges'); },
