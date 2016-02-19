@@ -16,7 +16,6 @@ Ext.define('MobileJudge.view.email.SendController', {
 
 	init: function(view) {
 		this.model = view.getViewModel();
-		console.log('testing init call');
 		this.view = view;
 		view.on('show', this.onEmailWizardShow, this);
 	},
@@ -92,7 +91,6 @@ Ext.define('MobileJudge.view.email.SendController', {
 	onUnchecked: function(record, index){
 		this.model.get('uncheckedStudents').push(index);
 		this.model.get('uncheckedJudges').push(index);
-		console.log("uncheckedJudge: " + record);
 	},
 
 	onJudgePageLoad: function(store, records) {
@@ -330,13 +328,6 @@ Ext.define('MobileJudge.view.email.SendController', {
 						this.model.get('selectedExtra').map(getRecord)
 					)
 				};
-			for(i =0; i<batch.emails.length; i++){
-			//	console.log(batch.emails[i].getRecord());
-			}
-			for(i=0; i<this.model.get('uncheckedJudges').length; i++){
-				console.log(this.model.get('uncheckedJudges')[i].id);
-			}
-			console.log('emails: ' + JSON.stringify(batch.emails));
 			Ext.getBody().mask();
 			panel.up('window').close();
 			Ext.Ajax.request({
