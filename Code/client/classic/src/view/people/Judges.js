@@ -48,7 +48,7 @@ Ext.define('MobileJudge.view.people.Judges', {
 						store: '{judgeStates}'
 					},
 					listeners: {
-						selectionchange: 'onFilterChange',
+						selectionchange: 'onFilterChange'
 
 					}
 				},
@@ -82,14 +82,23 @@ Ext.define('MobileJudge.view.people.Judges', {
 							}
 						}
 					]
+				},
+				{
+					ui: 'soft-blue',
+					glyph:'',
+					iconCls: 'x-fa fa-cloud-download',
+					text: 'Export Judges',
+					handler: 'doExportJudges'
 				}
+
 			]
 		},
 		{
 			xtype: 'pagingtoolbar',
 			dock: 'bottom',
 			displayInfo: true,
-			bind: '{judges}'
+			bind: '{judges}',
+			showPageCombo: true //This config enables the page size select combo box
 		}
 	],
 	columns: [

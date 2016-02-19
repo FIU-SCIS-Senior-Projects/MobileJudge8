@@ -74,7 +74,7 @@ Ext.define('MobileJudge.view.people.Students', {
 					glyph:'',
 					iconCls: 'x-fa fa-cloud-download',
 					text: 'Export Grades',
-					handler: 'doExport'
+					handler: 'doExportStudents'
 				}
 			]
 		},
@@ -82,7 +82,8 @@ Ext.define('MobileJudge.view.people.Students', {
 			xtype: 'pagingtoolbar',
 			dock: 'bottom',
 			displayInfo: true,
-			bind: '{students}'
+			bind: '{students}',
+			showPageCombo: true //This config enables the page size select combo box
 		}
 	],
 	columns: [

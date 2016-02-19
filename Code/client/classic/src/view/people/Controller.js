@@ -128,12 +128,21 @@ Ext.define('MobileJudge.view.people.Controller', {
 		});
 	},
 
-	doExport: function(){
+	doExportStudents: function(){
 
 		Ext.Ajax.request({
 			url: '/api/students',
 			success: function(resp) {
 				JSONToCSVConvertor(resp.responseText, "Student Report", true);
+			}
+		});
+	},
+	doExportJudges: function(){
+
+		Ext.Ajax.request({
+			url: '/api/judges',
+			success: function(resp) {
+				JSONToCSVConvertor(resp.responseText, "Judge List", true);
 			}
 		});
 	}

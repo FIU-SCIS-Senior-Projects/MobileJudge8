@@ -92,7 +92,7 @@ RUN apt-get install default-jre -y
 RUN sh SenchaCmd-6.0.2.14-linux-amd64.sh -q 
 
 
-#RUN sudo sh /configFiles/sencha_configure.sh
+RUN export PATH="/home/andres/bin/Sencha/Cmd/6.0.2.14/..:$PATH" && sudo sh /configFiles/sencha_configure.sh
 RUN sudo cp -rf /MobileJudge8/api /usr/share/nginx/html/
 RUN wget -qO- http://install.keymetrics.io/install.sh | SECRET_ID=c4oqalvhmicddmz PUBLIC_ID=7wu2tbb2eyc6sh1 sudo bash
 RUN sudo pm2 link c4oqalvhmicddmz 7wu2tbb2eyc6sh1 mj.cis.fiu.edu

@@ -87,6 +87,13 @@ module.exports = function(server, db) {
 							rowCls: 'nav-tree-badge nav-tree-badge-new',
 							routeId: 'settings',
 							leaf: true
+						},
+						{
+							text: 'Profile',
+							viewType: 'myProfile',
+							iconCls: 'x-fa fa-user',
+							routeId: 'profile',
+							leaf: true
 						}
 					]
 				});

@@ -10,22 +10,42 @@ Ext.define('MobileJudge.view.email.RefineSelection', {
 
 	cls: 'pages-faq-container FAQPanel',
 
-	layout: {
-		type:'vbox',
-		align: 'stretch'
+	layout: 'accordion',
+	defaults: {
+		xtype: 'grid',
+		iconCls:'x-fa fa-caret-down',
+		selModel: {
+			selType: 'checkboxmodel',
+			mode: 'SIMPLE'
+		},
+		enableColumnMove: false,
+		enableColumnHide: false,
+		enableColumnResize: false,
+		viewConfig: {
+			loadMask: false
+		},
+		columns: [
+			{
+				text:'Name',
+				flex: 1,
+				dataIndex: 'fullName'
+			},
+			{
+				text:'Email',
+				flex: 1,
+				dataIndex: 'email'
+			}
+		]
 	},
-
-	autoScroll: true,
-
 	items: [
 		{
-			xtype: 'searchfilterwizard',
-			maxWidth: 400,
-			fieldLabel: 'Search',
-			labelWidth: 50,
 			bind: {
-				storeStudents: '{students}',
-				storeJudges: '{judges}'
+				store: '{students}',
+				selection: '{studentsSelection}',
+				title: 'Students ({selectedStudents.length})'
+			},
+			listeners: {
+				selectionchange: 'onStudentsLoaded'
 			}
 		},
 		{	layout: 'accordion',
