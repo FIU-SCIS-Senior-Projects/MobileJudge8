@@ -33,10 +33,6 @@ module.exports = function(server, db) {
 			model: db.contact,
 			actions: ['list'],
 			endpoints: [apiPrefix + '/emails/contacts'],
-			search: {
-				param: 'query',
-				attributes: [ 'fullName', 'email']
-			},
 			pagination: false,
 			sort: {
 				default: 'fullName'
@@ -52,6 +48,10 @@ module.exports = function(server, db) {
 			model: db.sent,
 			actions: ['list'],
 			endpoints: [apiPrefix + '/emails'],
+			search: {
+				param: 'query',
+				attributes: [ 'fullName', 'address', 'subject' ]
+			},
 			sort: {
 				default: '-sent'
 			}

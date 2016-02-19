@@ -32,19 +32,19 @@
       "parameters": {
         "appControllers": "",
         "appModels": "",
-        "appName": "Admin",
+        "appName": "MobileJudge",
         "appStores": "",
         "appViews": "",
         "classic": false,
         "controllerFileName": "Main",
         "controllerName": "Main",
-        "controllerNamespace": "Admin.controller",
+        "controllerNamespace": "MobileJudge.controller",
         "frameworkName": "ext",
         "frameworkPath": "ext",
-        "modelNamespace": "Admin.model",
+        "modelNamespace": "MobileJudge.model",
         "modern": false,
-        "name": "Admin",
-        "packagesRelPath": "ext/packages",
+        "name": "MobileJudge",
+        "packagesRelPath": "ext/packages/,/home/rodolfo/MobileJudge8/Code/client/ext/${toolkit.name}",
         "senchadir": ".sencha",
         "themeName": "default",
         "toolkit": "",
@@ -52,7 +52,7 @@
         "universal": true,
         "viewFileName": "Main",
         "viewName": "Main",
-        "viewNamespace": "Admin.view"
+        "viewNamespace": "MobileJudge.view"
       }
     },
     ".sencha/app/native.properties": {
@@ -61,19 +61,19 @@
       "parameters": {
         "appControllers": "",
         "appModels": "",
-        "appName": "Admin",
+        "appName": "MobileJudge",
         "appStores": "",
         "appViews": "",
         "classic": false,
         "controllerFileName": "Main",
         "controllerName": "Main",
-        "controllerNamespace": "Admin.controller",
+        "controllerNamespace": "MobileJudge.controller",
         "frameworkName": "ext",
         "frameworkPath": "ext",
-        "modelNamespace": "Admin.model",
+        "modelNamespace": "MobileJudge.model",
         "modern": false,
-        "name": "Admin",
-        "packagesRelPath": "ext/packages",
+        "name": "MobileJudge",
+        "packagesRelPath": "ext/packages/,/home/rodolfo/MobileJudge8/Code/client/ext/${toolkit.name}",
         "senchadir": ".sencha",
         "themeName": "default",
         "toolkit": "",
@@ -81,7 +81,7 @@
         "universal": true,
         "viewFileName": "Main",
         "viewName": "Main",
-        "viewNamespace": "Admin.view"
+        "viewNamespace": "MobileJudge.view"
       }
     },
     ".sencha/app/sencha.cfg": {
@@ -90,19 +90,19 @@
       "parameters": {
         "appControllers": "",
         "appModels": "",
-        "appName": "Admin",
+        "appName": "MobileJudge",
         "appStores": "",
         "appViews": "",
         "classic": false,
         "controllerFileName": "Main",
         "controllerName": "Main",
-        "controllerNamespace": "Admin.controller",
+        "controllerNamespace": "MobileJudge.controller",
         "frameworkName": "ext",
         "frameworkPath": "ext",
-        "modelNamespace": "Admin.model",
+        "modelNamespace": "MobileJudge.model",
         "modern": false,
-        "name": "Admin",
-        "packagesRelPath": "ext/packages",
+        "name": "MobileJudge",
+        "packagesRelPath": "ext/packages/,/home/rodolfo/MobileJudge8/Code/client/ext/${toolkit.name}",
         "senchadir": ".sencha",
         "themeName": "default",
         "toolkit": "",
@@ -110,7 +110,7 @@
         "universal": true,
         "viewFileName": "Main",
         "viewName": "Main",
-        "viewNamespace": "Admin.view"
+        "viewNamespace": "MobileJudge.view"
       }
     },
     ".sencha/app/development.properties": {
@@ -119,19 +119,19 @@
       "parameters": {
         "appControllers": "",
         "appModels": "",
-        "appName": "Admin",
+        "appName": "MobileJudge",
         "appStores": "",
         "appViews": "",
         "classic": false,
         "controllerFileName": "Main",
         "controllerName": "Main",
-        "controllerNamespace": "Admin.controller",
+        "controllerNamespace": "MobileJudge.controller",
         "frameworkName": "ext",
         "frameworkPath": "ext",
-        "modelNamespace": "Admin.model",
+        "modelNamespace": "MobileJudge.model",
         "modern": false,
-        "name": "Admin",
-        "packagesRelPath": "ext/packages",
+        "name": "MobileJudge",
+        "packagesRelPath": "ext/packages/,/home/rodolfo/MobileJudge8/Code/client/ext/${toolkit.name}",
         "senchadir": ".sencha",
         "themeName": "default",
         "toolkit": "",
@@ -139,7 +139,7 @@
         "universal": true,
         "viewFileName": "Main",
         "viewName": "Main",
-        "viewNamespace": "Admin.view"
+        "viewNamespace": "MobileJudge.view"
       }
     },
     ".sencha/app/build.properties": {
@@ -148,19 +148,19 @@
       "parameters": {
         "appControllers": "",
         "appModels": "",
-        "appName": "Admin",
+        "appName": "MobileJudge",
         "appStores": "",
         "appViews": "",
         "classic": false,
         "controllerFileName": "Main",
         "controllerName": "Main",
-        "controllerNamespace": "Admin.controller",
+        "controllerNamespace": "MobileJudge.controller",
         "frameworkName": "ext",
         "frameworkPath": "ext",
-        "modelNamespace": "Admin.model",
+        "modelNamespace": "MobileJudge.model",
         "modern": false,
-        "name": "Admin",
-        "packagesRelPath": "ext/packages",
+        "name": "MobileJudge",
+        "packagesRelPath": "ext/packages/,/home/rodolfo/MobileJudge8/Code/client/ext/${toolkit.name}",
         "senchadir": ".sencha",
         "themeName": "default",
         "toolkit": "",
@@ -168,7 +168,7 @@
         "universal": true,
         "viewFileName": "Main",
         "viewName": "Main",
-        "viewNamespace": "Admin.view"
+        "viewNamespace": "MobileJudge.view"
       }
     },
     ".sencha/app/production.properties": {
@@ -177,19 +177,19 @@
       "parameters": {
         "appControllers": "",
         "appModels": "",
-        "appName": "Admin",
+        "appName": "MobileJudge",
         "appStores": "",
         "appViews": "",
         "classic": false,
         "controllerFileName": "Main",
         "controllerName": "Main",
-        "controllerNamespace": "Admin.controller",
+        "controllerNamespace": "MobileJudge.controller",
         "frameworkName": "ext",
         "frameworkPath": "ext",
-        "modelNamespace": "Admin.model",
+        "modelNamespace": "MobileJudge.model",
         "modern": false,
-        "name": "Admin",
-        "packagesRelPath": "ext/packages",
+        "name": "MobileJudge",
+        "packagesRelPath": "ext/packages/,/home/rodolfo/MobileJudge8/Code/client/ext/${toolkit.name}",
         "senchadir": ".sencha",
         "themeName": "default",
         "toolkit": "",
@@ -197,7 +197,7 @@
         "universal": true,
         "viewFileName": "Main",
         "viewName": "Main",
-        "viewNamespace": "Admin.view"
+        "viewNamespace": "MobileJudge.view"
       }
     },
     ".sencha/app/testing.properties": {
@@ -206,19 +206,19 @@
       "parameters": {
         "appControllers": "",
         "appModels": "",
-        "appName": "Admin",
+        "appName": "MobileJudge",
         "appStores": "",
         "appViews": "",
         "classic": false,
         "controllerFileName": "Main",
         "controllerName": "Main",
-        "controllerNamespace": "Admin.controller",
+        "controllerNamespace": "MobileJudge.controller",
         "frameworkName": "ext",
         "frameworkPath": "ext",
-        "modelNamespace": "Admin.model",
+        "modelNamespace": "MobileJudge.model",
         "modern": false,
-        "name": "Admin",
-        "packagesRelPath": "ext/packages",
+        "name": "MobileJudge",
+        "packagesRelPath": "ext/packages/,/home/rodolfo/MobileJudge8/Code/client/ext/${toolkit.name}",
         "senchadir": ".sencha",
         "themeName": "default",
         "toolkit": "",
@@ -226,7 +226,7 @@
         "universal": true,
         "viewFileName": "Main",
         "viewName": "Main",
-        "viewNamespace": "Admin.view"
+        "viewNamespace": "MobileJudge.view"
       }
     },
     "sass/config.rb": {
@@ -235,19 +235,19 @@
       "parameters": {
         "appControllers": "",
         "appModels": "",
-        "appName": "Admin",
+        "appName": "MobileJudge",
         "appStores": "",
         "appViews": "",
         "classic": false,
         "controllerFileName": "Main",
         "controllerName": "Main",
-        "controllerNamespace": "Admin.controller",
+        "controllerNamespace": "MobileJudge.controller",
         "frameworkName": "ext",
         "frameworkPath": "ext",
-        "modelNamespace": "Admin.model",
+        "modelNamespace": "MobileJudge.model",
         "modern": false,
-        "name": "Admin",
-        "packagesRelPath": "ext/packages",
+        "name": "MobileJudge",
+        "packagesRelPath": "ext/packages/,/home/rodolfo/MobileJudge8/Code/client/ext/${toolkit.name}",
         "senchadir": ".sencha",
         "themeName": "default",
         "toolkit": "",
@@ -255,7 +255,7 @@
         "universal": true,
         "viewFileName": "Main",
         "viewName": "Main",
-        "viewNamespace": "Admin.view"
+        "viewNamespace": "MobileJudge.view"
       }
     }
   }

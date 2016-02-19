@@ -7,7 +7,8 @@ Ext.define('MobileJudge.view.main.BaseController', {
 			logout: 'onLogout',
 			termChanged: 'onActiveTermChanged',
 			navTreeReady: 'onNavTreeReady',
-			requestError: 'onRequestError'
+			requestError: 'onRequestError',
+			loadProfile: 'loadProfileModel'
 		},
 		controller: {
 			'#': {

@@ -1,6 +1,6 @@
-Ext.define('MobileJudge.view.people.Judges', {
+Ext.define('MobileJudge.view.grade.Students', {
 	extend: 'Ext.grid.Panel',
-	alias: 'widget.judges',
+	alias: 'widget.gradestudents',
 
 	requires: [
 		'Ext.grid.plugin.RowEditing',
@@ -11,11 +11,10 @@ Ext.define('MobileJudge.view.people.Judges', {
 		'Ext.toolbar.Toolbar'
 	],
 
-	bind: '{judges}',
+	bind: '{students}',
+	references: 'gridStudents',
 
 	dockedItems: [
-
-
 		{
 			xtype: 'toolbar',
 			dock: 'top',
@@ -35,21 +34,20 @@ Ext.define('MobileJudge.view.people.Judges', {
 					selectedItemCls: 'selected',
 					selectionModel: {
 						type: 'dataviewmodel',
-						storeId: 'judges',
+						storeId: 'students',
 						mode: 'SIMPLE'
 					},
 					tpl: [
 						'<tpl for=".">',
-							'<button type="button" title="{name}">{abbr}</button>',
+						'<button type="button" title="{name}">{abbr}</button>',
 						'</tpl>'
 					],
 					bind: {
-						selection: '{judgeFilterSelection}',
-						store: '{judgeStates}'
+						selection: '{studentFilterSelection}',
+						store: '{studentStates}'
 					},
 					listeners: {
 						selectionchange: 'onFilterChange'
-
 					}
 				},
 				'->',
@@ -59,56 +57,45 @@ Ext.define('MobileJudge.view.people.Judges', {
 					fieldLabel: 'Search',
 					labelWidth: 50,
 					bind: {
-						store: '{judges}'
+						store: '{students}'
 					}
 				},
 				'->',
 				{
-					xtype: 'form',
-					reference: 'judgeUploadForm',
-					items: [
-						{
-							xtype: 'filefield',
-							name: 'judgesCsv',
-							buttonOnly: true,
-							buttonText: 'Import',
-							buttonConfig: {
-								ui: 'soft-blue',
-								glyph:'',
-								iconCls: 'x-fa fa-cloud-upload'
-							},
-							listeners: {
-								change: 'onImportJudges'
-							}
-						}
-					]
+					ui: 'soft-blue',
+					glyph:'',
+					iconCls: 'x-fa fa-cloud-download',
+					text: 'Sync',
+					handler: 'onStudentsLoad'
 				},
+
 				{
 					ui: 'soft-blue',
 					glyph:'',
 					iconCls: 'x-fa fa-cloud-download',
-					text: 'Export Judges',
-					handler: 'doExportJudges'
+					text: 'Export Grades',
+					handler: 'doExportStudents'
 				}
-
 			]
 		},
 		{
 			xtype: 'pagingtoolbar',
 			dock: 'bottom',
 			displayInfo: true,
-			bind: '{judges}',
+			bind: '{students}',
 			showPageCombo: true //This config enables the page size select combo box
 		}
 	],
 	columns: [
 		{
-			width: 75,
+			xtype: 'gridcolumn',
+			width: 85,
 			dataIndex: 'id',
 			hideable: false,
-			text: ''
+			text: 'PantherID'
 		},
 		{
+			xtype: 'gridcolumn',
 			renderer: function(value) {
 				return "<img class='profilePic' src='" + value + "' alt='Profile Pic' height='40px' width='40px'>";
 			},
@@ -119,29 +106,32 @@ Ext.define('MobileJudge.view.people.Judges', {
 			text: ''
 		},
 		{
+			xtype: 'gridcolumn',
 			dataIndex: 'fullName',
 			text: 'Name',
 			flex: 1
 		},
 		{
+			xtype: 'gridcolumn',
 			dataIndex: 'email',
 			text: 'Email',
+			flex: 1
+		},
+		{
+			xtype: 'gridcolumn',
+			dataIndex: 'project',
+			text: 'Project',
 			flex: 2
 		},
 		{
-			dataIndex: 'title',
-			text: 'Title',
-			flex: 1
-		},
-		{
-			dataIndex: 'affiliation',
-			text: 'Affiliation',
-			flex: 1
-		},
-		{
-			dataIndex: 'state',
-			text: 'State',
-			width: 120
+			xtype: 'gridcolumn',
+			dataIndex: 'grade',
+			text: 'Grade',
+            editor: {
+				xtype: 'textfield',
+				allowBlank: false
+			},
+			width: 80
 		},
 		{
 			xtype: 'actioncolumn',

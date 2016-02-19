@@ -75,6 +75,13 @@ module.exports = function(server, db) {
 							leaf: true
 						},
 						{
+							text: 'Grade',
+							iconCls: 'x-fa fa-bar-chart',
+							viewType: 'grade',
+							routeId: 'grade',
+							leaf: true
+						},
+                        {
 							text: 'Stats',
 							iconCls: 'x-fa fa-bar-chart',
 							viewType: 'pageblank', //'charts',
@@ -86,6 +93,13 @@ module.exports = function(server, db) {
 							iconCls: 'x-fa fa-gears',
 							rowCls: 'nav-tree-badge nav-tree-badge-new',
 							routeId: 'settings',
+							leaf: true
+						},
+						{
+							text: 'Profile',
+							viewType: 'myProfile',
+							iconCls: 'x-fa fa-user',
+							routeId: 'profile',
 							leaf: true
 						}
 					]

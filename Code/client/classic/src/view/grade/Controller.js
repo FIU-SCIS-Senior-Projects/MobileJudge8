@@ -1,6 +1,6 @@
-Ext.define('MobileJudge.view.people.Controller', {
+Ext.define('MobileJudge.view.grade.Controller', {
 	extend: 'Ext.app.ViewController',
-	alias: 'controller.people',
+	alias: 'controller.grade',
 
 	windows: {},
 	model: null,

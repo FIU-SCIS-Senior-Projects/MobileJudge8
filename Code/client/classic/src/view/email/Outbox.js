@@ -92,7 +92,8 @@ Ext.define('MobileJudge.view.email.Outbox', {
 			displayInfo: true,
 			bind: {
 				store: '{outbox}'
-			}
+			},
+			showPageCombo: true
 		}
 	]
 });
