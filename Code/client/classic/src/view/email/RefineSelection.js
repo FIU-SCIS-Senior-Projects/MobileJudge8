@@ -48,25 +48,74 @@ Ext.define('MobileJudge.view.email.RefineSelection', {
 				selectionchange: 'onStudentsLoaded'
 			}
 		},
-		{
-			bind: {
-				store: '{judges}',
-				selection: '{judgesSelection}',
-				title: 'Judges ({selectedJudges.length})'
+		{	layout: 'accordion',
+			defaults: {
+				xtype: 'grid',
+				iconCls:'x-fa fa-caret-down',
+				selModel: {
+					selType: 'checkboxmodel',
+					mode: 'SIMPLE',
+					listeners: {
+						select: 'onChecked',
+						deselect: 'onUnchecked'
+					}
+				},
+				enableColumnMove: false,
+				enableColumnHide: false,
+				enableColumnResize: false,
+				viewConfig: {
+					loadMask: false,
+					filter: true
+				},
+				columns: [
+					{
+						text:'Name',
+						flex: 1,
+						dataIndex: 'fullName'
+					},
+					{
+						text:'Email',
+						flex: 1,
+						dataIndex: 'email'
+					}
+				]
 			},
-			listeners: {
-				selectionchange: 'onJudgesLoaded'
-			}
-		},
-		{
-			bind: {
-				store: '{extraEmails}',
-				selection: '{extraSelection}',
-				title: 'Extra e-mails ({selectedExtra.length})'
-			},
-			listeners: {
-				selectionchange: 'onExtraSelectionChange'
-			}
+			items: [
+				{
+					name: 'studentGrid',
+
+					bind: {
+						store: '{students}',
+						selection: '{checkedStudentsSelection}',
+						title: 'Students ({selectedStudents.length})'
+					},
+					listeners: {
+						selectionchange: 'onStudentsLoaded'
+					}
+				},
+				{
+
+					bind: {
+						store: '{judges}',
+						selection: '{checkedJudgesSelection}',
+						title: 'Judges ({selectedJudges.length})'
+					},
+					listeners: {
+						selectionchange: 'onJudgesLoaded'
+					}
+				},
+				{
+
+					bind: {
+						store: '{extraEmails}',
+						selection: '{extraSelection}',
+						title: 'Extra e-mails ({selectedExtra.length})'
+					},
+					listeners: {
+						selectionchange: 'onExtraSelectionChange'
+					}
+				}
+			]
 		}
 	]
 

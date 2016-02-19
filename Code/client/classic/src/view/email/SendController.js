@@ -12,9 +12,11 @@ Ext.define('MobileJudge.view.email.SendController', {
 	selectListTask: null,
 	rootCheckBox: null,
 	model: null,
+	view: null,
 
 	init: function(view) {
 		this.model = view.getViewModel();
+		this.view = view;
 		view.on('show', this.onEmailWizardShow, this);
 	},
 
@@ -58,7 +60,50 @@ Ext.define('MobileJudge.view.email.SendController', {
 		if (this.selectListLoaded) this.setupTask();
 	},
 
-	onStudentsLoaded: function(store, records) {
+	onChecked: function(record, index){
+		//still needs to work for judges as well
+		//find where this person is in the unchecked array, and then delete him from it
+		var objectIndex = -1 ;
+		for(i=0; i<this.model.get('uncheckedStudents').length; i++){
+			if(index.id === this.model.get('uncheckedStudents')[i].id){
+				objectIndex = i;
+			}
+		}
+		if (objectIndex >=0){
+			var arr = this.model.get('uncheckedStudents');
+			var removed = arr.splice(objectIndex, 1);
+			this.model.set('uncheckedStudents', arr);
+		}
+		
+		var judgeIndex = -1
+		for(i=0; i<this.model.get('uncheckedJudges').length; i++){
+			if(index.id === this.model.get('uncheckedJudges')[i].id){
+				judgeIndex = i;
+			}
+		}
+		if(judgeIndex >=0){
+			var arr = this.model.get('uncheckedJudges');
+			var removed = arr.splice(judgeIndex, 1);
+			this.model.set('uncheckedJudges', arr);
+		}
+	},
+
+	onUnchecked: function(record, index){
+		this.model.get('uncheckedStudents').push(index);
+		this.model.get('uncheckedJudges').push(index);
+	},
+
+	onJudgePageLoad: function(store, records) {
+		this.model.set('selectedJudges', records);
+	},
+	
+	onStudentPageLoad: function (store, records) {
+		this.model.set('selectedStudents', records);
+
+		//need to uncheck the students that should be checked...
+	},
+
+	onStudentsLoaded: function(selModel, records) {
 		this.model.set('selectedStudents', records);
 	},
 
@@ -94,9 +139,9 @@ Ext.define('MobileJudge.view.email.SendController', {
 					if (old != value) {
 						parent.update(); header.update();
 						var filters = model.get('filters').reduce(function(dic, i) {
-								dic[i] = true;
-								return dic;
-							}, {});
+							dic[i] = true;
+							return dic;
+						}, {});
 						delete filters[button.dom.dataset.filter];
 						if (value) filters[button.dom.dataset.filter] = true;
 
@@ -175,8 +220,8 @@ Ext.define('MobileJudge.view.email.SendController', {
 
 		table.query('thead input[type="checkbox"]', false).forEach(function(chk) {
 			cols.push(!me.rootCheckBox
-					? (me.rootCheckBox = new ChkNode(chk))
-					: me.rootCheckBox.addChkChild(chk));
+				? (me.rootCheckBox = new ChkNode(chk))
+				: me.rootCheckBox.addChkChild(chk));
 		});
 
 		table.query('tbody tr', false).forEach(function(tr) {
@@ -205,6 +250,18 @@ Ext.define('MobileJudge.view.email.SendController', {
 
 			var filters = {}, stdParams = {}, judParams = {};
 
+
+
+
+			this.model.set('uncheckedStudents', []);
+			this.model.set('selectedStudents', []);
+			this.model.set('uncheckedJudges', []);
+			this.model.set('selectedJudges', []);
+			this.model.set('fullStudents', []);
+			this.model.set('fullJudges', []);
+			this.view.down('searchfilterwizard').onClearClick();
+			
+
 			me.model.get('filters').forEach(function(f){
 				var fs = f.split(','),
 					role = filters[fs[0]] || {},
@@ -230,8 +287,15 @@ Ext.define('MobileJudge.view.email.SendController', {
 
 			students.removeAll(); judges.removeAll(); extra.removeAll();
 
-			if (!Ext.Object.isEmpty(stdParams)) students.load({ params: { 'filter': Ext.encode(stdParams) } });
-			if (!Ext.Object.isEmpty(judParams)) judges.load({ params: { 'filter': Ext.encode(judParams) } });
+			if (!Ext.Object.isEmpty(stdParams)){
+			       	students.proxy.extraParams = { 'filter': Ext.encode(stdParams) };
+				students.load();
+			}
+			if (!Ext.Object.isEmpty(judParams)){
+			       	judges.proxy.extraParams = { 'filter': Ext.encode(judParams) };
+				judges.load();
+			}
+			
 
 			var extraEmails = this.model.get('extraEmailArray');
 			if (extraEmails.length > 0)	{
@@ -259,12 +323,11 @@ Ext.define('MobileJudge.view.email.SendController', {
 					templateId: template,
 					importJudges: this.model.get('importJudges'),
 					emails: Ext.Array.merge(
-						this.model.get('selectedStudents').map(getRecord),
-						this.model.get('selectedJudges').map(getRecord),
+						this.model.get('checkedStudentsSelection').map(getRecord),
+						this.model.get('checkedJudgesSelection').map(getRecord),
 						this.model.get('selectedExtra').map(getRecord)
 					)
 				};
-
 			Ext.getBody().mask();
 			panel.up('window').close();
 			Ext.Ajax.request({
@@ -286,9 +349,14 @@ Ext.define('MobileJudge.view.email.SendController', {
 	},
 
 	onPreviousClick: function(button) {
+		var me = this;
+		Ext.Msg.confirm('Previous','Navigating to previous tab will remove all changes made to this tab, Continue?',
+				function(choice){
+					if(choice !='yes') return;
 		var panel = button.up('panel');
-		this.model.set('atEnd', false);
-		this.navigate(button, panel, 'prev');
+		me.model.set('atEnd', false);
+		me.navigate(button, panel, 'prev');
+	});
 	},
 
 	navigate: function(button, panel, direction) {
