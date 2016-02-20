@@ -8,6 +8,6 @@ Ext.define('MobileJudge.store.email.Contacts', {
 		type: 'api',
 		url: '/api/emails/contacts'
 	},
-
+	remoteFilter: true,
 	pageSize: 0
 });

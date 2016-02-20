@@ -33,6 +33,10 @@ module.exports = function(server, db) {
 			model: db.contact,
 			actions: ['list'],
 			endpoints: [apiPrefix + '/emails/contacts'],
+			search: {
+				param: 'query',
+				attributes: [ 'fullName', 'email']
+			},
 			pagination: false,
 			sort: {
 				default: 'fullName'
