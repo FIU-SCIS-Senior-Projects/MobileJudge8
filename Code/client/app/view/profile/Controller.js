@@ -24,7 +24,7 @@ Ext.define('MobileJudge.view.profile.Controller', {
 		});
 	},
 	
-	onLinkAccount: function(){
+	onLinkAccount: function(view){
 		var me = this, win = view.mask ? view : Ext.Viewport;
 		$('.btn-oauth').click(function(e) {
 			e.preventDefault();
