@@ -98,6 +98,86 @@ Ext.define('MobileJudge.view.profile.Profile', {
 				value: '{profileImgUrl}'
 			}
 		},
+
+
+
+		{
+			xtype: 'container',
+			layout: {
+				type: 'hbox',	
+			items: [
+				{
+					ui: 'fiu',
+					userCls: 'btn-oauth',
+					tooltip: 'Login with FIU Account',
+					preventDefault: false
+				},
+				{
+					xtype: 'box',
+					width: 1,
+					html: '<div class="outer-div"><div class="seperator"></div></div>',
+					margin: '0 8'
+				},
+				{
+					ui: 'google',
+					userCls: 'btn-oauth',
+					iconCls: 'x-fa fa-google-plus',
+					tooltip: 'Login with Google',
+					preventDefault: false
+				},
+				{
+					xtype: 'box',
+					width: 1,
+					html: '<div class="outer-div"><div class="seperator"></div></div>',
+					margin: '0 8'
+				},
+				{
+					ui: 'linkedin2',
+					userCls: 'btn-oauth',
+					iconCls: 'x-fa fa-linkedin',
+					tooltip: 'Login with LinkedIn',
+					preventDefault: false
+				},
+				{
+					xtype: 'box',
+					width: 1,
+					html: '<div class="outer-div"><div class="seperator"></div></div>',
+					margin: '0 8'
+				},
+				{
+					ui: 'facebook',
+					userCls: 'btn-oauth',
+					iconCls: 'x-fa fa-facebook',
+					tooltip: 'Login with Facebook',
+					preventDefault: false
+				},
+				{
+					xtype: 'box',
+					width: 1,
+					html: '<div class="outer-div"><div class="seperator"></div></div>',
+					margin: '0 8'
+				},
+				{
+					ui: 'twitter',
+					userCls: 'btn-oauth',
+					iconCls: 'x-fa fa-twitter',
+					tooltip: 'Login with Twitter',
+					preventDefault: false
+				}
+			]
+		}
+	},
+
+
+
+
+
+
+
+
+
+
+
 		{
 			xtype: 'button',
 			margin: 10,
