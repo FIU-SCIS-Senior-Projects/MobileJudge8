@@ -56,12 +56,22 @@ module.exports = function(server, db) {
 				break;
 
 			case 3:
-				console.log('testing case 3 output' + req);
-				console.log(JSON.stringify(req));
 				model = db.user;
 				model.findById(req.user.id).then(function (user) {
-					if(req.params.parsedData!=null){
-						console.log('as expected');
+					if(req.params.parsedData!==null){
+						var parsedData = req.params;
+						var newToken = JSON.parse(user.oauth);
+						if(newToken===null){
+							newToken = {};
+						}
+						var newKey;
+						for(var key in parsedData){
+							var value = parsedData[key];
+							newToken[key] = {};
+							newToken[key] = value;
+						}
+						user.oauth = JSON.stringify(newToken);
+						user.save();
 					}
 
 					if (user == null) return next(new notFound());
