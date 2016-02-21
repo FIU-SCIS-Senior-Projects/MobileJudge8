@@ -28,8 +28,10 @@ Ext.define('MobileJudge.view.profile.Controller', {
 		});
 	},
 	
-	onLinkAccount: function(view){
+	onLinkAccount: function(thisButton, view){
 		console.log('testing handler call');
+		console.log();
+		console.log(thisButton.getUi());
 		var me = this, win = view.mask ? view : Ext.Viewport;
 		//$('.btn-oauth').click(function(e) {
 			console.log('entered click function');
@@ -38,12 +40,12 @@ Ext.define('MobileJudge.view.profile.Controller', {
 			//provider = (provider == 'x-btn-over' ? cls.pop() : provider).split('-')[2];
 			//if (me.loginInProcess) return;
 			me.loginInProcess = true;
-			var provider = "facebook";
+			//var provider = "facebook";
+			var provider = thisButton.getUi();
 			OAuth.popup(provider, function(err, res) {
 				console.log('entered popup')
 				if (err) {
 					me.loginInProcess = false;
-					console.log('error fucker');
 					Ext.Msg.alert("Error", Ext.isString(err) ? err : err.message);
 				}
 				else res.me().done(function (data) {
