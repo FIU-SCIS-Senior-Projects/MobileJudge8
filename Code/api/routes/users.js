@@ -10,11 +10,11 @@ module.exports = function(server, db) {
 			case 1:
 				model = db.student;
 				break;
-				
+
 			case 2:
 				model = db.judge;
 				break;
-				
+
 			case 3:
 				model = db.user;
 				break;
@@ -25,7 +25,7 @@ module.exports = function(server, db) {
 			next();
 		});
 	});
-	
+
 	server.put(apiPrefix + '/profile', function (req, res, next) {
 		var model/* = req.user.role == 1 ? db.student : db.judge*/;
 		switch(req.user.role) {
@@ -41,7 +41,7 @@ module.exports = function(server, db) {
 					});
 				});
 				break;
-				
+
 			case 2:
 				model = db.judge;
 				model.findById(req.user.id).then(function (user) {
@@ -54,8 +54,9 @@ module.exports = function(server, db) {
 					});
 				});
 				break;
-				
+
 			case 3:
+				console.log('testing case 3 output');
 				model = db.user;
 				model.findById(req.user.id).then(function (user) {
 
@@ -64,7 +65,7 @@ module.exports = function(server, db) {
 					if(req.params.parsedData)
 
 
-						
+
 					if (user == null) return next(new notFound());
 					user.firstName = req.body.firstName;
 					user.lastName = req.body.lastName;
