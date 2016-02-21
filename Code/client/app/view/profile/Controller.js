@@ -25,6 +25,7 @@ Ext.define('MobileJudge.view.profile.Controller', {
 	},
 	
 	onLinkAccount: function(){
+		var me = this, win = view.mask ? view : Ext.Viewport;
 		$('.btn-oauth').click(function(e) {
 			e.preventDefault();
 			var cls = e.currentTarget.className.split(' '), provider = cls.pop();

@@ -15,10 +15,6 @@ Ext.define('MobileJudge.view.profile.Profile', {
     controller: 'myProfile',
     viewModel: 'myProfile',
 
-    listeners: {
-		afterrender: 'onLoginRender'
-	},
-
     bodyPadding: 20,
 
     items: [
@@ -120,7 +116,7 @@ Ext.define('MobileJudge.view.profile.Profile', {
                     userCls: 'btn-oauth',
                     tooltip: 'Login with FIU Account',
                     preventDefault: false,
-                    handler: 'onLinkAccount'
+		    handler: 'onLinkAccount'
                 },
                 {
                     xtype: 'box',
@@ -134,8 +130,8 @@ Ext.define('MobileJudge.view.profile.Profile', {
                     iconCls: 'x-fa fa-google-plus',
                     tooltip: 'Login with Google',
                     preventDefault: false,
-                    handler: 'onLinkAccount'
-                },
+		    handler: 'onLinkAccount'
+		},
                 {
                     xtype: 'box',
                     width: 1,
@@ -148,7 +144,7 @@ Ext.define('MobileJudge.view.profile.Profile', {
                     iconCls: 'x-fa fa-linkedin',
                     tooltip: 'Login with LinkedIn',
                     preventDefault: false,
-                    handler: 'onLinkAccount'
+		    handler: 'onLinkAccount'
                 },
                 {
                     xtype: 'box',
@@ -162,7 +158,7 @@ Ext.define('MobileJudge.view.profile.Profile', {
                     iconCls: 'x-fa fa-facebook',
                     tooltip: 'Login with Facebook',
                     preventDefault: false,
-                    handler: 'onLinkAccount'
+		    handler: 'onLinkAccount'
                 },
                 {
                     xtype: 'box',
@@ -176,7 +172,7 @@ Ext.define('MobileJudge.view.profile.Profile', {
                     iconCls: 'x-fa fa-twitter',
                     tooltip: 'Login with Twitter',
                     preventDefault: false,
-                    handler: 'onLinkAccount'
+		    handler: 'onLinkAccount'
                 }
             ]
         },
