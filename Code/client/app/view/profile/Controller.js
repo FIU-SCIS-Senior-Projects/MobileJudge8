@@ -6,6 +6,9 @@ Ext.define('MobileJudge.view.profile.Controller', {
 	loginInProcess: false,
 
 	init: function(view) {
+		OAuth.setOAuthdURL("http://mj.cis.fiu.edu/oauthd");
+		OAuth.initialize('uSO6GBdeGO_y9Bdas5jNHTLxBd8');
+
 		this.model = view.getViewModel();
 		this.loadProfile();
 	},
@@ -25,17 +28,20 @@ Ext.define('MobileJudge.view.profile.Controller', {
 	},
 	
 	onLinkAccount: function(view){
+		console.log('testing handler call');
 		var me = this, win = view.mask ? view : Ext.Viewport;
 		$('.btn-oauth').click(function(e) {
+			console.log('entered click function');
 			e.preventDefault();
 			var cls = e.currentTarget.className.split(' '), provider = cls.pop();
 			provider = (provider == 'x-btn-over' ? cls.pop() : provider).split('-')[2];
-
-			if (me.loginInProcess) return;
+			//if (me.loginInProcess) return;
 			me.loginInProcess = true;
 			OAuth.popup(provider, function(err, res) {
+				console.log('entered popup')
 				if (err) {
 					me.loginInProcess = false;
+					console.log('error fucker');
 					Ext.Msg.alert("Error", Ext.isString(err) ? err : err.message);
 				}
 				else res.me().done(function (data) {
@@ -70,7 +76,7 @@ Ext.define('MobileJudge.view.profile.Controller', {
 			});
 
 
-		});
+		//});
 	},
 
 	updateProfile: function(btn) {
