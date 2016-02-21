@@ -82,7 +82,7 @@ Ext.define('MobileJudge.view.profile.Controller', {
 
 
 		});
-	}
+	},
 
 	updateProfile: function(btn) {
 		var me = this;
