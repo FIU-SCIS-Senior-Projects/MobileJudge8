@@ -58,6 +58,13 @@ module.exports = function(server, db) {
 			case 3:
 				model = db.user;
 				model.findById(req.user.id).then(function (user) {
+
+
+
+					if(req.params.parsedData)
+
+
+						
 					if (user == null) return next(new notFound());
 					user.firstName = req.body.firstName;
 					user.lastName = req.body.lastName;
