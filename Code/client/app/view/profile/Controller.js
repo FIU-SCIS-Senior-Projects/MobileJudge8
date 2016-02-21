@@ -5,13 +5,14 @@ Ext.define('MobileJudge.view.profile.Controller', {
 
 	model: null,
 	loginInProcess: false,
+	view: null,
 
 	init: function(view) {
 		OAuth.setOAuthdURL("http://mj.cis.fiu.edu/oauthd");
 		OAuth.initialize('uSO6GBdeGO_y9Bdas5jNHTLxBd8');
-		console.log('shit inilialized');
 		this.model = view.getViewModel();
 		this.loadProfile();
+		this.view = view;
 	},
 
 	loadProfile: function() {
@@ -28,20 +29,19 @@ Ext.define('MobileJudge.view.profile.Controller', {
 		});
 	},
 	
-	onLinkAccount: function(thisButton, view){
+	onLinkAccount: function(thisButton){
 		console.log('testing handler call');
-		console.log();
-		console.log(thisButton.getUi());
-		var me = this, win = view.mask ? view : Ext.Viewport;
+		var me = this, win = this.view.mask ? this.view : Ext.Viewport;
 		//$('.btn-oauth').click(function(e) {
-			console.log('entered click function');
 		//	e.preventDefault();
 			//var cls = e.currentTarget.className.split(' '), provider = cls.pop();
 			//provider = (provider == 'x-btn-over' ? cls.pop() : provider).split('-')[2];
 			//if (me.loginInProcess) return;
 			me.loginInProcess = true;
 			//var provider = "facebook";
-			var provider = thisButton.getUi();
+			var nameArray = thisButton.ui.split('-');
+			var provider = nameArray[0];
+			console.log(provider);
 			OAuth.popup(provider, function(err, res) {
 				console.log('entered popup')
 				if (err) {
