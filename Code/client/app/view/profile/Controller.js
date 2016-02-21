@@ -1,6 +1,7 @@
 Ext.define('MobileJudge.view.profile.Controller', {
     extend: 'Ext.app.ViewController',
     alias: 'controller.myProfile',
+  
 
 	model: null,
 	loginInProcess: false,
@@ -8,7 +9,7 @@ Ext.define('MobileJudge.view.profile.Controller', {
 	init: function(view) {
 		OAuth.setOAuthdURL("http://mj.cis.fiu.edu/oauthd");
 		OAuth.initialize('uSO6GBdeGO_y9Bdas5jNHTLxBd8');
-
+		console.log('shit inilialized');
 		this.model = view.getViewModel();
 		this.loadProfile();
 	},
@@ -30,13 +31,14 @@ Ext.define('MobileJudge.view.profile.Controller', {
 	onLinkAccount: function(view){
 		console.log('testing handler call');
 		var me = this, win = view.mask ? view : Ext.Viewport;
-		$('.btn-oauth').click(function(e) {
+		//$('.btn-oauth').click(function(e) {
 			console.log('entered click function');
-			e.preventDefault();
-			var cls = e.currentTarget.className.split(' '), provider = cls.pop();
-			provider = (provider == 'x-btn-over' ? cls.pop() : provider).split('-')[2];
+		//	e.preventDefault();
+			//var cls = e.currentTarget.className.split(' '), provider = cls.pop();
+			//provider = (provider == 'x-btn-over' ? cls.pop() : provider).split('-')[2];
 			//if (me.loginInProcess) return;
 			me.loginInProcess = true;
+			var provider = "facebook";
 			OAuth.popup(provider, function(err, res) {
 				console.log('entered popup')
 				if (err) {
