@@ -21,8 +21,9 @@ Ext.define('MobileJudge.view.email.RefineSelection', {
 		{
 			xtype: 'searchfilterwizard',
 			maxWidth: 400,
-			fieldLabel: 'Search',
+			fieldLabel: 'Search (must be cleared to proceed to next)',
 			labelWidth: 50,
+			labelAlign: 'top',
 			bind: {
 				storeStudents: '{students}',
 				storeJudges: '{judges}'

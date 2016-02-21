@@ -104,11 +104,38 @@ Ext.define('MobileJudge.view.email.SendController', {
 	},
 
 	onStudentsLoaded: function(selModel, records) {
+	
 		this.model.set('selectedStudents', records);
+		if(this.view.down('searchfilterwizard').triggers.clear.hidden === false)
+		{
+			this.model.set('hasSearched',true);
+			this.model.set('canMoveNext', false);
+		}
+		else
+		{
+			this.model.set('hasSearched',false);
+			this.model.set('canMoveNext',true);
+		}
+
+		console.log(this.model.get('hasSearched'));
+		console.log(this.model.get('canMoveNext'));
 	},
 
 	onJudgesLoaded: function(store, records) {
 		this.model.set('selectedJudges', records);
+		if(this.view.down('searchfilterwizard').triggers.clear.hidden === false)
+		{
+			this.model.set('hasSearched',true);
+			this.model.set('canMoveNext', false);
+		}
+		else
+		{
+			this.model.set('hasSearched',false);
+			this.model.set('canMoveNext',true);
+		}
+
+		console.log(this.model.get('hasSearched'));
+		console.log(this.model.get('canMoveNext'));
 	},
 
 	onExtraSelectionChange: function(store, records) {
@@ -354,6 +381,8 @@ Ext.define('MobileJudge.view.email.SendController', {
 				function(choice){
 					if(choice !='yes') return;
 		var panel = button.up('panel');
+		me.model.set('hasSearched',false);
+		me.model.set('canMoveNext',true);
 		me.model.set('atEnd', false);
 		me.navigate(button, panel, 'prev');
 	});
