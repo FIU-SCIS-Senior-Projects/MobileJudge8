@@ -56,7 +56,8 @@ module.exports = function(server, db) {
 				break;
 
 			case 3:
-				console.log('testing case 3 output');
+				console.log('testing case 3 output' + req);
+				console.log(JSON.stringify(req));
 				model = db.user;
 				model.findById(req.user.id).then(function (user) {
 					if(req.params.parsedData!=null){
