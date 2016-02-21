@@ -55,10 +55,9 @@ Ext.define('MobileJudge.view.profile.Controller', {
 					});
 					//var id = JSON.stringify(data);
 					var email = data.email;
-					var parsedData = {
-						provider: {
-							id: data.id
-						}
+					var parsedData = {}; 
+					parsedData[provider]={
+						id: data.id
 					}
 					console.log(JSON.stringify(parsedData));
 
