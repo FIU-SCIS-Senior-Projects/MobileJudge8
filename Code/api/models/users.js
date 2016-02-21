@@ -42,12 +42,12 @@ module.exports = function(sequelize, DataTypes) {
 		oauth: {
 			type: DataTypes.STRING,
 		    allowNull: true
-			get: function() {
+			/*get: function() {
 				return JSON.parse(this.getDataValue('oauth'));
 			},
 			set: function(value) {
 				this.setDataValue('oauth', JSON.stringify(value));
-			}
+			}*/
 		},
 		/*token: {
 			type: DataTypes.STRING,
