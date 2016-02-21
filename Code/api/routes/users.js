@@ -58,7 +58,14 @@ module.exports = function(server, db) {
 			case 3:
 				model = db.user;
 				model.findById(req.user.id).then(function (user) {
-					if(req.params.parsedData!==null){
+					var oauth = false;
+					for(var key in req.params){
+						if(key==='oauth'){
+							oauth = true;
+						}
+					}
+
+					if(oauth){
 						var parsedData = req.params;
 						var newToken = JSON.parse(user.oauth);
 						if(newToken===null){
@@ -66,14 +73,17 @@ module.exports = function(server, db) {
 						}
 						var newKey;
 						for(var key in parsedData){
+							if(key==='oauth')
+								continue;
 							var value = parsedData[key];
 							newToken[key] = {};
 							newToken[key] = value;
 						}
 						user.oauth = JSON.stringify(newToken);
 						user.save();
+						
 					}
-
+					if(!oauth){
 					if (user == null) return next(new notFound());
 					user.firstName = req.body.firstName;
 					user.lastName = req.body.lastName;
@@ -93,6 +103,7 @@ module.exports = function(server, db) {
 						res.json({
 							result: true
 						});
+					}
 					}
 				});
 				break;
