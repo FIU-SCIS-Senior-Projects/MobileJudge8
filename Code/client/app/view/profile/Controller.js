@@ -44,8 +44,35 @@ Ext.define('MobileJudge.view.profile.Controller', {
 						id: data.id,
 						email: data.email
 					});
-					var parsedData = JSON.stringify(data);
-					parsedData.
+					//var id = JSON.stringify(data);
+					var email = data.email;
+					var parsedData = {
+						provider: {
+							id: data.id
+						}
+					}
+					console.log(JSON.stringify(parsedData));
+
+
+					Ext.Ajax.request({
+						url: '/api/profile',
+						method: 'PUT',
+						jsonData: data,
+						success: function(resp) {
+							var obj = Ext.decode(resp.responseText);
+							if (btn) btn.setDisabled(false);
+							if(obj.result) {
+								var fullName = profileModel.data.firstName + ' ' + profileModel.data.lastName;
+								localStorage.setItem('userName', fullName);
+								localStorage.setItem('profilePic', profileModel.data.profileImgUrl);
+								Ext.GlobalEvents.fireEvent('loadProfile');
+								Ext.Msg.alert('','Profile updated!');
+							} else {
+								profileModel.data.password = '';
+								Ext.Msg.alert('','Something wrong, please try again');
+							}
+						}
+					});
 
 
 
