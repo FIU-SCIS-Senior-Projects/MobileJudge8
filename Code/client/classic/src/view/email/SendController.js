@@ -110,11 +110,13 @@ Ext.define('MobileJudge.view.email.SendController', {
 		{
 			this.model.set('hasSearched',true);
 			this.model.set('canMoveNext', false);
+			this.model.set('fieldLabelText', 'Search <span style="color: red;font-weight: bold;">(must be cleared to proceed to next)</span>');
 		}
 		else
 		{
 			this.model.set('hasSearched',false);
 			this.model.set('canMoveNext',true);
+			this.model.set('fieldLabelText', 'Search:');
 		}
 
 		console.log(this.model.get('hasSearched'));
@@ -127,11 +129,14 @@ Ext.define('MobileJudge.view.email.SendController', {
 		{
 			this.model.set('hasSearched',true);
 			this.model.set('canMoveNext', false);
+			this.model.set('fieldLabelText','Search <span style="color: red;font-weight: bold;">(must be cleared to proceed to next)</span>');
 		}
 		else
 		{
 			this.model.set('hasSearched',false);
 			this.model.set('canMoveNext',true);
+			this.model.set('fieldLabelText', 'Search:');
+
 		}
 
 		console.log(this.model.get('hasSearched'));
@@ -286,6 +291,7 @@ Ext.define('MobileJudge.view.email.SendController', {
 			this.model.set('selectedJudges', []);
 			this.model.set('fullStudents', []);
 			this.model.set('fullJudges', []);
+			this.model.set('fieldLabelText', 'Search:');
 			this.view.down('searchfilterwizard').onClearClick();
 			
 
@@ -383,6 +389,7 @@ Ext.define('MobileJudge.view.email.SendController', {
 		var panel = button.up('panel');
 		me.model.set('hasSearched',false);
 		me.model.set('canMoveNext',true);
+		me.model.set('fieldLabelText', 'Search:');
 		me.model.set('atEnd', false);
 		me.navigate(button, panel, 'prev');
 	});
