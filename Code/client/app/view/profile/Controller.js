@@ -3,6 +3,7 @@ Ext.define('MobileJudge.view.profile.Controller', {
     alias: 'controller.myProfile',
 
 	model: null,
+	loginInProcess: false,
 
 	init: function(view) {
 		this.model = view.getViewModel();
@@ -23,6 +24,39 @@ Ext.define('MobileJudge.view.profile.Controller', {
 		});
 	},
 	
+	onLinkAccount: function(){
+		$('.btn-oauth').click(function(e) {
+			e.preventDefault();
+			var cls = e.currentTarget.className.split(' '), provider = cls.pop();
+			provider = (provider == 'x-btn-over' ? cls.pop() : provider).split('-')[2];
+
+			if (me.loginInProcess) return;
+			me.loginInProcess = true;
+			OAuth.popup(provider, function(err, res) {
+				if (err) {
+					me.loginInProcess = false;
+					Ext.Msg.alert("Error", Ext.isString(err) ? err : err.message);
+				}
+				else res.me().done(function (data) {
+					console.log(data);
+					me.requestToken(win, {
+						provider: provider,
+						id: data.id,
+						email: data.email
+					});
+					var parsedData = JSON.stringify(data);
+					parsedData.
+
+
+
+
+				});
+			});
+
+
+		});
+	}
+
 	updateProfile: function(btn) {
 		var me = this;
 		var profileModel = this.model;
@@ -68,6 +102,32 @@ Ext.define('MobileJudge.view.profile.Controller', {
 				} else {
 					profileModel.data.password = '';
 					Ext.Msg.alert('','Something wrong, please try again');
+				}
+			}
+		});
+	},
+
+	requestToken: function(win, data) {
+		var me = this;
+
+		win.mask();
+		Ext.Ajax.request({
+			url: '/api/login',
+			method: 'POST',
+			jsonData: data,
+			callback: function() {
+				me.loginInProcess = false;
+			},
+			success: function(resp) {
+				var obj = Ext.decode(resp.responseText);
+				win.unmask();
+				if (!obj.result) {
+					Ext.Msg.alert("Error", obj.error);
+				}
+				else {
+					Ext.Object.each(obj.profile, localStorage.setItem, localStorage);
+					localStorage.setItem('token', obj.token);
+					Ext.GlobalEvents.fireEvent('login');
 				}
 			}
 		});
