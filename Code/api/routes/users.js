@@ -59,12 +59,9 @@ module.exports = function(server, db) {
 				console.log('testing case 3 output');
 				model = db.user;
 				model.findById(req.user.id).then(function (user) {
-
-
-
-					if(req.params.parsedData)
-
-
+					if(req.params.parsedData!=null){
+						console.log('as expected');
+					}
 
 					if (user == null) return next(new notFound());
 					user.firstName = req.body.firstName;
