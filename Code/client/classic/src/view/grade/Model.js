@@ -1,3 +1,6 @@
+/**
+ * Created by rodolfo on 1/29/16.
+ */
 Ext.define('MobileJudge.view.grade.Model', {
 	extend: 'Ext.app.ViewModel',
 	alias: 'viewmodel.grade',
@@ -46,6 +49,21 @@ Ext.define('MobileJudge.view.grade.Model', {
 		locations: {
 			type: 'locations',
 			storeId: 'locations'
+		}
+        ,
+        grades: {
+			type: 'studentGrades',
+			storeId: 'studentGrades',
+            listeners: {
+				load: 'loadStudentsGrades'
+			}
+		},
+        studentgradesview: {
+			type: 'studentgradesview',
+			storeId: 'studentgradesview'//,
+            // listeners: {
+			// 	load: 'loadStudentsGrades'
+			// }
 		}
 	}
 });

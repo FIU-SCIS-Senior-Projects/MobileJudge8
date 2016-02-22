@@ -8,12 +8,31 @@ Ext.define('MobileJudge.view.grade.Students', {
 		'Ext.form.field.Checkbox',
 		'Ext.form.field.Number',
 		'Ext.form.field.Text',
-		'Ext.toolbar.Toolbar'
+		'Ext.toolbar.Toolbar',
+        'Ext.Viewport'
 	],
 
-	bind: '{students}',
-	references: 'gridStudents',
+	bind: '{studentgradesview}',
+    references: 'gridStudents',
 
+    plugins: [
+        Ext.create('Ext.grid.plugin.CellEditing', {
+            clicksToEdit: 1
+        })
+    ], 
+    listeners: {
+        painted: 'loadStudentsGrades',
+        itemClick: function(dv, record, item, index, e){
+            this.data = record;
+        },
+        cellclick: function(iView, iCellEl, iColIdx, iStore, iRowEl, iRowIdx, iEvent){
+            var zRec = iColIdx;
+            if(zRec < 3)
+                Ext.widget('grademodal').show().loadData(this.data);
+            console.log(iRowEl);
+        }
+    }, 
+    
 	dockedItems: [
 		{
 			xtype: 'toolbar',
@@ -68,7 +87,6 @@ Ext.define('MobileJudge.view.grade.Students', {
 					text: 'Sync',
 					handler: 'onStudentsLoad'
 				},
-
 				{
 					ui: 'soft-blue',
 					glyph:'',
@@ -87,66 +105,47 @@ Ext.define('MobileJudge.view.grade.Students', {
 		}
 	],
 	columns: [
-		{
+        {
 			xtype: 'gridcolumn',
-			width: 85,
-			dataIndex: 'id',
-			hideable: false,
-			text: 'PantherID'
+			dataIndex: 'projectName',
+			text: 'Project',
+			flex: 1
 		},
-		{
-			xtype: 'gridcolumn',
-			renderer: function(value) {
-				return "<img class='profilePic' src='" + value + "' alt='Profile Pic' height='40px' width='40px'>";
-			},
-			width: 75,
-			dataIndex: 'profileImgUrl',
-			sortable: false,
-			hideable: false,
-			text: ''
-		},
-		{
+        {
 			xtype: 'gridcolumn',
 			dataIndex: 'fullName',
 			text: 'Name',
 			flex: 1
 		},
-		{
-			xtype: 'gridcolumn',
-			dataIndex: 'email',
-			text: 'Email',
-			flex: 1
-		},
-		{
-			xtype: 'gridcolumn',
-			dataIndex: 'project',
-			text: 'Project',
-			flex: 2
-		},
-		{
+        {
 			xtype: 'gridcolumn',
 			dataIndex: 'grade',
 			text: 'Grade',
-            editor: {
-				xtype: 'textfield',
-				allowBlank: false
-			},
-			width: 80
+			flex: 1
 		},
-		{
-			xtype: 'actioncolumn',
-			items: [
-				{
-					iconCls: 'x-fa fa-close',
-					tooltip: 'Delete',
-					handler: 'onUserDelete'
-				}
-			],
-
-			width: 40,
-			dataIndex: 'bool',
-			sortable: false,
-			hideable: false
+        { 
+			xtype: 'gridcolumn',
+			dataIndex: 'gradeStatus',
+			text: 'Status',
+			flex: 1,
+            editor: {
+                xtype: 'combo',
+                editable: false,
+                store:[
+                    'Accepted',
+                    'Rejected',
+                    'Pending'
+                ],
+                listeners: {
+                    onUpdate: function(iView, iCellEl, iColIdx, iRecord, iRowEl, iRowIdx, iEvent){
+                        //console.log(gridPanel.getSelectionModel().getCurrentPosition());
+                        console.log(iRecord);
+                    },
+                    onCancel: function(iView, iCellEl, iColIdx, iRecord, iRowEl, iRowIdx, iEvent){
+                        
+                    }
+                }
+            }
 		}
 	]
 });

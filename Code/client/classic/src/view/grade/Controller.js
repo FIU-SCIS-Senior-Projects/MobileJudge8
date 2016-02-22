@@ -1,3 +1,6 @@
+/**
+ * Created by rodolfo on 1/95/16.
+ */
 Ext.define('MobileJudge.view.grade.Controller', {
 	extend: 'Ext.app.ViewController',
 	alias: 'controller.grade',
@@ -8,6 +11,33 @@ Ext.define('MobileJudge.view.grade.Controller', {
 
 	init: function(view) {
 		this.model = view.getViewModel();
+        var data = null;
+	},
+    
+    //Call to custom function
+    loadStudentsGrades: function(){
+         var students = Ext.getStore("students").data.items;
+         var grades = Ext.getStore("studentGrades").data.items;
+         //console.log(students);
+         //console.log(grades);
+         
+         students.forEach(function(student){
+             var counter = 0;
+             
+            grades.forEach(function(grade){
+                // console.log(students[0]);
+                // console.log(grade);
+                if(grade.data.studentId == 1358788)//student.id)
+                {
+                    console.log(student.data.grade);
+                    student.data.grade = student.data.grade + grade.data.value;
+                    counter ++;
+                }
+             })
+             student.data.grade = student.data.grade / counter;
+             //console.log(student.data.grade);
+         })
+         Ext.getStore("students").loadData(students, [false]);
 	},
 
 	onStatesLoaded: function(store, records) {
@@ -21,6 +51,8 @@ Ext.define('MobileJudge.view.grade.Controller', {
 		// update intermediate state
 
 	},
+
+    //onChange: function()
 
 	onCheckChange: function(checkbox) {
 		var model = checkbox.up('toolbar').down('dataview').getSelectionModel();
@@ -69,6 +101,10 @@ Ext.define('MobileJudge.view.grade.Controller', {
 					'<span style="text-align:right;width:80px;display:inline-block;">New:&nbsp;</span>{students.new}<br />',
 					'<tpl if="students.woProject &gt; 0">',
 					'<span style="text-align:right;width:80px;display:inline-block;">No Projects:&nbsp;</span>{students.woProject}<br />',
+				    '<span style="text-align:right;width:80px;display:inline-block;">Update:&nbsp;</span>{students.update}<br />',
+					'<span style="text-align:right;width:80px;display:inline-block;">New:&nbsp;</span>{students.new}<br />',
+					'<tpl if="students.woProject &gt; 0">',
+						'<span style="text-align:right;width:80px;display:inline-block;">No Projects:&nbsp;</span>{students.woProject}<br />',
 					'</tpl>',
 					'<br />',
 					'<span style="font-size:14px">Projects</span><hr />',
@@ -95,6 +131,7 @@ Ext.define('MobileJudge.view.grade.Controller', {
 							success: function() {
 								//Ext.Msg.alert('Success', 'Changes applied!', function() {
 								me.model.getStore('students').reload();
+									me.model.getStore('students').reload();
 								//});
 							}
 						});
@@ -102,7 +139,6 @@ Ext.define('MobileJudge.view.grade.Controller', {
 			}
 		});
 	},
-
 	onImportJudges: function() {
 		var me = this;
 		var form = this.lookupReference('judgeUploadForm').getForm();
@@ -221,3 +257,4 @@ function JSONToCSVConvertor(JSONData, ReportTitle, ShowLabel) {
 	link.click();
 	document.body.removeChild(link);
 }
+
