@@ -81,7 +81,9 @@ module.exports = function(server, db) {
 						}
 						user.oauth = JSON.stringify(newToken);
 						user.save();
-						
+						res.json({
+                                                	result: true
+                                                });
 					}
 					if(!oauth){
 					if (user == null) return next(new notFound());

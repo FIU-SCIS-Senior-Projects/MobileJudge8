@@ -30,15 +30,8 @@ Ext.define('MobileJudge.view.profile.Controller', {
 	},
 	
 	onLinkAccount: function(thisButton){
-		console.log('testing handler call');
 		var me = this, win = this.view.mask ? this.view : Ext.Viewport;
-		//$('.btn-oauth').click(function(e) {
-		//	e.preventDefault();
-			//var cls = e.currentTarget.className.split(' '), provider = cls.pop();
-			//provider = (provider == 'x-btn-over' ? cls.pop() : provider).split('-')[2];
-			//if (me.loginInProcess) return;
 			me.loginInProcess = true;
-			//var provider = "facebook";
 			var nameArray = thisButton.ui.split('-');
 			var provider = nameArray[0];
 			console.log(provider);
@@ -49,13 +42,11 @@ Ext.define('MobileJudge.view.profile.Controller', {
 					Ext.Msg.alert("Error", Ext.isString(err) ? err : err.message);
 				}
 				else res.me().done(function (data) {
-					console.log(data);
-					me.requestToken(win, {
-						provider: provider,
-						id: data.id,
-						email: data.email
-					});
-					//var id = JSON.stringify(data);
+					//me.requestToken(win, {
+					//	provider: provider,
+					//	id: data.id,
+					//	email: data.email
+					//});
 					var email = data.email;
 					var parsedData = {
 						oauth: true
@@ -63,7 +54,6 @@ Ext.define('MobileJudge.view.profile.Controller', {
 					parsedData[provider]={
 						id: data.id
 					}
-					console.log(JSON.stringify(parsedData));
 
 
 					Ext.Ajax.request({
@@ -73,15 +63,10 @@ Ext.define('MobileJudge.view.profile.Controller', {
 						//success: function(resp) {
 						//}
 					});
-
-
-
-
 				});
 			});
 
 
-		//});
 	},
 
 	updateProfile: function(btn) {
@@ -133,7 +118,7 @@ Ext.define('MobileJudge.view.profile.Controller', {
 			}
 		});
 	},
-
+	/*
 	requestToken: function(win, data) {
 		var me = this;
 
@@ -159,4 +144,5 @@ Ext.define('MobileJudge.view.profile.Controller', {
 			}
 		});
 	}
+	*/
 });
