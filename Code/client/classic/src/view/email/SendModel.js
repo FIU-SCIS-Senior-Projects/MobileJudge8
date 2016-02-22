@@ -38,6 +38,8 @@ Ext.define('MobileJudge.view.email.SendModel', {
 	data: {
 		atStart: true,
 		atEnd: false,
+		hasSearched: false,
+		fieldLabelText: 'Search:',
 
 		filters: [],
 		extraEmailText: '',
@@ -60,6 +62,7 @@ Ext.define('MobileJudge.view.email.SendModel', {
 	formulas: {
 		caption: function(get) { return get('atEnd') ? 'Send' : 'Next'; },
 		studentsSelection: function(get) { return get('selectedStudents'); },
+		fieldLabelTextSelection: function(get) {return get('fieldLabelText');},
 
 		fullStudentsSelection: function(get) { return get('fullStudents');},
 		fullJudgesSelection: function(get) { return get('fullJudges');},
@@ -142,6 +145,7 @@ Ext.define('MobileJudge.view.email.SendModel', {
 				atStart: '{atStart}',
 				atEnd: '{atEnd}',
 				filters: '{filters}',
+				hasSearched:  '{hasSearched}',
 				extraEmails: '{extraEmailArray}',
 				template: '{template}',
 				selectedStudents: '{selectedStudents}',
@@ -149,9 +153,11 @@ Ext.define('MobileJudge.view.email.SendModel', {
 				selectedExtra: '{selectedExtra}'
 			},
 			get: function (data) {
+				console.log('called get');
+				if(data.hasSearched) return false;
 				if (data.atStart) return data.filters.length > 0 || data.extraEmails.length > 0;
 				if (data.atEnd) return !Ext.isEmpty(data.template);
-				return (data.selectedStudents.length + data.selectedJudges.length + data.selectedExtra.length) > 0;
+				return (data.selectedStudents.length + data.selectedJudges.length + data.selectedExtra.length) > 0 && !data.hasSearched;
 			}
 		}
 	}
