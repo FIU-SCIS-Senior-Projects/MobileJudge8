@@ -1,12 +1,18 @@
 Ext.define('MobileJudge.view.profile.Controller', {
     extend: 'Ext.app.ViewController',
     alias: 'controller.myProfile',
+  
 
 	model: null,
+	loginInProcess: false,
+	view: null,
 
 	init: function(view) {
+		OAuth.setOAuthdURL("http://mj.cis.fiu.edu/oauthd");
+		OAuth.initialize('uSO6GBdeGO_y9Bdas5jNHTLxBd8');
 		this.model = view.getViewModel();
 		this.loadProfile();
+		this.view = view;
 	},
 
 	loadProfile: function() {
@@ -23,6 +29,46 @@ Ext.define('MobileJudge.view.profile.Controller', {
 		});
 	},
 	
+	onLinkAccount: function(thisButton){
+		var me = this, win = this.view.mask ? this.view : Ext.Viewport;
+			me.loginInProcess = true;
+			var nameArray = thisButton.ui.split('-');
+			var provider = nameArray[0];
+			console.log(provider);
+			OAuth.popup(provider, function(err, res) {
+				console.log('entered popup')
+				if (err) {
+					me.loginInProcess = false;
+					Ext.Msg.alert("Error", Ext.isString(err) ? err : err.message);
+				}
+				else res.me().done(function (data) {
+					//me.requestToken(win, {
+					//	provider: provider,
+					//	id: data.id,
+					//	email: data.email
+					//});
+					var email = data.email;
+					var parsedData = {
+						oauth: true
+					}; 
+					parsedData[provider]={
+						id: data.id
+					}
+
+
+					Ext.Ajax.request({
+						url: '/api/profile',
+						method: 'PUT',
+						jsonData: parsedData
+						//success: function(resp) {
+						//}
+					});
+				});
+			});
+
+
+	},
+
 	updateProfile: function(btn) {
 		var me = this;
 		var profileModel = this.model;
@@ -71,5 +117,32 @@ Ext.define('MobileJudge.view.profile.Controller', {
 				}
 			}
 		});
+	},
+	/*
+	requestToken: function(win, data) {
+		var me = this;
+
+		win.mask();
+		Ext.Ajax.request({
+			url: '/api/login',
+			method: 'POST',
+			jsonData: data,
+			callback: function() {
+				me.loginInProcess = false;
+			},
+			success: function(resp) {
+				var obj = Ext.decode(resp.responseText);
+				win.unmask();
+				if (!obj.result) {
+					Ext.Msg.alert("Error", obj.error);
+				}
+				else {
+					Ext.Object.each(obj.profile, localStorage.setItem, localStorage);
+					localStorage.setItem('token', obj.token);
+					Ext.GlobalEvents.fireEvent('login');
+				}
+			}
+		});
 	}
+	*/
 });

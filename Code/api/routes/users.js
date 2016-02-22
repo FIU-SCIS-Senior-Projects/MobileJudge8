@@ -10,11 +10,11 @@ module.exports = function(server, db) {
 			case 1:
 				model = db.student;
 				break;
-				
+
 			case 2:
 				model = db.judge;
 				break;
-				
+
 			case 3:
 				model = db.user;
 				break;
@@ -25,7 +25,7 @@ module.exports = function(server, db) {
 			next();
 		});
 	});
-	
+
 	server.put(apiPrefix + '/profile', function (req, res, next) {
 		var model/* = req.user.role == 1 ? db.student : db.judge*/;
 		switch(req.user.role) {
@@ -41,7 +41,7 @@ module.exports = function(server, db) {
 					});
 				});
 				break;
-				
+
 			case 2:
 				model = db.judge;
 				model.findById(req.user.id).then(function (user) {
@@ -54,10 +54,38 @@ module.exports = function(server, db) {
 					});
 				});
 				break;
-				
+
 			case 3:
 				model = db.user;
 				model.findById(req.user.id).then(function (user) {
+					var oauth = false;
+					for(var key in req.params){
+						if(key==='oauth'){
+							oauth = true;
+						}
+					}
+
+					if(oauth){
+						var parsedData = req.params;
+						var newToken = JSON.parse(user.oauth);
+						if(newToken===null){
+							newToken = {};
+						}
+						var newKey;
+						for(var key in parsedData){
+							if(key==='oauth')
+								continue;
+							var value = parsedData[key];
+							newToken[key] = {};
+							newToken[key] = value;
+						}
+						user.oauth = JSON.stringify(newToken);
+						user.save();
+						res.json({
+                                                	result: true
+                                                });
+					}
+					if(!oauth){
 					if (user == null) return next(new notFound());
 					user.firstName = req.body.firstName;
 					user.lastName = req.body.lastName;
@@ -77,6 +105,7 @@ module.exports = function(server, db) {
 						res.json({
 							result: true
 						});
+					}
 					}
 				});
 				break;
