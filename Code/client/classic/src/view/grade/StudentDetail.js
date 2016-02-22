@@ -8,14 +8,14 @@ Ext.define('MobileJudge.view.grade.Wizard', {
         'Ext.layout.container.Accordion',
 	    'Ext.layout.container.Card'
     ],
-    
-    // cls: 'wizarddone',
-    // userCls: 'big-50 small-100',
-    
-    //layout: 'card',
-    tpl: [
-            '<p>Id: {id} - Name: {fullName} - Project: {project} - Grade: {grade}</p>'
-        ],
+
+    // tpl: [
+    //     '<div>'+
+    //         '<p>Name: {fullName}</p>'+
+    //         '<p>Project: {projectName}</p>'+
+    //         '<p>Grade: {grade}</p>' +
+    //      '</div>'
+    //     ],
     
     bodyPadding: 10,
     scrollable: true,
@@ -23,56 +23,89 @@ Ext.define('MobileJudge.view.grade.Wizard', {
     
     width: 500,
     height: 400,
-    title: 'Student Detail',
+    title: 'Student Grades by Judges',
     initComponent: function() {
         this.callParent(arguments);
     },
 
-    loadData: function(rec){
-        // controller = new MobileJudge.view.people.PeopleController();
-        //controller.loadStudentInfoWithJudgeInfo();
-        this.update(rec.data);
-        //this.update(rec.data.name + ' - ' + rec.data.email);
+    loadData: function(record){
+        this.update(record.data);
         Ext.create('studentsdetails');
-        // Ext.getStore('studentGrades').filterBy(function(rec, id) {
-        //     if (Ext.Array.indexOf(newValue,rec.get('studentId')) >= 0)
-        //         return true;
-        //     else
-        //         return false;
-        //     });
-        //MobileJudge.app.getController('PeopleController').loadStudentInfoWithJudgeInfo(rec.data.studentId);        
     },
     
     items: [
+        {
+            tpl: [
+                '<div>'+
+                    '<p>Name: {fullName}</p>'+
+                    '<p>Project: {projectName}</p>'+
+                    '<p>Grade: {grade}</p>' +
+                '</div>'
+            ],    
+        },
         {
             xtype: 'studentsdetails'
         }
     ]
 })
 
-
-
-
 Ext.define('MobileJudge.view.grade.Studentsdetails', {
     extend: 'Ext.grid.Panel',
     alias: 'widget.studentsdetails',
     title: 'Simpsons',
-    store: 'studentgradesview',
+    store: 'judgesgrades',
     initComponent: function() {
          this.callParent()
     },
     columns: [{
-        text: 'Id',
-        dataIndex: 'judgeId'
+        xtype: 'gridcolumn',
+        text: 'Judge',
+        dataIndex: '',
+        flex: 2,
+        width:120
+    },{
+        xtype: 'gridcolumn',
+        text: 'Grade',
+        dataIndex: '',
+        flex: 2,
+        width:120
+    },{
+        xtype: 'gridcolumn',
+        text: 'Status',
+        dataIndex: '',
+        flex: 2,
+        width:120
     }],
     floating: false,
     draggable: false,
     modal: true,
     closable: false,
-    height: 200,
-    width: 300,
+    height: 500,
+    width: 600,
     renderTo: Ext.get('grademodal'),
 });
+
+
+
+Ext.create('Ext.data.Store', {
+        storeId:'resumedStore',
+        fields:['judgeName', 'grade', 'status'],
+        data:{'items':[
+            { 'name': 'Lisa',  "email":"lisa@simpsons.com",  "phone":"555-111-1224"  },
+            { 'name': 'Bart',  "email":"bart@simpsons.com",  "phone":"555-222-1234" },
+            { 'name': 'Homer', "email":"home@simpsons.com",  "phone":"555-222-1244"  },
+            { 'name': 'Marge', "email":"marge@simpsons.com", "phone":"555-222-1254"  }
+        ]},
+        proxy: {
+            type: 'memory',
+            reader: {
+                type: 'json',
+                root: 'items'
+            }
+        }
+    });
+
+
 
 
 

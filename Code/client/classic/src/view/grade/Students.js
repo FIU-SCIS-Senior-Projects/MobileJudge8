@@ -18,18 +18,22 @@ Ext.define('MobileJudge.view.grade.Students', {
     plugins: [
         Ext.create('Ext.grid.plugin.CellEditing', {
             clicksToEdit: 1
+        }),
+        Ext.create('Ext.grid.plugin.RowEditing', {
+            clicksToEdit: 1
         })
     ], 
     listeners: {
         painted: 'loadStudentsGrades',
-        itemClick: function(dv, record, item, index, e){
+        itemClick: function (dv, record, item, index, e){
             this.data = record;
         },
-        cellclick: function(iView, iCellEl, iColIdx, iStore, iRowEl, iRowIdx, iEvent){
+        celldblclick: function(iView, iCellEl, iColIdx, iStore, iRowEl, iRowIdx, iEvent){
             var zRec = iColIdx;
+            
             if(zRec < 3)
                 Ext.widget('grademodal').show().loadData(this.data);
-            console.log(iRowEl);
+            console.log(iRowIdx);
         }
     }, 
     
@@ -136,16 +140,42 @@ Ext.define('MobileJudge.view.grade.Students', {
                     'Rejected',
                     'Pending'
                 ],
-                listeners: {
-                    onUpdate: function(iView, iCellEl, iColIdx, iRecord, iRowEl, iRowIdx, iEvent){
-                        //console.log(gridPanel.getSelectionModel().getCurrentPosition());
-                        console.log(iRecord);
-                    },
-                    onCancel: function(iView, iCellEl, iColIdx, iRecord, iRowEl, iRowIdx, iEvent){
-                        
-                    }
-                }
+                // listeners: {
+                //     change: function(iView, iCellEl, iColIdx, iRecord, iRowEl, iRowIdx, iEvent){
+                //         //console.log(gridPanel.getSelectionModel().getCurrentPosition());
+                //         console.log(iRecord);
+                //     },
+                //     onCancel: function(iView, iCellEl, iColIdx, iRecord, iRowEl, iRowIdx, iEvent){
+                //         var grades = Ext.getStore("studentGrades").data.items;
+                //         grades.forEach(function(element) {
+                //             //if()
+                //         }, this);
+                //     },
+                //     // onItemUpdate: function(){
+                //     //     alert("It works");
+                //     // }
+                // }
             }
 		}
 	]
 });
+
+Ext.override(Ext.grid.RowEditor, {
+        completeEdit: function() {
+        var me = this,
+            form = me.getForm();
+
+        if (!form.isValid()) {
+            return false;
+        }
+        
+        alert("Got it ");
+        
+        me.completing = true;
+        form.updateRecord(me.context.record);
+        me.hide();
+        me.completing = false;
+        return true;
+     }
+    });
+
