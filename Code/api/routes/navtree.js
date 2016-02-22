@@ -18,6 +18,13 @@ module.exports = function(server, db) {
 							viewType: 'eventmap',
 							routeId: 'map',
 							leaf: true
+						},
+						{
+							text: 'Profile',
+							viewType: 'myProfile',
+							iconCls: 'x-fa fa-user',
+							routeId: 'profile',
+							leaf: true
 						}
 					]
 				});
@@ -38,6 +45,13 @@ module.exports = function(server, db) {
 							iconCls: 'x-fa fa-map-marker',
 							viewType: 'eventmap',
 							routeId: 'map',
+							leaf: true
+						},
+						{
+							text: 'Profile',
+							viewType: 'myProfile',
+							iconCls: 'x-fa fa-user',
+							routeId: 'profile',
 							leaf: true
 						}
 					]
@@ -75,13 +89,6 @@ module.exports = function(server, db) {
 							leaf: true
 						},
 						{
-							text: 'Grade',
-							iconCls: 'x-fa fa-bar-chart',
-							viewType: 'grade',
-							routeId: 'grade',
-							leaf: true
-						},
-                        {
 							text: 'Stats',
 							iconCls: 'x-fa fa-bar-chart',
 							viewType: 'pageblank', //'charts',

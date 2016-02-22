@@ -7,6 +7,7 @@ var epilogue = require('epilogue'),
 module.exports = function(server, db) {
 
 	server.post(apiPrefix + '/judges/import', function(req, res, next) {
+	console.log('DONT EVEN DARE SHOW UP');
 		if (req.files === undefined || req.files.judgesCsv === undefined) {
 			return next(new badRequest('missing file'));
 		}
@@ -84,6 +85,51 @@ module.exports = function(server, db) {
 				}))
 				.pipe(transform);
 		});
+	});
+	
+	server.put(apiPrefix + '/judges/:id', function(req, res) {
+		//save affiliation and location
+		db.judge.findById(req.params.id).then(function(user2) {
+			user2.title = req.params.title ? req.params.title : "";
+			user2.affiliation = req.params.affiliation ? req.params.affiliation : "";
+			user2.save();
+		});
+		//save state
+		if(req.params.state) {
+			db.user.findById(req.params.id).then(function(user) {
+				switch(req.params.state) {
+					case "Prospective":
+						user.state = 1;
+						break;
+					case "Invited":
+						user.state = 2;
+						break;
+					case "Rejected":
+						user.state = 3;
+						break;
+					case "Pending":
+						user.state = 4;
+						break;
+					case "Registered":
+						user.state = 5;
+						break;
+					case "Attended":
+						user.state = 6;
+						break;
+					case "Started Grading":
+						user.state = 7;
+						break;
+					case "Graded":
+						user.state = 8;
+						break;
+					case "Removed":
+						user.state = 12;
+						break;
+				}
+				user.save();
+			});
+		}
+		return res.send(true);
 	});
 
 	return epilogue.resource({

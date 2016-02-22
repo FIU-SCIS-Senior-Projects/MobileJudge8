@@ -12,10 +12,18 @@ Ext.define('MobileJudge.view.people.Judges', {
 	],
 
 	bind: '{judges}',
+	
+	plugins: [
+		{
+			ptype: 'rowediting',
+			pluginId: 'gridEditor',
+			listeners: {
+				cancelEdit: 'onQuestionCancelEdit'
+			}
+		}
+	],
 
 	dockedItems: [
-
-
 		{
 			xtype: 'toolbar',
 			dock: 'top',
@@ -24,7 +32,6 @@ Ext.define('MobileJudge.view.people.Judges', {
 					xtype: 'checkboxfield',
 					checked   : true,
 					handler:'onCheckChange'
-
 				},
 				{
 					xtype: 'dataview',
@@ -131,17 +138,38 @@ Ext.define('MobileJudge.view.people.Judges', {
 		{
 			dataIndex: 'title',
 			text: 'Title',
-			flex: 1
+			flex: 1,
+			editor: {
+				xtype: 'textfield'
+			}
 		},
 		{
 			dataIndex: 'affiliation',
 			text: 'Affiliation',
-			flex: 1
+			flex: 1,
+			editor: {
+				xtype: 'textfield'
+			}
 		},
 		{
 			dataIndex: 'state',
 			text: 'State',
-			width: 120
+			width: 120,
+			editor: {
+                xtype: 'combo',
+                editable: false,
+                store: [
+                	'Prospective',
+                	'Invited',
+                	'Rejected',
+                	'Pending',
+                	'Registered',
+                	'Attended',
+                	'Started Grading',
+                	'Graded',
+                	'Removed'
+                ]
+            }
 		},
 		{
 			xtype: 'actioncolumn',

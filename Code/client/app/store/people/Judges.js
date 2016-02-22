@@ -11,5 +11,6 @@ Ext.define('MobileJudge.store.people.Judges', {
 
 	remoteSort: true,
 	remoteFilter: true,
+	autoSync: true,
 	pageSize: 25
 });
