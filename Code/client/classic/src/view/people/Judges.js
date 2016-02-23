@@ -128,12 +128,18 @@ Ext.define('MobileJudge.view.people.Judges', {
 		{
 			dataIndex: 'fullName',
 			text: 'Name',
-			flex: 1
+			flex: 1,
+			editor: {
+				xtype: 'textfield'
+			}
 		},
 		{
 			dataIndex: 'email',
 			text: 'Email',
-			flex: 2
+			flex: 2,
+			editor: {
+				xtype: 'textfield'
+			}
 		},
 		{
 			dataIndex: 'title',

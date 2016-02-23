@@ -88,42 +88,62 @@ module.exports = function(server, db) {
 	
 	server.put(apiPrefix + '/judges/:id', function(req, res) {
 		//save affiliation and location
-		db.judge.findById(req.params.id).then(function(user2) {
-			user2.title = req.params.title ? req.params.title : "";
-			user2.affiliation = req.params.affiliation ? req.params.affiliation : "";
-			user2.save();
+		db.judge.findById(req.params.id).then(function(user) {
+			user.title = req.params.title ? req.params.title : "";
+			user.affiliation = req.params.affiliation ? req.params.affiliation : "";
+			user.save();
 		});
-		//save state
-		if(req.params.state) {
+		//save state . fullName . email if any
+		if(req.params.state || req.params.fullName || req.params.email) {
 			db.user.findById(req.params.id).then(function(user) {
-				switch(req.params.state) {
-					case "Prospective":
-						user.state = 1;
-						break;
-					case "Invited":
-						user.state = 2;
-						break;
-					case "Rejected":
-						user.state = 3;
-						break;
-					case "Pending":
-						user.state = 4;
-						break;
-					case "Registered":
-						user.state = 5;
-						break;
-					case "Attended":
-						user.state = 6;
-						break;
-					case "Started Grading":
-						user.state = 7;
-						break;
-					case "Graded":
-						user.state = 8;
-						break;
-					case "Removed":
-						user.state = 12;
-						break;
+				if(req.params.state) {
+					switch(req.params.state) {
+						case "Prospective":
+							user.state = 1;
+							break;
+						case "Invited":
+							user.state = 2;
+							break;
+						case "Rejected":
+							user.state = 3;
+							break;
+						case "Pending":
+							user.state = 4;
+							break;
+						case "Registered":
+							user.state = 5;
+							break;
+						case "Attended":
+							user.state = 6;
+							break;
+						case "Started Grading":
+							user.state = 7;
+							break;
+						case "Graded":
+							user.state = 8;
+							break;
+						case "Removed":
+							user.state = 12;
+							break;
+					}
+				}
+				if(req.params.email) {
+					user.email = req.params.email;
+				}
+				if(req.params.fullName) {
+					var firstName, lastName = '',
+					name = req.params.fullName.split(" ");
+					firstName = name[0];
+					if(name[1]) {
+						for(var i = 1; i < name.length; i++) {
+							lastName += name[i] + " ";
+						}
+						user.lastName = lastName;
+					}
+					user.firstName = firstName;
+				} else {
+					user.firstName = "";
+					user.lastName = "";
 				}
 				user.save();
 			});

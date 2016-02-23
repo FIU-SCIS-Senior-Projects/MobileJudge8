@@ -19,7 +19,6 @@ module.exports = function(server, db) {
 				model = db.user;
 				break;
 		}
-		console.log(model);
 		model.findById(req.user.id).then(function (user) {
 			if (user == null) return next(new notFound());
 			res.send(_.omit(user.toJSON(), ['oauth', 'password', 'grade']));

@@ -5,7 +5,7 @@ Ext.define('MobileJudge.model.people.Judge', {
 		{ name: 'id',               type: 'int', convert: null },
 		{ name: 'state',            type: 'string' },
 		{ name: 'abbr',             type: 'string' },
-		{ name: 'fullName',         type: 'string', persist: false },
+		{ name: 'fullName',         type: 'string' },
 		{ name: 'email',            type: 'string' },
 		{ name: 'profileImgUrl',    type: 'string' },
 		{ name: 'title',            type: 'string' },
