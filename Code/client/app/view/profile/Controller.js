@@ -36,7 +36,6 @@ Ext.define('MobileJudge.view.profile.Controller', {
 			var provider = nameArray[0];
 			console.log(provider);
 			OAuth.popup(provider, function(err, res) {
-				console.log('entered popup')
 				if (err) {
 					me.loginInProcess = false;
 					Ext.Msg.alert("Error", Ext.isString(err) ? err : err.message);
