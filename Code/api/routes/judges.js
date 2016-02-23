@@ -7,7 +7,6 @@ var epilogue = require('epilogue'),
 module.exports = function(server, db) {
 
 	server.post(apiPrefix + '/judges/import', function(req, res, next) {
-	console.log('DONT EVEN DARE SHOW UP');
 		if (req.files === undefined || req.files.judgesCsv === undefined) {
 			return next(new badRequest('missing file'));
 		}
