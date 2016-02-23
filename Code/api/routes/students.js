@@ -190,6 +190,6 @@ module.exports = function(server, db) {
 			param: 'query',
 			attributes: [ 'fullName', 'project', 'email' ]
 		},
-		endpoints: [apiPrefix + '/students', apiPrefix + '/students/:id']
+		endpoints: [apiPrefix + '/students']
 	});
 };

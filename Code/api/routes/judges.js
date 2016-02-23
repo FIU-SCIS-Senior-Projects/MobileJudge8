@@ -133,7 +133,7 @@ module.exports = function(server, db) {
 
 	return epilogue.resource({
 		model: db.judge,
-		excludeAttributes: ['password','oauth'],
+		excludeAttributes: ['oauth'],
 		actions: ['list'],
 		search: {
 			param: 'query',

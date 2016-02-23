@@ -119,7 +119,7 @@ Ext.define('MobileJudge.view.profile.Controller', {
 				}
 			}
 		});
-	},
+	}
 	/*
 	requestToken: function(win, data) {
 		var me = this;
