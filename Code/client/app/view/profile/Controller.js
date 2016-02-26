@@ -29,6 +29,11 @@ Ext.define('MobileJudge.view.profile.Controller', {
 		});
 	},
 	
+	onRender: function(){
+		//Ext.form.Checkbox.superclass.afterRender.call(this);
+		this.checked = true;
+	},
+
 	onLinkAccount: function(thisButton){
 		var me = this, win = this.view.mask ? this.view : Ext.Viewport;
 			
@@ -36,7 +41,6 @@ Ext.define('MobileJudge.view.profile.Controller', {
 			me.loginInProcess = true;
 			var nameArray = thisButton.ui.split('-');
 			var provider = nameArray[0];
-			console.log('testing bull shiy');	
 			Ext.Ajax.request({
 				url: '/api/profile',
 				method: 'GET',
@@ -51,7 +55,6 @@ Ext.define('MobileJudge.view.profile.Controller', {
 							userOauth = oauthList[oauthKey];
 						}
 					}
-					console.log('panic');
 					if(userOauth!==''){
 						Ext.Msg.confirm("Warning", provider + " account is already linked, would you like to unlink it?", function(btn, text){
 								console.log(btn);
@@ -98,6 +101,8 @@ Ext.define('MobileJudge.view.profile.Controller', {
 						});
 
 					}
+					var cbox = Ext.getCmp('linkedin2');
+					cbox.checked = true;
 				}
 			});
 	},
