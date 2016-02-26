@@ -31,13 +31,23 @@ Ext.define('MobileJudge.view.profile.Controller', {
 	
 	onRender: function(){
 		//Ext.form.Checkbox.superclass.afterRender.call(this);
-		this.checked = true;
+		Ext.Ajax.request({
+			url: '/api/profile',
+			method: 'GET',
+			success: function(resp){
+				 var profile = Ext.decode(resp.responseText);
+				 var userOauth = "";
+				 var oauthList = JSON.parse(profile['oauth']);
+				 for(var oauthKey in oauthList){
+					var checkbox = Ext.getCmp(oauthKey);
+					checkbox.setValue(true);	
+				 }
+			}
+		});
 	},
 
 	onLinkAccount: function(thisButton){
 		var me = this, win = this.view.mask ? this.view : Ext.Viewport;
-			
-
 			me.loginInProcess = true;
 			var nameArray = thisButton.ui.split('-');
 			var provider = nameArray[0];
@@ -48,19 +58,15 @@ Ext.define('MobileJudge.view.profile.Controller', {
 					var profile = Ext.decode(resp.responseText);
 					var userOauth = "";
 					var oauthList = JSON.parse(profile['oauth']);
-					console.log(JSON.stringify(profile));
 					for(var oauthKey in oauthList){
-						console.log(oauthKey);
 						if(oauthKey === provider){
 							userOauth = oauthList[oauthKey];
 						}
 					}
 					if(userOauth!==''){
 						Ext.Msg.confirm("Warning", provider + " account is already linked, would you like to unlink it?", function(btn, text){
-								console.log(btn);
 								if(btn=='yes'){
 									delete oauthList[provider];
-									console.log('testing alert' + oauthList);
 									oauthList['oauth'] =  true;
 									Ext.Ajax.request({
 										url: '/api/profile', 
@@ -68,6 +74,8 @@ Ext.define('MobileJudge.view.profile.Controller', {
 										jsonData: oauthList,
 										success: function (resp){
 											Ext.Msg.alert("Success!", provider + " account has been unlinked");
+											var checkbox = Ext.getCmp(provider);
+											checkbox.setValue(false);
 										}
 									});	
 								}
@@ -94,6 +102,8 @@ Ext.define('MobileJudge.view.profile.Controller', {
 									jsonData: parsedData,
 									success: function(resp){
 										 Ext.Msg.alert("Success", provider + " account as been successfully linked"); 
+										 var checkbox = Ext.getCmp(provider);
+										 checkbox.setValue(true);
 									}
 								});
 							});
