@@ -21,7 +21,7 @@ module.exports = function(server, db) {
 		}
 		model.findById(req.user.id).then(function (user) {
 			if (user == null) return next(new notFound());
-			res.send(_.omit(user.toJSON(), ['oauth', 'password', 'grade']));
+			res.send(_.omit(user.toJSON(), ['password', 'grade']));
 			next();
 		});
 	});
@@ -67,14 +67,13 @@ module.exports = function(server, db) {
 
 					if(oauth){
 						var parsedData = req.params;
-						var newToken = JSON.parse(user.oauth);
-						if(newToken===null){
-							newToken = {};
-						}
-						var newKey;
+						var newToken;
 						for(var key in parsedData){
 							if(key==='oauth')
 								continue;
+							if(newToken===null){
+								newToken = {};
+							}
 							var value = parsedData[key];
 							newToken[key] = {};
 							newToken[key] = value;
