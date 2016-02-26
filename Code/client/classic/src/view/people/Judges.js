@@ -1,6 +1,6 @@
 Ext.define('MobileJudge.view.people.Judges', {
 	extend: 'Ext.grid.Panel',
-	alias: 'widget.judges',
+	alias: ['widget.textclearfield', 'widget.judges'],
 
 	requires: [
 		'Ext.grid.plugin.RowEditing',
@@ -10,6 +10,8 @@ Ext.define('MobileJudge.view.people.Judges', {
 		'Ext.form.field.Text',
 		'Ext.toolbar.Toolbar'
 	],
+	
+	
 
 	bind: '{judges}',
 	
@@ -126,12 +128,20 @@ Ext.define('MobileJudge.view.people.Judges', {
 			text: ''
 		},
 		{
-			dataIndex: 'fullName',
-			text: 'Name',
+			dataIndex: 'firstName',
+			text: 'First Name',
 			flex: 1,
 			editor: {
 				xtype: 'textfield'
-			}
+			}	
+		},
+		{
+			dataIndex: 'lastName',
+			text: 'Last Name',
+			flex: 1,
+			editor: {
+				xtype: 'textfield'
+			}	
 		},
 		{
 			dataIndex: 'email',
@@ -139,6 +149,18 @@ Ext.define('MobileJudge.view.people.Judges', {
 			flex: 2,
 			editor: {
 				xtype: 'textfield'
+			}
+		},
+		{
+			text: 'Password',
+			dataIndex: 'password',
+			flex: 1,
+			renderer: function() {
+				return '<div style="color:#888888">Password not displayed</div>';
+			},
+			editor: {
+				xtype: 'textfield',
+				inputType:'password'
 			}
 		},
 		{

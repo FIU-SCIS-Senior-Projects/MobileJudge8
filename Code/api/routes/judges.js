@@ -2,6 +2,7 @@ var epilogue = require('epilogue'),
 	badRequest = require('restify').errors.BadRequestError,
 	fs = require('fs'),
 	csv = require('csv'),
+	crypt = require('../utils/crypt.js'),
 	_ = require('lodash');
 
 module.exports = function(server, db) {
@@ -87,14 +88,15 @@ module.exports = function(server, db) {
 	});
 	
 	server.put(apiPrefix + '/judges/:id', function(req, res) {
+		console.log(req.params);
 		//save affiliation and location
 		db.judge.findById(req.params.id).then(function(user) {
 			user.title = req.params.title ? req.params.title : "";
 			user.affiliation = req.params.affiliation ? req.params.affiliation : "";
 			user.save();
 		});
-		//save state . fullName . email if any
-		if(req.params.state || req.params.fullName || req.params.email) {
+		//save state . firstname . last name . email if any
+		if(req.params.state || req.params.firstName || req.params.lastName || req.params.email || req.params.password) {
 			db.user.findById(req.params.id).then(function(user) {
 				if(req.params.state) {
 					switch(req.params.state) {
@@ -127,25 +129,29 @@ module.exports = function(server, db) {
 							break;
 					}
 				}
+				if(req.params.firstName) {
+					user.firstName = req.params.firstName;
+				}
+				if(req.params.lastName) {
+					user.lastName = req.params.lastName;
+				}
 				if(req.params.email) {
-					user.email = req.params.email;
-				}
-				if(req.params.fullName) {
-					var firstName, lastName = '',
-					name = req.params.fullName.split(" ");
-					firstName = name[0];
-					if(name[1]) {
-						for(var i = 1; i < name.length; i++) {
-							lastName += name[i] + " ";
+					db.user.find({'email': req.params.email}).then(function(user) {
+						if(user.email === req.params.email) {
+							console.log('email exists');
+							//return res.send(false);
+						} else {
+							//user.email = req.params.email;
 						}
-						user.lastName = lastName;
-					}
-					user.firstName = firstName;
-				} else {
-					user.firstName = "";
-					user.lastName = "";
+					})
 				}
-				user.save();
+				if(req.params.password) {
+					crypt.hashPassword(req.params.password).then(function(hash) {
+						user.password = hash;
+						user.save();
+						return;
+					});
+				}
 			});
 		}
 		return res.send(true);
@@ -153,11 +159,11 @@ module.exports = function(server, db) {
 
 	return epilogue.resource({
 		model: db.judge,
-		excludeAttributes: ['oauth'],
+		excludeAttributes: ['oauth', 'password'],
 		actions: ['list'],
 		search: {
 			param: 'query',
-			attributes: [ 'fullName', 'affiliation', 'email' ]
+			attributes: [ 'firstName', 'lastName', 'affiliation', 'email' ]
 		},
 		endpoints: [apiPrefix + '/judges']
 	});
