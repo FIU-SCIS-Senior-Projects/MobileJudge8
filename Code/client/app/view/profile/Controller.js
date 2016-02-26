@@ -36,8 +36,7 @@ Ext.define('MobileJudge.view.profile.Controller', {
 			me.loginInProcess = true;
 			var nameArray = thisButton.ui.split('-');
 			var provider = nameArray[0];
-			var userOauth = '';
-			
+			console.log('testing bull shiy');	
 			Ext.Ajax.request({
 				url: '/api/profile',
 				method: 'GET',
@@ -45,12 +44,14 @@ Ext.define('MobileJudge.view.profile.Controller', {
 					var profile = Ext.decode(resp.responseText);
 					var userOauth = "";
 					var oauthList = JSON.parse(profile['oauth']);
+					console.log(JSON.stringify(profile));
 					for(var oauthKey in oauthList){
 						console.log(oauthKey);
 						if(oauthKey === provider){
 							userOauth = oauthList[oauthKey];
 						}
 					}
+					console.log('panic');
 					if(userOauth!==''){
 						Ext.Msg.confirm("Warning", provider + " account is already linked, would you like to unlink it?", function(btn, text){
 								console.log(btn);

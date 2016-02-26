@@ -67,11 +67,11 @@ module.exports = function(server, db) {
 
 					if(oauth){
 						var parsedData = req.params;
-						var newToken;
+						var newToken = undefined;
 						for(var key in parsedData){
 							if(key==='oauth')
 								continue;
-							if(newToken===null){
+							if(newToken===undefined){
 								newToken = {};
 							}
 							var value = parsedData[key];
