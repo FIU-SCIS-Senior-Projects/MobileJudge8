@@ -46,13 +46,17 @@ Ext.define('MobileJudge.view.profile.Profile', {
                 width: 60
             },
             items: [
-	    	{
-			xtype: 'checkboxfield',
-			width: 1,
-			id: "google",
-			html: '<div class="outer-div"><div class="seperator"></div></div>',
-		},
-
+                {
+                    xtype: 'checkboxfield',
+                    width: 1,
+                    id: "google",
+                    html: '<div class="outer-div"><div class="seperator"></div></div>',
+                    margin: '1px -6px',
+                    readOnly: true,
+                    listeners: {
+                    afterrender: 'onRender'
+                    }
+                },
                 {
                     ui: 'google',
                     userCls: 'btn-oauth',
@@ -64,13 +68,13 @@ Ext.define('MobileJudge.view.profile.Profile', {
                 {
                     xtype: 'checkboxfield',
                     width: 1,
-		    id: "google",
+                    id: "linkedin2",
                     html: '<div class="outer-div"><div class="seperator"></div></div>',
-                    margin: '0 8',
-		    readOnly: true,
-		    listeners: {
-		    	afterrender: 'onRender'
-		    }
+                    margin: '1px -6px',
+                    readOnly: true,
+                    listeners: {
+                    afterrender: 'onRender'
+                    }
                 },
                 {
                     ui: 'linkedin2',
@@ -81,11 +85,15 @@ Ext.define('MobileJudge.view.profile.Profile', {
                     handler: 'onLinkAccount'
                 },
                 {
-		    xtype: 'checkboxfield',
-		    width: 1,
-		    id: 'linkedin2',
+                    xtype: 'checkboxfield',
+                    width: 1,
+                    id: "facebook",
                     html: '<div class="outer-div"><div class="seperator"></div></div>',
-                    margin: '0 15'
+                    margin: '1px -6px',
+                    readOnly: true,
+                    listeners: {
+                    afterrender: 'onRender'
+                    }
                 },
                 {
                     ui: 'facebook',
@@ -98,8 +106,13 @@ Ext.define('MobileJudge.view.profile.Profile', {
                 {
                     xtype: 'checkboxfield',
                     width: 1,
+                    id: "twitter",
                     html: '<div class="outer-div"><div class="seperator"></div></div>',
-                    margin: '0 8px'
+                    margin: '1px -6px',
+                    readOnly: true,
+                    listeners: {
+                    afterrender: 'onRender'
+                    }
                 },
                 {
                     ui: 'twitter',
@@ -108,13 +121,7 @@ Ext.define('MobileJudge.view.profile.Profile', {
                     tooltip: 'Login with Twitter',
                     preventDefault: false,
                     handler: 'onLinkAccount'
-                },
-		{
-		   xtype: 'checkboxfield',
-		   width: 1,
-		   html: '<div class="outer-div"><div class="seperator"></div></div>',
-		   margin: '0 8'
-		}
+                }
             ]
         },
         {
