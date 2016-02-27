@@ -47,19 +47,6 @@ Ext.define('MobileJudge.view.profile.Profile', {
             },
             items: [
                 {
-                    ui: 'fiu',
-                    userCls: 'btn-oauth',
-                    tooltip: 'Login with FIU Account',
-                    preventDefault: false,
-                    handler: 'onLinkAccount'
-                },
-                {
-                    xtype: 'box',
-                    width: 1,
-                    html: '<div class="outer-div"><div class="seperator"></div></div>',
-                    margin: '0 8'
-                },
-                {
                     ui: 'google',
                     userCls: 'btn-oauth',
                     iconCls: 'x-fa fa-google-plus',
@@ -151,6 +138,7 @@ Ext.define('MobileJudge.view.profile.Profile', {
         {
             xtype: 'textfield',
             inputType: 'password',
+            clearOnReset: true,
             bind: {
                 value: '{password}'
             }
@@ -162,6 +150,7 @@ Ext.define('MobileJudge.view.profile.Profile', {
         {
             xtype: 'textfield',
             inputType: 'password',
+            clearOnReset: true,
             bind: {
                 value: '{retypePassword}'
             }
@@ -172,7 +161,7 @@ Ext.define('MobileJudge.view.profile.Profile', {
         },
         {
             xtype: 'component',
-            html: 'You can upload any of your pictures online by pasting the URL in the field.'
+            html: 'You can upload any picture you have hosted online by pasting the URL in the field.'
         },
         {
             xtype: 'textfield',

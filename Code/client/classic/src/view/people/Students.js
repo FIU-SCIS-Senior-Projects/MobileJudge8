@@ -13,6 +13,15 @@ Ext.define('MobileJudge.view.people.Students', {
 
 	bind: '{students}',
 	references: 'gridStudents',
+	plugins: [
+		{
+			ptype: 'rowediting',
+			pluginId: 'gridEditor',
+			listeners: {
+				cancelEdit: 'onQuestionCancelEdit'
+			}
+		}
+	],
 
 	dockedItems: [
 		{
@@ -23,7 +32,6 @@ Ext.define('MobileJudge.view.people.Students', {
 					xtype: 'checkboxfield',
 					checked   : true,
 					handler:'onCheckChange'
-
 				},
 				{
 					xtype: 'dataview',
@@ -106,36 +114,43 @@ Ext.define('MobileJudge.view.people.Students', {
 			text: ''
 		},
 		{
-			xtype: 'gridcolumn',
 			dataIndex: 'fullName',
 			text: 'Name',
 			flex: 1
 		},
 		{
-			xtype: 'gridcolumn',
 			dataIndex: 'email',
 			text: 'Email',
 			flex: 1
 		},
 		{
-			xtype: 'gridcolumn',
 			dataIndex: 'project',
 			text: 'Project',
 			flex: 2
 		},
 		{
-			xtype: 'gridcolumn',
-			dataIndex: 'location',
+			dataIndex: 'realLocation',
 			text: 'Location',
-			flex: 1
+			flex: 1,
+			editor: {
+				xtype: 'textfield'
+			}
 		},
 		{
-			xtype: 'gridcolumn',
 			dataIndex: 'state',
 			text: 'State',
-			width: 80
-		},{
-			xtype: 'gridcolumn',
+			width: 120,
+			editor: {
+                xtype: 'combo',
+                editable: false,
+                store: [
+                	'Active',
+                	'Dropped',
+                	'Incomplete'
+                ]
+            }
+		},
+		{
 			dataIndex: 'grade',
 			text: 'Grade',
 			width: 80
