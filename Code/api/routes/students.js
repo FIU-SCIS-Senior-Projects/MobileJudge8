@@ -1,3 +1,7 @@
+/*
+ * Make sure to update the view table 'students' in the database in case of errors with the backend
+*/
+
 var epilogue = require('epilogue');
 var	fetch = require('node-fetch');
 fetch.Promise = require('bluebird');

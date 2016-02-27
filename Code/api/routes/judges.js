@@ -1,3 +1,7 @@
+/*
+ * Make sure to update the view table 'judges' in the database in case of errors with the backend
+*/
+
 var epilogue = require('epilogue'),
 	badRequest = require('restify').errors.BadRequestError,
 	fs = require('fs'),
