@@ -10,10 +10,6 @@ Ext.define('MobileJudge.view.people.Controller', {
 		this.model = view.getViewModel();
 	},
 	
-	something: function() {
-		console.log('heller');
-	},
-	
 	onQuestionCancelEdit: function (editor, context) {
 		if (context.record.phantom) {
 			context.grid.getStore().remove(context.record);

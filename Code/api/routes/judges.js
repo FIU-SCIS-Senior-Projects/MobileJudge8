@@ -105,6 +105,16 @@ module.exports = function(server, db) {
 			//arr[0] is for users
 			//arr[1] is for email.....if any
 			//arr[2] is for password..if any
+			if(req.params.firstName === "") {
+				return res.send({success: false, message: "First name field can not be empty"});
+			}
+			if(req.params.lastName === "") {
+				return res.send({success: false, message: "Last name field can not be empty"});
+			}
+			if(req.params.email === "") {
+				return res.send({success: false, message: "Email field can not not be empty"});
+			}
+			
 			if(req.params.title || req.params.title === "") {
 				arr[0].title = req.params.title;
 			}
@@ -154,6 +164,9 @@ module.exports = function(server, db) {
 				} else {
 					arr[0].email = req.params.email;
 				}
+			}
+			if(req.params.password) {
+				arr[0].password = arr[2];
 			}
 			arr[0].save();
 			return res.send(true);
