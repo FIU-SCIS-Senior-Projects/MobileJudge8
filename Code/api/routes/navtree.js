@@ -84,6 +84,7 @@ module.exports = function(server, db) {
                         {
 							text: 'Stats',
 							iconCls: 'x-fa fa-bar-chart',
+                            rowCls: 'nav-tree-badge nav-tree-badge-new',
 							viewType: 'pageblank', //'charts',
 							routeId: 'stats',
 							leaf: true

@@ -12,7 +12,12 @@ Ext.define('MobileJudge.view.grade.Controller', {
 	init: function(view) {
 		this.model = view.getViewModel();
         var data = null;
+        var text = 'Accept';
 	},
+    
+    gradeStatus: function() {
+        
+    },
     
     //Call to custom function
     loadStudentsGrades: function(){
@@ -40,26 +45,20 @@ Ext.define('MobileJudge.view.grade.Controller', {
          Ext.getStore("students").loadData(students, [false]);
 	},
     
-    updateData:function(data){
-        console.log("Update methods is being called on Updata");
-      Ext.Ajax.request({
-            url: '/views_table/:id',
-            success: this.updateCallback,
-            failure: this.updateError,
-            scope:this,
-            jsonData :JSON.stringify(data),
-            disableCaching:true,
-            method:'PUT',
-            headers: {
-                'Object-Type' : "json",
-                'Accept': 'application/json'
-            }		   
-        });  
+    onStateChange:function(grid, rowIndex){
+        var store = grid.getStore(), id = store.getAt(rowIndex).data.studentId, data = store.getAt(rowIndex).data;
+        console.log(id); 
+        Ext.Ajax.request({
+                url: '/api/views_table/'+ id,
+                success: function(){
+                    store.load();
+                },
+                failure: this.updateError,
+                jsonData :data,
+                disableCaching:true,
+                method:'PUT'		   
+        }); 
     },
-    
-    updateCallback: function(){
-        console.log("SUccess updating");
-    }, 
     
     updateError: function () {
         console.log("Error updating")

@@ -34,27 +34,56 @@ var epilogue = require('epilogue'),
         
         
         server.put(apiPrefix + '/views_table/:id', function(req, res, next) {
-        // console.log('THIS IS A TEST', req.params.id);
-        // var id = req.params.id.split("-");
-        // console.log(id[1]);
-        console.log(req);
-		db.term.getActiveTerm()
-                .then(function(term){
-                console.log("Got here", term.id);
-                db.student_grade.findAll({
-                    where: {
-                        termId: term.id
+        //console.log('THIS IS A TEST ++++', req.body.gradeStatus);
+		          
+                  var value = req.body.gradeStatus;
+                  var model = db.user;
+                  
+                  if(value == "Pending"){
+                        console.log("FIrst ONe");
+                        value = "Accepted";
                     }
-                }).then(function(grade){
-                    console.log("THIS IS THE FIRST FUCKING", grade);
-                    db.student_grade.findById(req.params.id).then(function(){
-                        console.log("This is printing the grades",grade);
-                        console.log(grade);
-                        res.json(grade);
-                        next();  
-                    })
-                })
-            });
+                    else if(value == "Accepted"){
+                        console.log("Second ONe");
+                        value = "Rejected";
+                    }
+                    else
+                    {
+                        console.log("Third ONe");
+                        value = "Pending";
+                    }
+                        
+                    model.update({
+                        gradeStatus: value,
+                        }, {
+                        where: {
+                            id: req.body.id
+                        }
+                        }
+                    );
+                    console.log("Exiting");
+                    next();
+                  
+                //console.log("Got here", term.id);
+                // model.findAll({
+                //     where: {
+                //         id: req.params.id
+                //     }
+                // }).then(function(user){
+                //     //console.log("THIS IS THE FIRST FUCKING", user);
+                //     if(user.gradeStatus == "Pending"){
+                //         user.gradeStatus = "Accepted";
+                //     }
+                //     else if(user.gradeStatus == "Accepted"){
+                //         user.gradeStatus = "Rejected";
+                //     }
+                //     else
+                //         user.gradeStatus = "Pending";
+                //     model.update();
+                //     console.log("Exiting");
+                //     next();
+                // });
+        
      });
         
         
@@ -67,6 +96,7 @@ var epilogue = require('epilogue'),
         		param: 'query',
         		attributes: [ 'fullName', 'project', 'email' ]
         	},
+            actions: ['create', 'read', 'update', 'delete'],
         	endpoints: [apiPrefix + '/views_table', apiPrefix + '/views_table/:id']
         });
 }

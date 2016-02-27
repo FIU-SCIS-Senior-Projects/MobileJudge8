@@ -1,6 +1,6 @@
-Ext.define('MobileJudge.view.grade.Wizard', {
+Ext.define('MobileJudge.view.grade.GradeStudentDetailWizard', {
     extend: 'Ext.window.Window',
-    alias: 'widget.grademodal',
+    alias: 'widget.gradestudentdetailwizard',
     requires: [
         'Ext.button.Button',
         'Ext.form.field.Radio',
@@ -8,71 +8,115 @@ Ext.define('MobileJudge.view.grade.Wizard', {
         'Ext.layout.container.Accordion',
 	    'Ext.layout.container.Card'
     ],
-
-    // tpl: [
-    //     '<div>'+
-    //         '<p>Name: {fullName}</p>'+
-    //         '<p>Project: {projectName}</p>'+
-    //         '<p>Grade: {grade}</p>' +
-    //      '</div>'
-    //     ],
-    
+  
+    cls: 'wizardone',
+    layout: 'card',
+  
     bodyPadding: 10,
     scrollable: true,
     controller: 'people',
     
-    width: 500,
-    height: 400,
-    title: 'Student Grades by Judges',
+    width: 600,
+    height: 500,
+    title: 'Student Grades by Judges', 
+    
     initComponent: function() {
         this.callParent(arguments);
     },
 
     loadData: function(record){
         this.update(record.data);
-        Ext.create('studentsdetails');
+        //Ext.create('judgeaveragegrade');
+        console.log(record);
     },
     
+    // tbar: {
+    //     // tpl:'<h1>{fullName}</h1>' + '<h1>{emaiprojectNamel}</h1>' +'<h1>{grade}</h1>',
+	// 	items: [
+	// 		{
+    //             xtype: 'panel',
+	// 			 tpl:'<h1>{fullName}</h1>' + '<h1>{emaiprojectNamel}</h1>' +'<h1>{grade}</h1>',
+	// 		}
+	// 	]
+	// },
+    
     items: [
+        // {
+        //     itemId: 'top',
+        //     tpl: [
+        //         '<div>'+
+        //             '<p>Name: {fullName}</p>'+
+        //         '</div>'+
+        //         '<div>'+
+        //             '<p>Project: {projectName}</p>'+
+        //         '</div>'+
+        //         '<div>'+
+        //             '<p>Grade: {grade}</p>' +
+        //         '</div>'
+        //     ] 
+		// },
+        // {
+        //     xtype: 'container',
+            
+        //     item: [
+        //         {   
+        //             xtype: 'field',
+        //             text: 'Name:',
+        //             flex: 1, 
+        //         }
+        //     ]
+        // },
+        // {
+        //     xtype: 'field',
+        //     text: 'Project:',
+        //     dataIndex: 'projectName',
+        //     flex: 2,
+        //     width:120
+        // },
+        // {
+        //     xtype: 'field',
+        //     text: 'Grade:',
+        //     dataIndex: 'grade',
+        //     flex: 2,
+        //     width:120
+        // },
         {
-            tpl: [
-                '<div>'+
-                    '<p>Name: {fullName}</p>'+
-                    '<p>Project: {projectName}</p>'+
-                    '<p>Grade: {grade}</p>' +
-                '</div>'
-            ],    
-        },
-        {
-            xtype: 'studentsdetails'
+            itemId: 'middle',
+            xtype: 'judgeaveragegrade',
+            flex: 1,
         }
     ]
-})
+});
 
-Ext.define('MobileJudge.view.grade.Studentsdetails', {
-    extend: 'Ext.grid.Panel',
-    alias: 'widget.studentsdetails',
-    title: 'Simpsons',
-    store: 'judgesgrades',
+Ext.define('MobileJudge.view.grade.JudgeAverageGrade', {
+    extend:'Ext.grid.Panel',
+    alias: 'widget.judgeaveragegrade',
+    store: 'mockData',
     initComponent: function() {
          this.callParent()
+    },
+    listeners: {
+        itemClick: function (dv, record, item, index, e) {
+            //this.data = record;
+            Ext.widget('acceptgradewizard').show().loadData(this.data);
+        },
     },
     columns: [{
         xtype: 'gridcolumn',
         text: 'Judge',
-        dataIndex: '',
+        dataIndex: 'name',
         flex: 2,
         width:120
     },{
         xtype: 'gridcolumn',
         text: 'Grade',
-        dataIndex: '',
+        dataIndex: 'gradeAvg',
         flex: 2,
         width:120
     },{
         xtype: 'gridcolumn',
         text: 'Status',
-        dataIndex: '',
+        dataIndex: 'status',
         flex: 2,
         width:120
     }],
@@ -85,80 +129,22 @@ Ext.define('MobileJudge.view.grade.Studentsdetails', {
     renderTo: Ext.get('grademodal'),
 });
 
-
-
 Ext.create('Ext.data.Store', {
-        storeId:'resumedStore',
-        fields:['judgeName', 'grade', 'status'],
-        data:{'items':[
-            { 'name': 'Lisa',  "email":"lisa@simpsons.com",  "phone":"555-111-1224"  },
-            { 'name': 'Bart',  "email":"bart@simpsons.com",  "phone":"555-222-1234" },
-            { 'name': 'Homer', "email":"home@simpsons.com",  "phone":"555-222-1244"  },
-            { 'name': 'Marge', "email":"marge@simpsons.com", "phone":"555-222-1254"  }
-        ]},
-        proxy: {
-            type: 'memory',
-            reader: {
-                type: 'json',
-                root: 'items'
-            }
+    storeId:'mockData',
+    fields:['name', 'grade1', 'grade2','grade3', 'grade4', 'grade5',],
+    data:{'items':[
+        { 'name': 'Lisa',  "gradeAvg":8,  'status':'Pending'  },
+        { 'name': 'Bart',  "gradeAvg":9,  'status':'Pending'  },
+        { 'name': 'Homer', "gradeAvg":6,  'status':'Pending'  },
+        { 'name': 'Homer', "gradeAvg":5,  'status':'Pending'  },
+        { 'name': 'Marge', "gradeAvg":9,  'status':'Pending'  }
+    ]},
+    proxy: {
+        type: 'memory',
+        reader: {
+            type: 'json',
+            root: 'items'
         }
-    });
-
-
-
-
-
-
-// Ext.define('MobileJudge.ux.grade.StudentsDetails', {
-// 	extend: 'Ext.grid.Panel',
-// 	xtype: 'studentsdetails',
-
-// 	userCls: 'user-grid shadow',
-// 	title: 'Students Details',
-
-// 	tools: [
-// 		{
-// 			type: 'refresh',
-// 			handler: 'onStudentsRefresh'
-// 		}
-// 	],
-
-// 	viewConfig: {
-// 		stripeRows: true,
-// 		enableTextSelection: false,
-// 		loadMask: false,
-// 		markDirty: false
-// 	},
-
-// 	disableSelection: true,
-// 	enableColumnHide: false,
-// 	enableColumnMove: false,
-// 	enableColumnResize: false,
-// 	sortableColumns: false,
-// 	headerBorders: false,
-// 	columns:[
-// 		{
-// 			renderer: function(value) {
-// 				return "<img class='profilePic' src='" + value + "' alt='Profile Pic' height='40px' width='40px'>";
-// 			},
-// 			width: 75,
-// 			dataIndex: 'profileImgUrl',
-// 			text: ''
-// 		},
-// 		{
-// 			dataIndex: 'fullName',
-// 			text: 'Name',
-// 			flex: 1
-// 		},
-// 		{
-// 			dataIndex: 'project',
-// 			text: 'Project',
-// 			flex: 2
-// 		}
-// 	]
-// });
-
-
-
+    }
+});
 
