@@ -4,6 +4,8 @@ var epilogue = require('epilogue'),
 	csv = require('csv'),
 	crypt = require('../utils/crypt.js'),
 	_ = require('lodash');
+var	fetch = require('node-fetch');
+fetch.Promise = require('bluebird');
 
 module.exports = function(server, db) {
 
@@ -14,7 +16,7 @@ module.exports = function(server, db) {
 
 		var file = req.files.judgesCsv;
 
-		Promise.all([
+		fetch.Promise.all([
 			db.term.getActiveTerm({ attributes: ['id'] }),
 			db.user.findAll({
 				attributes: [[db.sequelize.fn('MAX', db.sequelize.col('id')), 'id']],
@@ -88,73 +90,70 @@ module.exports = function(server, db) {
 	});
 	
 	server.put(apiPrefix + '/judges/:id', function(req, res) {
-		console.log(req.params);
-		//save affiliation and location
-		db.judge.findById(req.params.id).then(function(user) {
-			user.title = req.params.title ? req.params.title : "";
-			user.affiliation = req.params.affiliation ? req.params.affiliation : "";
-			user.save();
-		});
-		//save state . firstname . last name . email if any
-		if(req.params.state || req.params.firstName || req.params.lastName || req.params.email || req.params.password) {
-			db.user.findById(req.params.id).then(function(user) {
-				if(req.params.state) {
-					switch(req.params.state) {
-						case "Prospective":
-							user.state = 1;
-							break;
-						case "Invited":
-							user.state = 2;
-							break;
-						case "Rejected":
-							user.state = 3;
-							break;
-						case "Pending":
-							user.state = 4;
-							break;
-						case "Registered":
-							user.state = 5;
-							break;
-						case "Attended":
-							user.state = 6;
-							break;
-						case "Started Grading":
-							user.state = 7;
-							break;
-						case "Graded":
-							user.state = 8;
-							break;
-						case "Removed":
-							user.state = 12;
-							break;
-					}
-				}
-				if(req.params.firstName) {
-					user.firstName = req.params.firstName;
-				}
-				if(req.params.lastName) {
-					user.lastName = req.params.lastName;
-				}
-				if(req.params.email) {
-					db.user.find({'email': req.params.email}).then(function(user) {
-						if(user.email === req.params.email) {
-							console.log('email exists');
-							//return res.send(false);
-						} else {
-							//user.email = req.params.email;
-						}
-					})
-				}
-				if(req.params.password) {
-					crypt.hashPassword(req.params.password).then(function(hash) {
-						user.password = hash;
-						user.save();
-						return;
-					});
-				}
-			});
+	console.log(req.params);
+		var promises = [];
+		promises.push(db.user.findById(req.params.id));
+		promises.push(db.user.findOne({where: {email: req.params.email}}));
+		if(req.params.password) {
+			promises.push(crypt.hashPassword(req.params.password));
 		}
-		return res.send(true);
+		fetch.Promise.all(promises).then(function (arr) {
+			//arr[0] is for users
+			//arr[1] is for email.....if any
+			//arr[2] is for password..if any
+			if(req.params.title || req.params.title === "") {
+				arr[0].title = req.params.title;
+			}
+			if(req.params.affiliation || req.params.affiliation === "") {
+				arr[0].affiliation = req.params.affiliation;
+			}
+			if(req.params.state) {
+				switch(req.params.state) {
+					case "Prospective":
+						arr[0].state = 1;
+						break;
+					case "Invited":
+						arr[0].state = 2;
+						break;
+					case "Rejected":
+						arr[0].state = 3;
+						break;
+					case "Pending":
+						arr[0].state = 4;
+						break;
+					case "Registered":
+						arr[0].state = 5;
+						break;
+					case "Attended":
+						arr[1].state = 6;
+						break;
+					case "Started Grading":
+						arr[0].state = 7;
+						break;
+					case "Graded":
+						arr[0].state = 8;
+						break;
+					case "Removed":
+						arr[0].state = 12;
+						break;
+				}
+			}
+			if(req.params.firstName) {
+				arr[0].firstName = req.params.firstName;
+			}
+			if(req.params.lastName) {
+				arr[0].lastName = req.params.lastName;
+			}
+			if(req.params.email) {
+				if(arr[1]) {
+					return res.send({success: false, message: "Email already exists"});
+				} else {
+					arr[0].email = req.params.email;
+				}
+			}
+			arr[0].save();
+			return res.send(true);
+		});
 	});
 
 	return epilogue.resource({
