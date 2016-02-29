@@ -14,7 +14,7 @@ Ext.define('MobileJudge.view.grade.Students', {
 
     bind: '{studentgradesview}',
     userCls: 'big-50 small-100',
-    
+
     references: 'gridStudents',
 
     plugins: [
@@ -25,20 +25,18 @@ Ext.define('MobileJudge.view.grade.Students', {
             clicksToEdit: 1
         })
     ],
+
     listeners: {
         painted: 'loadStudentsGrades',
-        itemClick: function (dv, record, item, index, e) {
-            this.data = record;
-            Ext.widget('gradestudentdetailwizard').show().loadData(this.data);
-        },
-        // celldblclick: function (iView, iCellEl, iColIdx, iStore, iRowEl, iRowIdx, iEvent) {
-        //     var zRec = iColIdx;
+        cellclick: function (iView, iCellEl, iColIdx, iStore, iRowEl, iRowIdx, iEvent) {
+            var zRec = iColIdx;
+            var data = Ext.getStore("studentgradesview").data.items[iRowIdx];
 
-        //     if (zRec < 3)
-        //         Ext.widget('grademodal').show().loadData(this.data);
-        //     console.log(iRowIdx);
-        // }
+            if (zRec < 3)
+                Ext.widget('gradestudentdetailwizard').show().loadData(data);
+        }
     },
+
     dockedItems: [
         {
             xtype: 'toolbar',
@@ -48,7 +46,7 @@ Ext.define('MobileJudge.view.grade.Students', {
                     xtype: 'checkboxfield',
                     checked: true,
                     handler: 'onCheckChange'
-
+                    
                 },
                 {
                     xtype: 'dataview',
@@ -87,18 +85,46 @@ Ext.define('MobileJudge.view.grade.Students', {
                 },
                 '->',
                 {
+                    xtype: 'image',
+                    flex: 1,
+                    src: '/resources/images/icons/favicon(2).ico',
+                    // items: [
+                    //             {
+                    //                 icon: '/resources/images/icons/favicon(2).ico',
+                    //                 handler: 'onStateChange'
+                    //             } 
+                    // ],
+                    renderer: function (value, metadata, record) {
+                        // if (record.get('gradeStatus').toLowerCase() == "pending") {
+                        //     this.items[0].tooltip = 'Pending';
+                        //     this.items[0].icon = '/resources/images/icons/favicon(2).ico';
+                        // }else if (record.get('gradeStatus').toLowerCase() == "accepted") {
+                        //     this.items[0].tooltip = 'Accepted';
+                        //     this.items[0].icon = '/resources/images/icons/favicon(4).ico';
+                        // } else {
+                        //     this.items[0].tooltip = 'Rejected';
+                        //     this.items[0].icon = '/resources/images/icons/favicon(3).ico'; 
+                        // }
+                    },
+                    width: 40,
+                    dataIndex: 'bool',
+                    sortable: false,
+                    hideable: false
+                },
+                {
                     ui: 'soft-blue',
-                    glyph: '',
-                    iconCls: 'x-fa fa-cloud-download',
-                    text: 'Sync',
-                    handler: 'onStudentsLoad'
+                    xtype: 'button',
+                    text: 'Accept-All',
+                    handler: 'statusManager',
+                    flex: 1
                 },
                 {
                     ui: 'soft-blue',
                     glyph: '',
                     iconCls: 'x-fa fa-cloud-download',
                     text: 'Export Grades',
-                    handler: 'doExportStudents'
+                    handler: 'doExportStudents',
+                    flex: 1
                 }
             ]
         },
@@ -110,6 +136,7 @@ Ext.define('MobileJudge.view.grade.Students', {
             showPageCombo: true //This config enables the page size select combo box
         }
     ],
+
     columns: [
         {
             xtype: 'gridcolumn',
@@ -132,22 +159,33 @@ Ext.define('MobileJudge.view.grade.Students', {
         {
             id: 'status',
             xtype: 'actioncolumn',
-            //dataIndex: 'gradeStatus',
             text: 'Status',
             flex: 1,
             items: [
                 {
-                    iconCls: 'fa fa-dot-circle-o',
+                    icon: '/resources/images/icons/Yellow.ico',
                     tooltip: 'Status',
-                    handler: 'onStateChange',
-
-                }
+                    handler: 'onStateChange'
+                } 
             ],
+            renderer: function (value, metadata, record) {
+                if (record.get('gradeStatus').toLowerCase() == "pending") {
+                    this.items[0].tooltip = 'Pending';
+                    this.items[0].icon = '/resources/images/icons/Yellow.ico';
+                }else if (record.get('gradeStatus').toLowerCase() == "accepted") {
+                    this.items[0].tooltip = 'Accepted';
+                    this.items[0].icon = '/resources/images/icons/Green.ico';
+                } else {
+                    this.items[0].tooltip = 'Rejected';
+                    this.items[0].icon = '/resources/images/icons/Red.ico'; 
+                }
+            },
             width: 40,
             dataIndex: 'bool',
             sortable: false,
             hideable: false
         }
+
         // {
         //     xtype: 'actioncolumn',
         //     //dataIndex: 'gradeStatus',

@@ -6,7 +6,8 @@ Ext.define('MobileJudge.view.grade.GradeStudentDetailWizard', {
         'Ext.form.field.Radio',
         'Ext.form.*',
         'Ext.layout.container.Accordion',
-	    'Ext.layout.container.Card'
+	    'Ext.layout.container.Card',
+        'Ext.Component'
     ],
   
     cls: 'wizardone',
@@ -14,10 +15,11 @@ Ext.define('MobileJudge.view.grade.GradeStudentDetailWizard', {
   
     bodyPadding: 10,
     scrollable: true,
-    controller: 'people',
+    controller: 'grade',
+    modal : true,
     
     width: 600,
-    height: 500,
+    height: 375,
     title: 'Student Grades by Judges', 
     
     initComponent: function() {
@@ -25,61 +27,97 @@ Ext.define('MobileJudge.view.grade.GradeStudentDetailWizard', {
     },
 
     loadData: function(record){
-        this.update(record.data);
-        //Ext.create('judgeaveragegrade');
-        console.log(record);
+        $("#nameLabel").text(record.data.fullName);
+        $("#projectLabel").text(record.data.projectName);
+        $("#gradeLabel").text(record.data.grade);
+        this.getController('grade').getData(record.data);//.then(function(){
+        setTimeout(function(){
+            var data = this.getController('grade').returnData();
+        }, 3000);
+            //Creating the DataStore
+            // Ext.create('Ext.data.Store', {
+            //     storeId:'firstPopUp',
+            //     fields:['judgeName','fullName', 'project', 'accepted','gradeAverage', 'graded', 'project'],
+            //     data:data,
+            //     proxy: {
+            //         type: 'memory',
+            //         reader: { 
+            //             type: 'json',
+            //             root: 'items'
+            //         }
+            //     }
+            // });
+        //});
+        
+        //var data = this.getController('grade').returnData();
+        
+        
+        
     },
     
-    // tbar: {
-    //     // tpl:'<h1>{fullName}</h1>' + '<h1>{emaiprojectNamel}</h1>' +'<h1>{grade}</h1>',
-	// 	items: [
-	// 		{
-    //             xtype: 'panel',
-	// 			 tpl:'<h1>{fullName}</h1>' + '<h1>{emaiprojectNamel}</h1>' +'<h1>{grade}</h1>',
-	// 		}
-	// 	]
-	// },
+    tbar: {
+        items: [
+            {
+                id: 'thePanel',
+                xtype: 'panel', 
+                width: 400,
+                items: [
+                        {
+                          items: [
+                                {
+                                    xtype: 'label',
+                                    text: 'Name:',
+                                    readOnly : true
+                                },
+                                {
+                                    id: 'nameLabel',
+                                    xtype: 'label',
+                                    text: 'Masoud Sadjadi',
+                                    readOnly : true,
+                                    style:'padding:0px 0px 0px 30px',
+                                    //flex: 1
+                                }
+                          ]
+                        },
+                        {
+                            items: [
+                                {
+                                    xtype: 'label',
+                                    text: 'Project:',
+                                    readOnly : true
+                                },
+                                {
+                                    id: 'projectLabel',
+                                    xtype: 'label',
+                                    text: 'Mobile Judge 8',
+                                    readOnly : true,
+                                    style:'padding:0px 0px 0px 25px'
+                                }
+                          ]
+                        },
+                        {
+                            items: [
+                                {
+                                    xtype: 'label',
+                                    text: 'Grade:',
+                                    readOnly : true
+                                },
+                                {
+                                    id: 'gradeLabel',
+                                    xtype: 'label',
+                                    text: '8',
+                                    readOnly : true,
+                                    style:'padding:0px 0px 0px 28px'
+                                }
+                          ]
+                        }
+                ]
+            }
+        ],
+        renderTo: Ext.getBody()
+	},
     
     items: [
-        // {
-        //     itemId: 'top',
-        //     tpl: [
-        //         '<div>'+
-        //             '<p>Name: {fullName}</p>'+
-        //         '</div>'+
-        //         '<div>'+
-        //             '<p>Project: {projectName}</p>'+
-        //         '</div>'+
-        //         '<div>'+
-        //             '<p>Grade: {grade}</p>' +
-        //         '</div>'
-        //     ] 
-		// },
-        // {
-        //     xtype: 'container',
-            
-        //     item: [
-        //         {   
-        //             xtype: 'field',
-        //             text: 'Name:',
-        //             flex: 1, 
-        //         }
-        //     ]
-        // },
-        // {
-        //     xtype: 'field',
-        //     text: 'Project:',
-        //     dataIndex: 'projectName',
-        //     flex: 2,
-        //     width:120
-        // },
-        // {
-        //     xtype: 'field',
-        //     text: 'Grade:',
-        //     dataIndex: 'grade',
-        //     flex: 2,
-        //     width:120
-        // },
         {
             itemId: 'middle',
             xtype: 'judgeaveragegrade',
@@ -96,49 +134,71 @@ Ext.define('MobileJudge.view.grade.JudgeAverageGrade', {
          this.callParent()
     },
     listeners: {
-        itemClick: function (dv, record, item, index, e) {
-            //this.data = record;
-            Ext.widget('acceptgradewizard').show().loadData(this.data);
-        },
+        cellclick: function (iView, iCellEl, iColIdx, iStore, iRowEl, iRowIdx, iEvent) {
+            var zRec = iColIdx;
+            var data = Ext.getStore("firstPopUp").data.items[iRowIdx];
+
+            if (zRec < 2)
+                Ext.widget('acceptgradewizard').show().loadData(data);
+        }
     },
-    columns: [{
+    columns: [
+        {
         xtype: 'gridcolumn',
         text: 'Judge',
-        dataIndex: 'name',
+        dataIndex: 'judgeName',
         flex: 2,
         width:120
     },{
         xtype: 'gridcolumn',
         text: 'Grade',
-        dataIndex: 'gradeAvg',
+        dataIndex: 'gradeAverage',
         flex: 2,
         width:120
-    },{
-        xtype: 'gridcolumn',
-        text: 'Status',
-        dataIndex: 'status',
-        flex: 2,
-        width:120
-    }],
+    },
+    {
+            id: 'secondViewStatus',
+            xtype: 'actioncolumn',
+            text: 'Status',
+            flex: 1,
+            items: [
+                {
+                    icon: '/resources/images/icons/favicon(2).ico',
+                    tooltip: 'Status',
+                    handler: 'onStateChange'
+                } 
+            ],
+            renderer: function (value, metadata, record) {
+                // if (record.get('gradeStatus').toLowerCase() == "pending") {
+                //     this.items[0].tooltip = 'Pending';
+                //     this.items[0].icon = '/resources/images/icons/favicon(2).ico';
+                // }else if (record.get('gradeStatus').toLowerCase() == "accepted") {
+                //     this.items[0].tooltip = 'Accepted';
+                //     this.items[0].icon = '/resources/images/icons/favicon(4).ico';
+                // } else {
+                //     this.items[0].tooltip = 'Rejected';
+                //     this.items[0].icon = '/resources/images/icons/favicon(3).ico'; 
+                // }
+            },
+            width: 40,
+            dataIndex: 'bool',
+            sortable: false,
+            hideable: false
+        }
+    ],
     floating: false,
     draggable: false,
     modal: true,
     closable: false,
     height: 500,
-    width: 600,
+    width: 375,
     renderTo: Ext.get('grademodal'),
 });
 
 Ext.create('Ext.data.Store', {
     storeId:'mockData',
     fields:['name', 'grade1', 'grade2','grade3', 'grade4', 'grade5',],
-    data:{'items':[
-        { 'name': 'Lisa',  "gradeAvg":8,  'status':'Pending'  },
-        { 'name': 'Bart',  "gradeAvg":9,  'status':'Pending'  },
-        { 'name': 'Homer', "gradeAvg":6,  'status':'Pending'  },
-        { 'name': 'Homer', "gradeAvg":5,  'status':'Pending'  },
-        { 'name': 'Marge', "gradeAvg":9,  'status':'Pending'  }
-    ]},
+    data:'',
     proxy: {
         type: 'memory',
         reader: {

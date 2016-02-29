@@ -56,7 +56,11 @@ module.exports = function(sequelize, DataTypes) {
 		profileImgUrl: {
 			type: DataTypes.STRING,
 			allowNull: true
-		}
+		},
+        gradeStatus: {
+			type: DataTypes.STRING,
+			allowNull: false
+		},
 	}, {
 		classMethods: {
 			associate: function (models) {

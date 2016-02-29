@@ -78,13 +78,13 @@ module.exports = function(server, db) {
 							text: 'Grade',
 							iconCls: 'x-fa fa-bar-chart',
 							viewType: 'grade',
+                            rowCls: 'nav-tree-badge nav-tree-badge-new',
 							routeId: 'grade',
 							leaf: true
 						},
                         {
 							text: 'Stats',
 							iconCls: 'x-fa fa-bar-chart',
-                            rowCls: 'nav-tree-badge nav-tree-badge-new',
 							viewType: 'pageblank', //'charts',
 							routeId: 'stats',
 							leaf: true

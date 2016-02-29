@@ -6,36 +6,101 @@ Ext.define('MobileJudge.view.grade.Wizard', {
         'Ext.form.field.Radio',
         'Ext.form.*',
         'Ext.layout.container.Accordion',
-	    'Ext.layout.container.Card'
+	    'Ext.layout.container.Card',
+        'Ext.Component'
     ],
     
     bodyPadding: 10,
     scrollable: true,
-    controller: 'people',
+    controller: 'grade',
+    modal : true,
     
-    width: 600,
-    height: 500,
-    title: 'Temporal Title', 
-    // initComponent: function() {
-    //     this.callParent(arguments);
-    // },
+    width: 500,
+    height: 400,
+    title: 'Student Grade by One Judge', 
+    initComponent: function() {
+        this.callParent(arguments);
+    },
 
     loadData: function(record){
-        //this.update(record.data);
+        //this.update(record.data)0
         //Ext.create('studentsdetails');
         console.log("Got in here");
     },
     
+    tbar: {
+        items: [
+            {
+                name: 'thePanel',
+                xtype: 'panel', 
+                items: [
+                        {
+                          items: [
+                                {
+                                    xtype: 'label',
+                                    text: 'Judge:',
+                                    readOnly : true
+                                },
+                                {
+                                    xtype: 'label',
+                                    text: 'Masoud Sadjadi',
+                                    readOnly : true,
+                                    style:'padding:0px 0px 0px 30px'
+                                }
+                          ]
+                        },
+                        {
+                          items: [
+                                {
+                                    xtype: 'label',
+                                    text: 'Name:',
+                                    readOnly : true
+                                },
+                                {
+                                    xtype: 'label',
+                                    text: 'Rodolfo Viant',
+                                    readOnly : true,
+                                    style:'padding:0px 0px 0px 30px'
+                                }
+                          ]
+                        },
+                        {
+                            items: [
+                                {
+                                    xtype: 'label',
+                                    text: 'Project:',
+                                    readOnly : true
+                                },
+                                {
+                                    xtype: 'label',
+                                    text: 'Mobile Judge 8',
+                                    readOnly : true,
+                                    style:'padding:0px 0px 0px 25px'
+                                }
+                          ]
+                        },
+                        {
+                            items: [
+                                {
+                                    xtype: 'label',
+                                    text: 'Grade:',
+                                    readOnly : true
+                                },
+                                {
+                                    xtype: 'label',
+                                    text: '8',
+                                    readOnly : true,
+                                    style:'padding:0px 0px 0px 28px'
+                                }
+                          ]
+                        }
+                ]
+            }
+        ],
+        renderTo: Ext.getBody()
+	},
+    
     items: [
-        {
-            tpl: [
-                '<div>'+
-                    '<p>Name: {fullName}</p>'+
-                    '<p>Project: {projectName}</p>'+
-                    '<p>Grade: {grade}</p>' +
-                '</div>'
-            ]    
-        },
         {
             xtype: 'acceptGrade'
         }
@@ -49,10 +114,17 @@ Ext.define('MobileJudge.view.grade.acceptGrade', {
     initComponent: function() {
          this.callParent()
     },
-    columns: [{
+    columns: [
+        {
         xtype: 'gridcolumn',
-        text: 'Judge',
-        dataIndex: 'name',
+        text: 'Question',
+        dataIndex: 'question',
+        flex: 2,
+        width:120,
+    },{
+        xtype: 'gridcolumn',
+        text: 'Grade',
+        dataIndex: 'grade',
         flex: 2,
         width:120,
         editor: {
@@ -63,62 +135,12 @@ Ext.define('MobileJudge.view.grade.acceptGrade', {
 			}
     },{
         xtype: 'gridcolumn',
-        text: 'Grade1',
-        dataIndex: 'grade1',
+        text: 'Comment',
+        dataIndex: 'comment',
         flex: 2,
         width:120,
         editor: {
-				xtype: 'numberfield',
-				minValue: 1,
-				maxValue: 10,
-				allowBlank: false
-			}
-    },{
-        xtype: 'gridcolumn',
-        text: 'Grade2',
-        dataIndex: 'grade1',
-        flex: 2,
-        width:120,
-        editor: {
-				xtype: 'numberfield',
-				minValue: 1,
-				maxValue: 10,
-				allowBlank: false
-			}
-    },{
-        xtype: 'gridcolumn',
-        text: 'Grade3',
-        dataIndex: 'grade1',
-        flex: 2,
-        width:120,
-        editor: {
-				xtype: 'numberfield',
-				minValue: 1,
-				maxValue: 10,
-				allowBlank: false
-			}
-    },{
-        xtype: 'gridcolumn',
-        text: 'Grade4',
-        dataIndex: 'grade1',
-        flex: 2,
-        width:120,
-        editor: {
-				xtype: 'numberfield',
-				minValue: 1,
-				maxValue: 10,
-				allowBlank: false
-			}
-    },{
-        xtype: 'gridcolumn',
-        text: 'Grade5',
-        dataIndex: 'grade5',
-        flex: 2,
-        width:120,
-        editor: {
-				xtype: 'numberfield',
-				minValue: 1,
-				maxValue: 10,
+				xtype: 'textField',
 				allowBlank: false
 			}
     }],
@@ -126,20 +148,20 @@ Ext.define('MobileJudge.view.grade.acceptGrade', {
     draggable: false,
     modal: true,
     closable: false,
-    height: 500,
-    width: 600,
+    height: 300,
+    width: 400,
     renderTo: Ext.get('acceptgrademodal'),
 });
 
 Ext.create('Ext.data.Store', {
     storeId:'testData',
-    fields:['name', 'grade1', 'grade2','grade3', 'grade4', 'grade5',],
+    fields:['question', 'comment', 'grade'],
     data:{'items':[
-        { 'name': 'Lisa',  "grade1":8,  "grade2":9, "grade3":9, "grade4":9, "grade5":9,  },
-        { 'name': 'Bart',  "grade1":9,  "grade2":8, "grade3":9, "grade4":9, "grade5":9,  },
-        { 'name': 'Homer', "grade1":9,  "grade2":9, "grade3":8, "grade4":9, "grade5":9,  },
-        { 'name': 'Homer', "grade1":9,  "grade2":9, "grade3":9, "grade4":8, "grade5":9,  },
-        { 'name': 'Marge', "grade1":9,  "grade2":9, "grade3":9, "grade4":8, "grade5":8,  }
+        { 'question': 'First Question',  "comment":"This is great comment is not too long",  "grade":9},
+        { 'question': 'Second Question',  "comment":"This is great comment is not too long",  "grade":9},
+        { 'question': 'Thids Question',  "comment":"This is great comment is not too long",  "grade":9},
+        { 'question': 'Fourth Question',  "comment":"This is great",  "grade":9},
+        { 'question': 'Fifth Question',  "comment":"This is great",  "grade":9},
     ]},
     proxy: {
         type: 'memory',

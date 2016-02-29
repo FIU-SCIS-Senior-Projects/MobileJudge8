@@ -13,10 +13,59 @@ Ext.define('MobileJudge.view.grade.Controller', {
 		this.model = view.getViewModel();
         var data = null;
         var text = 'Accept';
+        var dataArray = null;
 	},
     
-    gradeStatus: function() {
-        
+    returnData: function(){
+            return this.dataArray;
+    },
+    
+    getData: function(data){
+        console.log("Requesting data for the selected student");
+        return Ext.Ajax.request({
+                url: '/api/views_table/judges',
+                success: function(response){
+                    var data = JSON.parse(response.responseText)
+                    data.judges.forEach(function(judge){
+                        data.students.forEach(function(student){
+                            if(student.judgeId == judge.id)
+                                student.judgeName = judge.fullName;
+                        })
+                    })
+                    data.students.forEach(function(student){
+                        var tempAverage = 1;
+                            data.grades.forEach(function(grade){
+                               if(student.judgeName == grade.judge && student.fullName == grade.student && student.project == grade.projectName)
+                                {
+                                    student.gradeAverage = grade.grade;
+                                    tempAverage ++;
+                                }    
+                            })
+                            student.gradeAverage = student.gradeAverage / tempAverage;
+                        })
+                    
+                    this.dataArray = data;
+                    Ext.getStore('mockData').data = data.students;
+                    Ext.getStore('mockData').reload();
+                    
+                    // Ext.create('Ext.data.Store', {
+                    //     storeId:'firstPopUp',
+                    //     fields:['judgeName','fullName', 'project', 'accepted','gradeAverage', 'graded', 'project',],
+                    //     data:data,
+                    //     proxy: {
+                    //         type: 'memory',
+                    //         reader: { 
+                    //             type: 'json',
+                    //             root: 'items'
+                    //         }
+                    //     }
+                    // });
+                },
+                failure: this.updateError,
+                jsonData :data,
+                disableCaching:true,
+                method:'POST'		   
+        }); 
     },
     
     //Call to custom function
@@ -45,13 +94,14 @@ Ext.define('MobileJudge.view.grade.Controller', {
          Ext.getStore("students").loadData(students, [false]);
 	},
     
-    onStateChange:function(grid, rowIndex){
+    onStateChange:function(grid, rowIndex, colIndex){
         var store = grid.getStore(), id = store.getAt(rowIndex).data.studentId, data = store.getAt(rowIndex).data;
         console.log(id); 
         Ext.Ajax.request({
                 url: '/api/views_table/'+ id,
                 success: function(){
                     store.load();
+                    console.log("success");
                 },
                 failure: this.updateError,
                 jsonData :data,
@@ -74,10 +124,8 @@ Ext.define('MobileJudge.view.grade.Controller', {
 		var filter = selections.map(function(r) { return r.get('abbr'); });
 		this.model.getStore(selModel.storeId).filter('abbr', Ext.isEmpty(filter) ? 'XX' : filter);
 		// update intermediate state
-
+gfilter = filter;
 	},
-
-    //onChange: function()
 
 	onCheckChange: function(checkbox) {
 		var model = checkbox.up('toolbar').down('dataview').getSelectionModel();
@@ -89,26 +137,6 @@ Ext.define('MobileJudge.view.grade.Controller', {
 		{
 			model.deselectAll();
 		}
-	},
-
-	onUserDelete: function(grid, rowIndex) {
-		var store = grid.getStore(), id = store.getAt(rowIndex).get('id');
-
-		Ext.Msg.confirm('Delete', 'Are you sure you want to delete the selected record?',
-			function(choice) {
-				if (choice !== 'yes') return;
-				Ext.getBody().mask();
-				Ext.Ajax.request({
-					url: '/api/users/'+ id,
-					method: 'DELETE',
-					callback: function() {
-						Ext.getBody().unmask();
-					},
-					success: function() {
-						store.reload();
-					}
-				});
-			});
 	},
 
 	onStudentsLoad: function(btn) {
