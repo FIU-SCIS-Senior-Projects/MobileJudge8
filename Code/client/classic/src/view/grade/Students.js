@@ -87,7 +87,7 @@ Ext.define('MobileJudge.view.grade.Students', {
                 {
                     xtype: 'image',
                     flex: 1,
-                    src: '/resources/images/icons/favicon(2).ico',
+                    src: '/resources/images/icons/Yellow.ico',
                     // items: [
                     //             {
                     //                 icon: '/resources/images/icons/favicon(2).ico',

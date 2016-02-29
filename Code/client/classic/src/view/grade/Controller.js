@@ -43,7 +43,7 @@ Ext.define('MobileJudge.view.grade.Controller', {
                             })
                             student.gradeAverage = student.gradeAverage / tempAverage;
                         })
-                    
+                    console.log('data updated');
                     this.dataArray = data;
                     Ext.getStore('mockData').data = data.students;
                     Ext.getStore('mockData').reload();
@@ -96,15 +96,17 @@ Ext.define('MobileJudge.view.grade.Controller', {
     
     onStateChange:function(grid, rowIndex, colIndex){
         var store = grid.getStore(), id = store.getAt(rowIndex).data.studentId, data = store.getAt(rowIndex).data;
+	console.log(store);
         console.log(id); 
         Ext.Ajax.request({
                 url: '/api/views_table/'+ id,
-                success: function(){
-                    store.load();
+                success: function(resp){
+                    console.log(resp);
+			store.load();
                     console.log("success");
                 },
                 failure: this.updateError,
-                jsonData :data,
+                jsonData: data,
                 disableCaching:true,
                 method:'PUT'		   
         }); 
