@@ -14,9 +14,7 @@ Ext.define('MobileJudge.view.profile.Profile', {
     
     controller: 'myProfile',
     viewModel: 'myProfile',
-
     bodyPadding: 20,
-
     items: [
         {
             xtype: 'image',
@@ -47,17 +45,7 @@ Ext.define('MobileJudge.view.profile.Profile', {
             },
             items: [
                 {
-                    xtype: 'checkboxfield',
-                    width: 20,
-                    id: "google",
-                    //html: '<div class="outer-div"><div class="seperator"></div></div>',
-                    //margin: '10px 10px 10px 10px',
-		    readOnly: true,
-		    listeners: {
-                    afterrender: 'onRender'
-                    }
-                },
-                {
+
                     ui: 'google',
                     userCls: 'btn-oauth',
                     iconCls: 'x-fa fa-google-plus',
@@ -65,17 +53,7 @@ Ext.define('MobileJudge.view.profile.Profile', {
                     preventDefault: false,
                     handler: 'onLinkAccount'
                 },
-                {
-                    xtype: 'checkboxfield',
-                    width: 20,
-                    id: "linkedin2",
-		    readOnly: true,
-                    //html: '<div class="outer-div"><div class="seperator"></div></div>',
-                    //margin: '10px 10px 10px 10px',
-                    listeners: {
-                    afterrender: 'onRender'
-                    }
-                },
+
                 {
                     ui: 'linkedin2',
                     userCls: 'btn-oauth',
@@ -85,34 +63,12 @@ Ext.define('MobileJudge.view.profile.Profile', {
                     handler: 'onLinkAccount'
                 },
                 {
-                    xtype: 'checkboxfield',
-                    width: 20,
-                    id: "facebook",
-		    readOnly: true,
-                    //html: '<div class="outer-div"><div class="seperator"></div></div>',
-                    //margin: '10px 10px 10px 10px',
-                    listeners: {
-                    afterrender: 'onRender'
-                    }
-                },
-                {
                     ui: 'facebook',
                     userCls: 'btn-oauth',
                     iconCls: 'x-fa fa-facebook',
                     tooltip: 'Login with Facebook',
                     preventDefault: false,
                     handler: 'onLinkAccount'
-                },
-                {
-                    xtype: 'checkboxfield',
-                    width: 20,
-                    id: "twitter",
-		    readOnly: true,
-                    //html: '<div class="outer-div"><div class="seperator"></div></div>',
-                    //margin: '10px 10px 10px 10px',
-                    listeners: {
-                    afterrender: 'onRender'
-                    }
                 },
                 {
                     ui: 'twitter',
@@ -124,6 +80,48 @@ Ext.define('MobileJudge.view.profile.Profile', {
                 }
             ]
         },
+        {   xtype: 'container', 
+            layout:{ 
+            type:'hbox', 
+            pack: 'center'}, 
+             items:
+            [ 
+                { 
+                xtype: 'checkboxfield', 
+                width: 20, 
+                id: "google", 
+                    html: '<div class="outer-div"><div class="seperator"></div></div>',
+                    margin: '-5px 20px 20px 20px',
+              listeners: {afterrender: 'onRender'} 
+            }, 
+                { 
+            xtype: 'checkboxfield', 
+                    width: 20, 
+            id: "linkedin2",
+                    html: '<div class="outer-div"><div class="seperator"></div></div>',
+                    margin: '-5px 20px 20px 20px',
+                    readOnly: true, 
+            listeners: {afterrender: 'onRender'} 
+                },
+                {
+                    xtype: 'checkboxfield',
+                    width: 20,
+                    id: "facebook",
+                    html: '<div class="outer-div"><div class="seperator"></div></div>',
+                    margin: '-5px 20px 20px 20px',
+                    readOnly: true,
+                    listeners: {afterrender: 'onRender'}
+                },
+                { 
+                xtype: 'checkboxfield', 
+                width: 20, 
+                id: "twitter",
+                html: '<div class="outer-div"><div class="seperator"></div></div>',
+                margin: '-5px 20px 20px 20px',
+                readOnly: true, 
+                listeners: {afterrender: 'onRender'} 
+            }     ] },
+
         {
             xtype: 'component',
             html: '<b>*First Name</b>'
