@@ -85,7 +85,7 @@ Ext.define('MobileJudge.view.profile.Controller', {
 						OAuth.popup(provider, function(err, res) {
 							if (err) {
 								me.loginInProcess = false;
-								Ext.Msg.alert("Error", Ext.isString(err) ? err : err.message);
+								Ext.Msg.alert("Error", (Ext.isString(err) ? err : err.message) + " please ensure popups are not blocked");
 							}
 							else res.me().done(function (data) {
 								var email = data.email;
