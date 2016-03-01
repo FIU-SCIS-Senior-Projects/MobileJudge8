@@ -65,7 +65,7 @@ Ext.define('MobileJudge.view.profile.Controller', {
 					}
 					if(userOauth!==''){
 						Ext.Msg.confirm("Warning", provider + " account is already linked, would you like to unlink it?", function(btn, text){
-								if(btn=='yes'){
+								if(btn==='yes'){
 									delete oauthList[provider];
 									oauthList['oauth'] =  true;
 									Ext.Ajax.request({
