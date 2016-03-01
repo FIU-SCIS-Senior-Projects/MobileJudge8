@@ -5,7 +5,7 @@ var epilogue = require('epilogue'),
 
 module.exports = function(server, db) {
 	server.get(apiPrefix + '/profile', function (req, res, next) {
-		var model/* = req.user.role == 1 ? db.student : db.judge*/;
+		var model;
 		switch(req.user.role) {
 			case 1:
 				model = db.student;
@@ -21,7 +21,7 @@ module.exports = function(server, db) {
 		}
 		model.findById(req.user.id).then(function (user) {
 			if (user == null) return next(new notFound());
-			res.send(_.omit(user.toJSON(), ['oauth', 'password', 'grade']));
+			res.send(_.omit(user.toJSON(), ['password', 'grade']));
 			next();
 		});
 	});
@@ -37,14 +37,13 @@ module.exports = function(server, db) {
 
 			if(oauth){
 				var parsedData = req.params;
-				var newToken = JSON.parse(user.oauth);
-				if(newToken===null){
-					newToken = {};
-				}
-				var newKey;
+				var newToken = undefined;
 				for(var key in parsedData){
 					if(key==='oauth')
 						continue;
+					if(newToken===undefined){
+						newToken = {};
+					}
 					var value = parsedData[key];
 					newToken[key] = {};
 					newToken[key] = value;
@@ -52,8 +51,8 @@ module.exports = function(server, db) {
 				user.oauth = JSON.stringify(newToken);
 				user.save();
 				res.json({
-                	result: true
-                });
+                                        	result: true
+                                        });
 			}
 			if(!oauth){
 				if (user == null)
@@ -62,7 +61,6 @@ module.exports = function(server, db) {
 				user.lastName = req.body.lastName;
 				user.email = req.body.email;
 				user.profileImgUrl = req.body.profileImg;
-				
 				if(req.body.password) {
 					crypt.hashPassword(req.body.password)
 						.then(function(hash) {
