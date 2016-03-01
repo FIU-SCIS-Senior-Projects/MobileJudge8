@@ -31,8 +31,8 @@ Ext.define('MobileJudge.view.grade.Students', {
         cellclick: function (iView, iCellEl, iColIdx, iStore, iRowEl, iRowIdx, iEvent) {
             var zRec = iColIdx;
             var data = Ext.getStore("studentgradesview").data.items[iRowIdx];
-
             if (zRec < 3)
+		    //Ext.widget('gradestudentdetailwizard').getConfig().student = data;
                 Ext.widget('gradestudentdetailwizard').show().loadData(data);
         }
     },

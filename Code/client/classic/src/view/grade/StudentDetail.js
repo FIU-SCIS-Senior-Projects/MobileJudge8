@@ -11,56 +11,27 @@ Ext.define('MobileJudge.view.grade.GradeStudentDetailWizard', {
     ],
     cls: 'wizardone',
     layout: 'card',
-  
+    model: null,
     bodyPadding: 10,
     scrollable: true,
     controller: 'grade',
     modal : true,
-    
     width: 600,
     height: 375,
     title: 'Student Grades by Judges', 
-	
-    initComponent: function() {
-        this.callParent(arguments);
+    config: {
+    	student : null
+    },
+    initComponent: function(view) {
+	    this.callParent(arguments);
     },
 
     loadData: function(record){
+	    console.log('loadData');
+	    this.getConfig().student = record
         $("#nameLabel").text(record.data.fullName);
         $("#projectLabel").text(record.data.projectName);
         $("#gradeLabel").text(record.data.grade);
-        console.log('testing the load data');
-	//Ext.Ajax.request({
-	//	url: 'api/views_table/judges',
-	//	method: 'POST',
-	//	jsonData: record.data,
-	//	success:function(response){
-	//		var data = JSON.parse(response.responseText);
-	//		data.judges.forEach(function(judge){
-	//			data.students.forEach(function(student){
-	//				if(student.judgeId == judge.id)
-	//					student.judgeName = judge.fullName;
-	//			})
-	//		})
-	//		data.students.forEach(function(student){
-	//			var tempAverage = 1;
-	//			data.grades.forEach(function(grade){
-	//				if(student.judgeName == grade.judge && student.fullName == grade.student && student.project == grade.projectName)
-	//				{
-	//					student.gradeAverage = grade.grade;
-	//					tempAverage++;
-	//				}
-	//			})
-	//			student.gradeAverage = student.gradeAverage / tempAverage
-	//		})
-	//		console.log(data.students);
-	//		//Ext.getStore('testerData').data = data.students;
-	//		//Ext.getStore('testerData').reload();
-	//	}
-    //
-	//});
-
-
     },
     
     tbar: {
@@ -138,13 +109,20 @@ Ext.define('MobileJudge.view.grade.JudgeAverageGrade', {
     extend:'Ext.grid.Panel',
     alias: 'widget.judgeaveragegrade',
     store: 'studentData',
+    controller: 'grade',
     initComponent: function() {
          this.callParent()
     },
-
+   
     listeners: {
-	beforerender: function(){
-        var studentData = {
+	afterrender: function(){
+	//console.log(this.student);	
+	
+	var testy = this.up().getConfig().student;
+	if(testy == null){
+		return;
+	}
+	var studentData = {
             studentId: "105658"
         }
 		console.log('testing');
@@ -176,7 +154,7 @@ Ext.define('MobileJudge.view.grade.JudgeAverageGrade', {
                 console.log('printing store' + Ext.getStore('studentData').data);
             }
         });
-
+	
     },
         cellclick: function (iView, iCellEl, iColIdx, iStore, iRowEl, iRowIdx, iEvent) {
             var zRec = iColIdx;

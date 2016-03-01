@@ -11,12 +11,14 @@ Ext.define('MobileJudge.view.grade.Model', {
 
 	data: {
 		studentFilter: [],
-		judgeFilter: []
+		judgeFilter: [],
+		studentInfo: null
 	},
 
 	formulas: {
 		studentFilterSelection: function(get) { return get('studentFilter'); },
-		judgeFilterSelection: function(get) { return get('judgeFilter'); }
+		judgeFilterSelection: function(get) { return get('judgeFilter'); },
+		getStudent: function(get) {return get('studentInfo'); }
 	},
 
 	stores: {

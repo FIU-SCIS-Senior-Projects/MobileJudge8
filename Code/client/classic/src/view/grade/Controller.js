@@ -6,12 +6,11 @@ Ext.define('MobileJudge.view.grade.Controller', {
 	alias: 'controller.grade',
 
 	windows: {},
-	model: null,
 	deleteRecord: {},
 
 	init: function(view) {
-		this.model = view.getViewModel();
-        var data = null;
+
+	var data = null;
         var text = 'Accept';
         var dataArray = null;
 	},
@@ -67,7 +66,10 @@ Ext.define('MobileJudge.view.grade.Controller', {
                 method:'POST'		   
         }); 
     },
-    
+   
+     saveStudentRecord: function(record){
+     	this.model.set('studentInfo');
+     },
     //Call to custom function
     loadStudentsGrades: function(){
          var students = Ext.getStore("students").data.items;
@@ -115,6 +117,42 @@ Ext.define('MobileJudge.view.grade.Controller', {
     updateError: function () {
         console.log("Error updating")
     },
+
+	onStudentsGradesLoaded: function(){
+		
+		var studentData = {
+			studentId: this.student
+		}
+		Ext.Ajax.request({
+			url: 'api/views_table/judges',
+			method: 'POST',
+			jsonData: studentData,
+			success:function(response){
+				var data = JSON.parse(response.responseText);
+				data.judges.forEach(function(judge){
+					data.students.forEach(function(student){
+						if(student.judgeId == judge.id)
+							student.judgeName = judge.fullName;
+					})
+				})
+				data.students.forEach(function(student){
+					var tempAverage = 1;
+					data.grades.forEach(function(grade){
+						if(student.judgeName == grade.judge && student.fullName == grade.student && student.project == grade.projectName)
+						{
+							student.gradeAverage = grade.grade;
+							tempAverage++;
+						}
+					})
+					student.gradeAverage = student.gradeAverage / tempAverage;
+				})
+				console.log(data.students);
+				Ext.getStore('studentData').loadData(data.students);
+				console.log('printing store' + Ext.getStore('studentData').data);
+			}
+		});
+
+	},
     
 
 	onStatesLoaded: function(store, records) {
