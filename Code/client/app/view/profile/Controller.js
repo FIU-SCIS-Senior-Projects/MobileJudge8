@@ -29,44 +29,92 @@ Ext.define('MobileJudge.view.profile.Controller', {
 		});
 	},
 	
+	onRender: function(){
+		//Ext.form.Checkbox.superclass.afterRender.call(this);
+		Ext.Ajax.request({
+			url: '/api/profile',
+			method: 'GET',
+			success: function(resp){
+				 var profile = Ext.decode(resp.responseText);
+				 var userOauth = "";
+				 var oauthList = JSON.parse(profile['oauth']);
+				 for(var oauthKey in oauthList){
+					var checkbox = Ext.getCmp(oauthKey);
+					checkbox.setValue(true);	
+				 }
+			}
+		});
+	},
+
 	onLinkAccount: function(thisButton){
 		var me = this, win = this.view.mask ? this.view : Ext.Viewport;
 			me.loginInProcess = true;
 			var nameArray = thisButton.ui.split('-');
 			var provider = nameArray[0];
-			console.log(provider);
-			OAuth.popup(provider, function(err, res) {
-				console.log('entered popup')
-				if (err) {
-					me.loginInProcess = false;
-					Ext.Msg.alert("Error", Ext.isString(err) ? err : err.message);
-				}
-				else res.me().done(function (data) {
-					//me.requestToken(win, {
-					//	provider: provider,
-					//	id: data.id,
-					//	email: data.email
-					//});
-					var email = data.email;
-					var parsedData = {
-						oauth: true
-					}; 
-					parsedData[provider]={
-						id: data.id
+			Ext.Ajax.request({
+				url: '/api/profile',
+				method: 'GET',
+				success: function(resp){
+					var profile = Ext.decode(resp.responseText);
+					var userOauth = "";
+					var oauthList = JSON.parse(profile['oauth']);
+					for(var oauthKey in oauthList){
+						if(oauthKey === provider){
+							userOauth = oauthList[oauthKey];
+						}
 					}
+					if(userOauth!==''){
+						Ext.Msg.confirm("Warning", provider + " account is already linked, would you like to unlink it?", function(btn, text){
+								if(btn==='yes'){
+									delete oauthList[provider];
+									oauthList['oauth'] =  true;
+									Ext.Ajax.request({
+										url: '/api/profile', 
+										method: 'PUT',
+										jsonData: oauthList,
+										success: function (resp){
+											Ext.Msg.alert("Success!", provider + " account has been unlinked");
+											var checkbox = Ext.getCmp(provider);
+											checkbox.setValue(false);
+										}
+									});	
+								}
+						});
+					}
+					else{
+						OAuth.popup(provider, function(err, res) {
+							if (err) {
+								me.loginInProcess = false;
+								Ext.Msg.alert("Error", Ext.isString(err) ? err : err.message);
+							}
+							else res.me().done(function (data) {
+								var email = data.email;
+								var parsedData = oauthList;
+								parsedData['oauth'] = true; 
+								parsedData[provider]={
+									id: data.id
+								}
+	
 
+								Ext.Ajax.request({
+									url: '/api/profile',
+									method: 'PUT',
+									jsonData: parsedData,
+									success: function(resp){
+										 Ext.Msg.alert("Success", provider + " account as been successfully linked"); 
+										 var checkbox = Ext.getCmp(provider);
+										 checkbox.setValue(true);
+									}
+								});
+							});
+						
+						});
 
-					Ext.Ajax.request({
-						url: '/api/profile',
-						method: 'PUT',
-						jsonData: parsedData
-						//success: function(resp) {
-						//}
-					});
-				});
+					}
+					var cbox = Ext.getCmp('linkedin2');
+					cbox.checked = true;
+				}
 			});
-
-
 	},
 
 	updateProfile: function(btn) {
@@ -117,32 +165,5 @@ Ext.define('MobileJudge.view.profile.Controller', {
 				}
 			}
 		});
-	},
-	/*
-	requestToken: function(win, data) {
-		var me = this;
-
-		win.mask();
-		Ext.Ajax.request({
-			url: '/api/login',
-			method: 'POST',
-			jsonData: data,
-			callback: function() {
-				me.loginInProcess = false;
-			},
-			success: function(resp) {
-				var obj = Ext.decode(resp.responseText);
-				win.unmask();
-				if (!obj.result) {
-					Ext.Msg.alert("Error", obj.error);
-				}
-				else {
-					Ext.Object.each(obj.profile, localStorage.setItem, localStorage);
-					localStorage.setItem('token', obj.token);
-					Ext.GlobalEvents.fireEvent('login');
-				}
-			}
-		});
 	}
-	*/
 });
