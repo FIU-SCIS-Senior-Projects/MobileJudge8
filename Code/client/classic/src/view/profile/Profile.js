@@ -92,7 +92,8 @@ Ext.define('MobileJudge.view.profile.Profile', {
                 id: "google", 
                     html: '<div class="outer-div"><div class="seperator"></div></div>',
                     margin: '-5px 20px 20px 20px',
-              listeners: {afterrender: 'onRender'} 
+              	readOnly: true,
+		listeners: {afterrender: 'onRender'} 
             }, 
                 { 
             xtype: 'checkboxfield', 
