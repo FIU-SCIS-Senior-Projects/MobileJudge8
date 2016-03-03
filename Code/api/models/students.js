@@ -6,7 +6,8 @@ module.exports = function(sequelize, DataTypes) {
 		email: DataTypes.STRING,
 		profileImgUrl: DataTypes.STRING,
 		project: DataTypes.STRING,
-		location: DataTypes.STRING,
+		//location: DataTypes.STRING,
+		realLocation: DataTypes.STRING,
 		/*termName: DataTypes.STRING,
 		mapImageUrl: DataTypes.STRING,*/
 		grade: DataTypes.FLOAT,

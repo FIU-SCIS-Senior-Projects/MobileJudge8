@@ -3,13 +3,14 @@ Ext.define('MobileJudge.model.people.Student', {
 
 	fields: [
 		{ name: 'id',               type: 'int', convert: null },
-		{ name: 'state',            type: 'string' },
-		{ name: 'abbr',             type: 'string' },
-		{ name: 'fullName',         type: 'string', persist: false },
-		{ name: 'email',            type: 'string' },
-		{ name: 'profileImgUrl',    type: 'string' },
-		{ name: 'project',          type: 'string' },
-		{ name: 'location',         type: 'string' },
+		{ name: 'state',            type: 'string', convert: null },
+		{ name: 'abbr',             type: 'string', convert: null },
+		{ name: 'fullName',         type: 'string', convert: null, persist: false },
+		{ name: 'email',            type: 'string', convert: null },
+		{ name: 'profileImgUrl',    type: 'string', convert: null },
+		{ name: 'project',          type: 'string', convert: null },
+		//{ name: 'location',         type: 'string', convert: null },
+		{ name: 'realLocation',     type: 'string' },
 		/*{ name: 'termName',         type: 'string' },
 		{ name: 'mapImageUrl',      type: 'string' },*/
 		{ name: 'grade',            type: 'float', convert: null },

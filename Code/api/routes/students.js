@@ -1,15 +1,20 @@
-var epilogue = require('epilogue'),
-	Promise = require('bluebird'),
-	fetch = require('node-fetch'),
-	_ = require('lodash');
+/*
+ * Make sure to update the view table 'students' in the database in case of errors with the backend
+*/
+
+var epilogue = require('epilogue');
+var	fetch = require('node-fetch');
+fetch.Promise = require('bluebird');
+var _ = require('lodash');
 
 module.exports = function(server, db) {
 	var trim = /^\/|\/$/g;
 
 	var getStudentsFromSpws = function(term) {
+	console.log(term.srProjectUrl.replace(trim, '') + '/getAll/' + term.srProjectToken.replace(trim, ''));
 			return fetch(term.srProjectUrl.replace(trim, '') + '/getAll/' + term.srProjectToken.replace(trim, ''))
 				.then(function (res) {
-					return Promise.map(res.json(), function (s) {
+					return fetch.Promise.map(res.json(), function (s) {
 						return _.assign(s, {termId: term.id});
 					});
 				});
@@ -25,7 +30,7 @@ module.exports = function(server, db) {
 				var ids = _.map(students, 'id').map(parseId);
 				var projects = _.uniq(_.map(students, 'projectID').map(parseId));
 
-				Promise.all([
+				fetch.Promise.all([
 					db.user.scope('current', 'students').count({ where: { state: { '$ne': 10 }, id: { $in: ids } } }),
 					db.user.scope('current', 'students').count({ where: { state: { '$ne': 10 }, id: { $notIn: ids } } }),
 					db.active_project.count({
@@ -79,9 +84,9 @@ module.exports = function(server, db) {
 						};
 					}), 'id');
 
-				return Promise.map(projects, function(p) { return db.project.upsert(p);	})
+				return fetch.Promise.map(projects, function(p) { return db.project.upsert(p);	})
 					.then(function() {
-						return Promise.all([
+						return fetch.Promise.all([
 							db.user.update({state: 10}, {
 								where: {
 									role: 1,
@@ -89,7 +94,7 @@ module.exports = function(server, db) {
 									id: {$notIn: ids}
 								}
 							}),
-							Promise.map(students, function (s) {
+							fetch.Promise.map(students, function (s) {
 								return db.user.upsert({
 									id: parseInt(s.id),
 									email: s.email + '@fiu.edu',
@@ -128,9 +133,9 @@ module.exports = function(server, db) {
 						};
 					}), 'id');
 
-				return Promise.map(projects, function(p) { return db.project.upsert(p);	})
+				return fetch.Promise.map(projects, function(p) { return db.project.upsert(p);	})
 					.then(function() {
-						return Promise.all([
+						return fetch.Promise.all([
 							db.user.update({state: 10}, {
 								where: {
 									role: 1,
@@ -138,7 +143,7 @@ module.exports = function(server, db) {
 									id: {$notIn: ids}
 								}
 							}),
-							Promise.map(students, function (s) {
+							fetch.Promise.map(students, function (s) {
 								return db.user.upsert({
 									id: parseInt(s.id),
 									email: s.email + '@fiu.edu',
@@ -161,19 +166,34 @@ module.exports = function(server, db) {
 			});
 	});
 
-
-	/*server.put(apiPrefix + '/students/:id', function(req, res, next) {
-
-	});*/
+	
+	server.put(apiPrefix + '/students/:id', function(req, res) {
+		db.user.findById(req.params.id).then(function(user) {
+			user.realLocation = req.params.realLocation ? req.params.realLocation : "";
+			switch(req.params.state) {
+				case "Active":
+					user.state = 9;
+					break;
+				case "Dropped":
+					user.state = 10;
+					break;
+				case "Incomplete":
+					user.state = 11;
+					break;
+			}
+			user.save();
+		});
+		return res.send(true);
+	});
 
 	return epilogue.resource({
 		model: db.student,
 		excludeAttributes: ['password','oauth'],
-		//actions: ['list'],
+		actions: ['list'],
 		search: {
 			param: 'query',
 			attributes: [ 'fullName', 'project', 'email' ]
 		},
-		endpoints: [apiPrefix + '/students', apiPrefix + '/students/:id']
+		endpoints: [apiPrefix + '/students']
 	});
 };
