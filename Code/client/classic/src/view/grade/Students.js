@@ -103,7 +103,8 @@ Ext.define('MobileJudge.view.grade.Students', {
                 },
                 {
                     ui: 'soft-blue',
-                    xtype: 'button',
+		    id: 'allButton',
+		    xtype: 'button',
                     text: 'Accept-All',
                     handler: 'statusManager',
                     flex: 1
@@ -172,7 +173,7 @@ Ext.define('MobileJudge.view.grade.Students', {
                     red = true;
                     this.items[0].icon = '/resources/images/icons/Red.ico'; 
                 }
-            },
+    	    },
             width: 40,
             dataIndex: 'bool',
             sortable: false,

@@ -111,6 +111,7 @@ Ext.define('MobileJudge.view.grade.Controller', {
 	},
 
     changeIcon: function (){
+	    console.log('testing changeIcon');
         var me  =this;
         var mainStore = Ext.getStore('studentgradesview');
         
@@ -120,27 +121,30 @@ Ext.define('MobileJudge.view.grade.Controller', {
         
         mainStore.data.items.forEach(function(item){
             if(item.data.gradeStatus ==  'Accepted'){
-                document.getElementById("topIcon").src = '/resources/images/icons/Green.ico';
-                green = true;
+                Ext.getCmp('topIcon').setSrc('/resources/images/icons/Green.ico');
+		green = true;
             }
             if(item.data.gradeStatus ==  'Pending'){
-                document.getElementById("topIcon").src = '/resources/images/icons/Yellow.ico';
-                yellow = true
+		Ext.getCmp('topIcon').setSrc('/resources/images/icons/Yellow.ico');
+		yellow = true
             }
             if(item.data.gradeStatus ==  'Rejected'){
-                document.getElementById("topIcon").src = '/resources/images/icons/Red.ico' ;
-                red = true;
+                Ext.getCmp('topIcon').setSrc('/resources/images/icons/Red.ico');
+		red = true;
             }
-            
-            if(green && yellow)
-                document.getElementById("topIcon").src = '/resources/images/icons/YellowGreen.ico';
-            if(green && red)
-                document.getElementById("topIcon").src = '/resources/images/icons/RedGreen.ico';
-            if(red && yellow)
-                document.getElementById("topIcon").src = '/resources/images/icons/RedYellow.ico';
-            if(red && yellow && green)
-                document.getElementById("topIcon").src = '/resources/images/icons/RedYellowGreen.ico';
-        })
+            if(green && yellow){
+	        Ext.getCmp('topIcon').setSrc('/resources/images/icons/YellowGreen.ico');
+	    }
+	    if(green && red){
+		Ext.getCmp('topIcon').setSrc('/resources/images/icons/RedGreen.ico');
+	    }
+	    if(red && yellow){
+		Ext.getCmp('topIcon').setSrc('/resources/images/icons/RedYellow.ico');
+	    }
+	    if(red && yellow && green){
+		Ext.getCmp('topIcon').setSrc('/resources/images/icons/RedYellowGreen.ico');
+            }
+	})
     },
 
 	onFilterChange: function(selModel, selections) {
@@ -162,6 +166,49 @@ gfilter = filter;
 		{
 			model.deselectAll();
 		}
+	},
+	
+	statusManager: function(){
+		console.log('testing function');
+		var mainStore = Ext.getStore('studentgradesview');
+		var changeTo = Ext.getCmp('allButton').text;
+		console.log(changeTo);
+		var dataArr = [];
+		mainStore.data.items.forEach(function(item){
+			if(changeTo==='Accept-All'){
+				item.data.gradeStatus = 'Accepted';
+				dataArr.push(item);
+			}
+			if(changeTo ==='Pending-All'){
+				item.data.gradeStatus = 'Pending';
+				dataArr.push(item);
+			}
+			if(changeTo === 'Reject-All'){
+				item.data.gradeStatus = 'Rejected';
+				dataArr.push(item);
+			}
+			Ext.Ajax.request({
+				url: '/api/views_table/' + item.data.studentId,
+				success: function(){
+					Ext.getStore('studentgradesview').load();
+				},
+				failure: this.updateError,
+				jsonData: item.data,
+				disableCaching: true,
+				method: 'PUT'
+			});	
+		});
+		if(changeTo ==='Accept-All'){
+			Ext.getCmp('allButton').setText('Reject-All');
+		}
+		else if(changeTo ==='Reject-All'){
+			Ext.getCmp('allButton').setText('Pending-All');
+		}
+		else if(changeTo === 'Pending-All'){
+			Ext.getCmp('allButton').setText('Accept-All');
+		}
+		this.changeIcon();
+		mainStore.loadData(dataArr);
 	},
 
 	doExportStudents: function(){
