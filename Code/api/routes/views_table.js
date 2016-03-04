@@ -42,11 +42,6 @@ var epilogue = require('epilogue'),
                                 studentId: req.params.studentId
                             }
                         }),
-                        // db.judges_grade.findAll({
-                        //     where: {
-                        //         student: req.params.fullName
-                        //     }
-                        // }), 
                         db.user.findAll({
                             where: {
                                 role: 2
@@ -63,43 +58,50 @@ var epilogue = require('epilogue'),
 					   });
 					next();
                     })
-                    
-                    // res.json(data);
-                // })
             });
             next();
      });
         
-        server.put(apiPrefix + '/views_table/:id', function(req, res, next) {
-        //console.log('THIS IS A TEST ++++', req.body.gradeStatus);
-        //console.log('THIS IS A TEST ++++', req.params.id);
-		          
-                  var value = req.body.gradeStatus;
-                  var theModel = db.user;
-                   
-                  if(value == "Pending"){
-                        //console.log("FIrst ONe");
-                        value = "Accepted";
-                    }
-                    else if(value == "Accepted"){
-                        //console.log("Second ONe");
-                        value = "Rejected";
-                    }
-                    else
-                    {
-                        //console.log("Third ONe");
-                        value = "Pending";
-                    }
+    server.put(apiPrefix + '/views_table/:id', function(req, res, next) {
+                
+                var value = req.body.gradeStatus;
+                var state = 0;
+                var theModel = db.user;
+                
+                
+                if(value == "Pending"){
+                    value = "Accepted";
+                    state = 1;
+                }
+                else if(value == "Accepted"){
+                    value = "Rejected";
+                    state = 2;
+                }
+                else
+                {
+                    value = "Pending";
+                    state = 0;
+                }
+                
+                theModel.findById(req.params.id).then(function (user) {
+                    user.gradeStatus = value;
+                    user.save();
                     
-                    theModel.findById(req.params.id).then(function (user) {
-                       user.gradeStatus = value;
-                       //console.log("Started Saving");
-                       user.save();
-                       //console.log("Exiting");
-                       res.json({result: true});
-					});
-                    
-                    next();
+                    db.grade.findAll({
+                            where: {
+                                studentId: req.params.studentId
+                            }
+                        }).then(function(grades){
+                            //console.log("Saved the grades", grades);
+                            grades.forEach(function(grade){
+                                grade.state = state;
+                                grade.save();  
+                            })
+                            res.json({result: true});
+                        })
+                });
+                
+                next();
      });
         
         

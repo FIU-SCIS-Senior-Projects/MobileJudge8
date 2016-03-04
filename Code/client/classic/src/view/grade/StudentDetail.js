@@ -192,15 +192,12 @@ Ext.define('MobileJudge.view.grade.JudgeAverageGrade', {
             renderer: function (value, metadata, record) {
                 if (record.get('gradeStatus').toLowerCase() == "pending") {
                     this.items[0].tooltip = 'Pending';
-                    yellow = true;
                     this.items[0].icon = '/resources/images/icons/Yellow.ico';
                 }else if (record.get('gradeStatus').toLowerCase() == "accepted") {
                     this.items[0].tooltip = 'Accepted';
-                    green = true;
                     this.items[0].icon = '/resources/images/icons/Green.ico';
                 } else {
                     this.items[0].tooltip = 'Rejected';
-                    red = true;
                     this.items[0].icon = '/resources/images/icons/Red.ico'; 
                 }
             },
