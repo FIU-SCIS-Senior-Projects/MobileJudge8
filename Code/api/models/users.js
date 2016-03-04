@@ -39,6 +39,10 @@ module.exports = function(sequelize, DataTypes) {
 			allowNull: false,
 			defaultValue: 0
 		},
+		realLocation: {
+			type: DataTypes.STRING,
+			allowNull: true
+		},
 		oauth: {
 			type: DataTypes.STRING,
 		    allowNull: true

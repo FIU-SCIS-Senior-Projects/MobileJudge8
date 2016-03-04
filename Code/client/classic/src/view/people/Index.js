@@ -37,13 +37,7 @@ Ext.define('MobileJudge.view.people.Index', {
 		{
 			xtype: 'students',
 			title: 'Students',
-			iconCls: 'x-fa fa-graduation-cap',
-			plugins: [
-				{
-					ptype: 'rowediting',
-					pluginId: 'gridEditor'
-				}
-			]
+			iconCls: 'x-fa fa-graduation-cap'
 		},
 		{
 			xtype: 'judges',

@@ -1,8 +1,15 @@
+/*
+ * Make sure to update the view table 'judges' in the database in case of errors with the backend
+*/
+
 var epilogue = require('epilogue'),
 	badRequest = require('restify').errors.BadRequestError,
 	fs = require('fs'),
 	csv = require('csv'),
+	crypt = require('../utils/crypt.js'),
 	_ = require('lodash');
+var	fetch = require('node-fetch');
+fetch.Promise = require('bluebird');
 
 module.exports = function(server, db) {
 
@@ -13,7 +20,7 @@ module.exports = function(server, db) {
 
 		var file = req.files.judgesCsv;
 
-		Promise.all([
+		fetch.Promise.all([
 			db.term.getActiveTerm({ attributes: ['id'] }),
 			db.user.findAll({
 				attributes: [[db.sequelize.fn('MAX', db.sequelize.col('id')), 'id']],
@@ -85,14 +92,94 @@ module.exports = function(server, db) {
 				.pipe(transform);
 		});
 	});
+	
+	server.put(apiPrefix + '/judges/:id', function(req, res) {
+	console.log(req.params);
+		var promises = [];
+		promises.push(db.user.findById(req.params.id));
+		promises.push(db.user.findOne({where: {email: req.params.email}}));
+		if(req.params.password) {
+			promises.push(crypt.hashPassword(req.params.password));
+		}
+		fetch.Promise.all(promises).then(function (arr) {
+			//arr[0] is for users
+			//arr[1] is for email.....if any
+			//arr[2] is for password..if any
+			if(req.params.firstName === "") {
+				return res.send({success: false, message: "First name field can not be empty"});
+			}
+			if(req.params.lastName === "") {
+				return res.send({success: false, message: "Last name field can not be empty"});
+			}
+			if(req.params.email === "") {
+				return res.send({success: false, message: "Email field can not not be empty"});
+			}
+			
+			if(req.params.title || req.params.title === "") {
+				arr[0].title = req.params.title;
+			}
+			if(req.params.affiliation || req.params.affiliation === "") {
+				arr[0].affiliation = req.params.affiliation;
+			}
+			if(req.params.state) {
+				switch(req.params.state) {
+					case "Prospective":
+						arr[0].state = 1;
+						break;
+					case "Invited":
+						arr[0].state = 2;
+						break;
+					case "Rejected":
+						arr[0].state = 3;
+						break;
+					case "Pending":
+						arr[0].state = 4;
+						break;
+					case "Registered":
+						arr[0].state = 5;
+						break;
+					case "Attended":
+						arr[1].state = 6;
+						break;
+					case "Started Grading":
+						arr[0].state = 7;
+						break;
+					case "Graded":
+						arr[0].state = 8;
+						break;
+					case "Removed":
+						arr[0].state = 12;
+						break;
+				}
+			}
+			if(req.params.firstName) {
+				arr[0].firstName = req.params.firstName;
+			}
+			if(req.params.lastName) {
+				arr[0].lastName = req.params.lastName;
+			}
+			if(req.params.email) {
+				if(arr[1]) {
+					return res.send({success: false, message: "Email already exists"});
+				} else {
+					arr[0].email = req.params.email;
+				}
+			}
+			if(req.params.password) {
+				arr[0].password = arr[2];
+			}
+			arr[0].save();
+			return res.send(true);
+		});
+	});
 
 	return epilogue.resource({
 		model: db.judge,
-		excludeAttributes: ['password','oauth'],
+		excludeAttributes: ['oauth', 'password'],
 		actions: ['list'],
 		search: {
 			param: 'query',
-			attributes: [ 'fullName', 'affiliation', 'email' ]
+			attributes: [ 'firstName', 'lastName', 'affiliation', 'email' ]
 		},
 		endpoints: [apiPrefix + '/judges']
 	});

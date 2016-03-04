@@ -34,7 +34,8 @@
     "pmx": "^0.5.5",
     "restify": "^4.0.3",
     "restify-jwt": "^0.4.0",
-    "sequelize": "^3.12.1"
+    "sequelize": "^3.12.1",
+    "morgan": "~1.7.0"
   },
   "devDependencies": {
     "mocha": "^2.3.3",

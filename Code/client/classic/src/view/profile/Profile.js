@@ -14,9 +14,7 @@ Ext.define('MobileJudge.view.profile.Profile', {
     
     controller: 'myProfile',
     viewModel: 'myProfile',
-
     bodyPadding: 20,
-
     items: [
         {
             xtype: 'image',
@@ -42,23 +40,10 @@ Ext.define('MobileJudge.view.profile.Profile', {
             cls: 'social-login',
             defaultType: 'button',
             defaults: {
-                scale: 'large',
+		    scale: 'large',
                 width: 60
             },
             items: [
-                {
-                    ui: 'fiu',
-                    userCls: 'btn-oauth',
-                    tooltip: 'Login with FIU Account',
-                    preventDefault: false,
-                    handler: 'onLinkAccount'
-                },
-                {
-                    xtype: 'box',
-                    width: 1,
-                    html: '<div class="outer-div"><div class="seperator"></div></div>',
-                    margin: '0 8'
-                },
                 {
                     ui: 'google',
                     userCls: 'btn-oauth',
@@ -67,12 +52,7 @@ Ext.define('MobileJudge.view.profile.Profile', {
                     preventDefault: false,
                     handler: 'onLinkAccount'
                 },
-                {
-                    xtype: 'box',
-                    width: 1,
-                    html: '<div class="outer-div"><div class="seperator"></div></div>',
-                    margin: '0 8'
-                },
+
                 {
                     ui: 'linkedin2',
                     userCls: 'btn-oauth',
@@ -82,24 +62,12 @@ Ext.define('MobileJudge.view.profile.Profile', {
                     handler: 'onLinkAccount'
                 },
                 {
-                    xtype: 'box',
-                    width: 1,
-                    html: '<div class="outer-div"><div class="seperator"></div></div>',
-                    margin: '0 8'
-                },
-                {
                     ui: 'facebook',
                     userCls: 'btn-oauth',
                     iconCls: 'x-fa fa-facebook',
                     tooltip: 'Login with Facebook',
                     preventDefault: false,
                     handler: 'onLinkAccount'
-                },
-                {
-                    xtype: 'box',
-                    width: 1,
-                    html: '<div class="outer-div"><div class="seperator"></div></div>',
-                    margin: '0 8'
                 },
                 {
                     ui: 'twitter',
@@ -111,6 +79,49 @@ Ext.define('MobileJudge.view.profile.Profile', {
                 }
             ]
         },
+        {   xtype: 'container', 
+            layout:{ 
+            type:'hbox', 
+            pack: 'center'}, 
+             items:
+            [ 
+                { 
+                xtype: 'checkboxfield', 
+                width: 20, 
+                id: "google", 
+                    html: '<div class="outer-div"><div class="seperator"></div></div>',
+                    margin: '-5px 20px 20px 20px',
+              	readOnly: true,
+		listeners: {afterrender: 'onRender'} 
+            }, 
+                { 
+            xtype: 'checkboxfield', 
+                    width: 20, 
+            id: "linkedin2",
+                    html: '<div class="outer-div"><div class="seperator"></div></div>',
+                    margin: '-5px 20px 20px 20px',
+                    readOnly: true, 
+            listeners: {afterrender: 'onRender'} 
+                },
+                {
+                    xtype: 'checkboxfield',
+                    width: 20,
+                    id: "facebook",
+                    html: '<div class="outer-div"><div class="seperator"></div></div>',
+                    margin: '-5px 20px 20px 20px',
+                    readOnly: true,
+                    listeners: {afterrender: 'onRender'}
+                },
+                { 
+                xtype: 'checkboxfield', 
+                width: 20, 
+                id: "twitter",
+                html: '<div class="outer-div"><div class="seperator"></div></div>',
+                margin: '-5px 20px 20px 20px',
+                readOnly: true, 
+                listeners: {afterrender: 'onRender'} 
+            }     ] },
+
         {
             xtype: 'component',
             html: '<b>*First Name</b>'
@@ -151,6 +162,7 @@ Ext.define('MobileJudge.view.profile.Profile', {
         {
             xtype: 'textfield',
             inputType: 'password',
+            clearOnReset: true,
             bind: {
                 value: '{password}'
             }
@@ -162,6 +174,7 @@ Ext.define('MobileJudge.view.profile.Profile', {
         {
             xtype: 'textfield',
             inputType: 'password',
+            clearOnReset: true,
             bind: {
                 value: '{retypePassword}'
             }
@@ -172,7 +185,7 @@ Ext.define('MobileJudge.view.profile.Profile', {
         },
         {
             xtype: 'component',
-            html: 'You can upload any of your pictures online by pasting the URL in the field.'
+            html: 'You can upload any picture you have hosted online by pasting the URL in the field.'
         },
         {
             xtype: 'textfield',

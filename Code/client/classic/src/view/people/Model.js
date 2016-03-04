@@ -2,10 +2,6 @@ Ext.define('MobileJudge.view.people.Model', {
 	extend: 'Ext.app.ViewModel',
 	alias: 'viewmodel.people',
 
-	requires: [
-
-	],
-
 	data: {
 		studentFilter: [],
 		judgeFilter: []

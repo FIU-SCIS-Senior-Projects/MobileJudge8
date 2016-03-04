@@ -18,6 +18,7 @@ Ext.define('MobileJudge.model.people.User', {
 		{ name: 'title',            type: 'string' },
 		{ name: 'affiliation',      type: 'string' },
 		{ name: 'location',         type: 'int', convert: null },
+		{ name: 'realLocation',     type: 'string', convert: null },
 		/*{ name: 'oauth',            type: 'int', convert: null },
 		{ name: 'oauthId',          type: 'string' },
 		{ name: 'token',            type: 'string' },*/
