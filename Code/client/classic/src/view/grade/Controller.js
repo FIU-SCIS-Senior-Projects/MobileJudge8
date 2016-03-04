@@ -22,7 +22,7 @@ Ext.define('MobileJudge.view.grade.Controller', {
     
     getData: function(data){
         console.log("Requesting data for the selected student");
-        return Ext.Ajax.request({
+            Ext.Ajax.request({
                 url: '/api/views_table/judges',
                 success: function(response){
                     var data = JSON.parse(response.responseText)
@@ -37,29 +37,16 @@ Ext.define('MobileJudge.view.grade.Controller', {
                             data.grades.forEach(function(grade){
                                if(student.judgeName == grade.judge && student.fullName == grade.student && student.project == grade.projectName)
                                 {
-                                    student.gradeAverage = grade.grade;
+                                    student.gradeAverage = student.gradeAverage + grade.grade;
                                     tempAverage ++;
                                 }    
                             })
                             student.gradeAverage = student.gradeAverage / tempAverage;
                         })
                     
-                    this.dataArray = data;
+                    return data;
                     Ext.getStore('mockData').data = data.students;
                     Ext.getStore('mockData').reload();
-                    
-                    // Ext.create('Ext.data.Store', {
-                    //     storeId:'firstPopUp',
-                    //     fields:['judgeName','fullName', 'project', 'accepted','gradeAverage', 'graded', 'project',],
-                    //     data:data,
-                    //     proxy: {
-                    //         type: 'memory',
-                    //         reader: { 
-                    //             type: 'json',
-                    //             root: 'items'
-                    //         }
-                    //     }
-                    // });
                 },
                 failure: this.updateError,
                 jsonData :data,
@@ -95,6 +82,7 @@ Ext.define('MobileJudge.view.grade.Controller', {
 	},
     
     onStateChange:function(grid, rowIndex, colIndex){
+        var me = this;
         var store = grid.getStore(), id = store.getAt(rowIndex).data.studentId, data = store.getAt(rowIndex).data;
         console.log(id); 
         Ext.Ajax.request({
@@ -102,12 +90,14 @@ Ext.define('MobileJudge.view.grade.Controller', {
                 success: function(){
                     store.load();
                     console.log("success");
+                    me.changeIcon();
                 },
                 failure: this.updateError,
                 jsonData :data,
                 disableCaching:true,
                 method:'PUT'		   
         }); 
+        
     },
     
     updateError: function () {
@@ -120,7 +110,43 @@ Ext.define('MobileJudge.view.grade.Controller', {
 		this.model.set(filter, records);
 	},
 
+    changeIcon: function (){
+        var me  =this;
+        var mainStore = Ext.getStore('studentgradesview');
+        
+        var green = false;
+        var yellow = false;
+        var red = false;
+        
+        mainStore.data.items.forEach(function(item){
+            if(item.data.gradeStatus ==  'Accepted'){
+                document.getElementById("topIcon").src = '/resources/images/icons/Green.ico';
+                green = true;
+            }
+            if(item.data.gradeStatus ==  'Pending'){
+                document.getElementById("topIcon").src = '/resources/images/icons/Yellow.ico';
+                yellow = true
+            }
+            if(item.data.gradeStatus ==  'Rejected'){
+                document.getElementById("topIcon").src = '/resources/images/icons/Red.ico' ;
+                red = true;
+            }
+            
+            if(green && yellow)
+                document.getElementById("topIcon").src = '/resources/images/icons/YellowGreen.ico';
+            if(green && red)
+                document.getElementById("topIcon").src = '/resources/images/icons/RedGreen.ico';
+            if(red && yellow)
+                document.getElementById("topIcon").src = '/resources/images/icons/RedYellow.ico';
+            if(red && yellow && green)
+                document.getElementById("topIcon").src = '/resources/images/icons/RedYellowGreen.ico';
+        })
+        // me.updateLayout();
+    },
+
 	onFilterChange: function(selModel, selections) {
+        var me = this;
+        me.changeIcon();    
 		var filter = selections.map(function(r) { return r.get('abbr'); });
 		this.model.getStore(selModel.storeId).filter('abbr', Ext.isEmpty(filter) ? 'XX' : filter);
 		// update intermediate state
@@ -137,84 +163,6 @@ gfilter = filter;
 		{
 			model.deselectAll();
 		}
-	},
-
-	onStudentsLoad: function(btn) {
-		var me = this;
-		btn.setDisabled(true);
-		btn.setText('Please Wait');
-
-		Ext.Ajax.request({
-			url: '/api/students/change',
-			success: function(resp) {
-				var tpl = new Ext.XTemplate(
-					'<span style="font-size:14px">Students</span><hr />',
-					'<span style="text-align:right;width:80px;display:inline-block;">Dropped:&nbsp;</span>{students.dropped}<br />',
-					'<span style="text-align:right;width:80px;display:inline-block;">Update:&nbsp;</span>{students.update}<br />',
-					'<span style="text-align:right;width:80px;display:inline-block;">New:&nbsp;</span>{students.new}<br />',
-					'<tpl if="students.woProject &gt; 0">',
-					'<span style="text-align:right;width:80px;display:inline-block;">No Projects:&nbsp;</span>{students.woProject}<br />',
-				    '<span style="text-align:right;width:80px;display:inline-block;">Update:&nbsp;</span>{students.update}<br />',
-					'<span style="text-align:right;width:80px;display:inline-block;">New:&nbsp;</span>{students.new}<br />',
-					'<tpl if="students.woProject &gt; 0">',
-						'<span style="text-align:right;width:80px;display:inline-block;">No Projects:&nbsp;</span>{students.woProject}<br />',
-					'</tpl>',
-					'<br />',
-					'<span style="font-size:14px">Projects</span><hr />',
-					'<span style="text-align:right;width:80px;display:inline-block;">Deactivate:&nbsp;</span>{projects.deactivate}<br />',
-					'<span style="text-align:right;width:80px;display:inline-block;">Update:&nbsp;</span>{projects.update}<br />',
-					'<span style="text-align:right;width:80px;display:inline-block;">New:&nbsp;</span>{projects.new}<br />'
-				);
-				Ext.Msg.confirm('Apply this changes?', tpl.apply(Ext.decode(resp.responseText)),
-					function(choice) {
-						if (choice !== 'yes') {
-							btn.setText('Sync');
-							btn.setDisabled(false);
-							return;
-						}
-
-						Ext.Ajax.request({
-							url: '/api/students',
-							method: 'POST',
-							callback: function() {
-								btn.setText('Sync');
-								btn.setDisabled(false);
-								//.getView().refresh();
-							},
-							success: function() {
-								//Ext.Msg.alert('Success', 'Changes applied!', function() {
-								me.model.getStore('students').reload();
-									me.model.getStore('students').reload();
-								//});
-							}
-						});
-					});
-			}
-		});
-	},
-	onImportJudges: function() {
-		var me = this;
-		var form = this.lookupReference('judgeUploadForm').getForm();
-		form.submit({
-			url: '/api/judges/import',
-			waitMsg: 'Importing judges...',
-			success: function(form, action) {
-				me.model.getStore('judges').reload();
-				var tpl = new Ext.XTemplate(
-					'File processed on the server.<br />',
-					'Name: {fileName}<br />',
-					'Size: {fileSize:fileSize}<br /><hr />',
-					'Processed: {total}<br />',
-					'Inserted: {records}<br />',
-					'Skipped: {skipped}'
-				);
-				Ext.Msg.alert('Success', tpl.apply(action.result));
-			},
-			failure: function(form, action) {
-				console.log(action);
-				Ext.Msg.alert("Error", action.response.responseText);
-			}
-		});
 	},
 
 	doExportStudents: function(){

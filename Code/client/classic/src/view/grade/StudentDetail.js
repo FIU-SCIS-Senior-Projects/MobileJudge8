@@ -21,38 +21,54 @@ Ext.define('MobileJudge.view.grade.GradeStudentDetailWizard', {
     width: 600,
     height: 375,
     title: 'Student Grades by Judges', 
+    config: {
+    	student : null
+    },
     
     initComponent: function() {
         this.callParent(arguments);
     },
 
-    loadData: function(record){
+    loadData: function(record) {
+        this.getConfig().student = record;
+        var requestData = {
+            studentId : record.data.studentId
+        }
         $("#nameLabel").text(record.data.fullName);
         $("#projectLabel").text(record.data.projectName);
         $("#gradeLabel").text(record.data.grade);
-        this.getController('grade').getData(record.data);//.then(function(){
-        setTimeout(function(){
-            var data = this.getController('grade').returnData();
-        }, 3000);
-            //Creating the DataStore
-            // Ext.create('Ext.data.Store', {
-            //     storeId:'firstPopUp',
-            //     fields:['judgeName','fullName', 'project', 'accepted','gradeAverage', 'graded', 'project'],
-            //     data:data,
-            //     proxy: {
-            //         type: 'memory',
-            //         reader: { 
-            //             type: 'json',
-            //             root: 'items'
-            //         }
-            //     }
-            // });
-        //});
-        
-        //var data = this.getController('grade').returnData();
-        
-        
-        
+    
+        Ext.Ajax.request({
+            url: '/api/views_table/judges',
+            success: function(response){
+                var data = JSON.parse(response.responseText)
+                data.judges.forEach(function(judge){
+                    data.students.forEach(function(student){
+                        if(student.judgeId == judge.id)
+                            student.judgeName = judge.fullName;
+                    })
+                })
+                data.students.forEach(function(student){
+                    var tempAverage = 1;
+                        data.grades.forEach(function(grade){
+                            if(student.judgeName == grade.judge && student.fullName == grade.student && student.project == grade.projectName)
+                            {
+                                student.gradeAverage = student.gradeAverage + grade.grade;
+                                tempAverage ++;
+                            }    
+                        })
+                        student.gradeAverage = student.gradeAverage / tempAverage;
+                    })
+                
+                this.dataArray = data;
+                
+                Ext.getStore('studentDetailData').loadData(data.students);
+            },
+            failure: this.updateError,
+            jsonData : requestData,
+            disableCaching:true,
+            method:'POST'		   
+        });
     },
     
     tbar: {
@@ -129,11 +145,14 @@ Ext.define('MobileJudge.view.grade.GradeStudentDetailWizard', {
 Ext.define('MobileJudge.view.grade.JudgeAverageGrade', {
     extend:'Ext.grid.Panel',
     alias: 'widget.judgeaveragegrade',
-    store: 'mockData',
+    store: 'studentDetailData',
     initComponent: function() {
          this.callParent()
     },
     listeners: {
+        afterrender:function (){
+          console.log("Got here")  
+        },
         cellclick: function (iView, iCellEl, iColIdx, iStore, iRowEl, iRowIdx, iEvent) {
             var zRec = iColIdx;
             var data = Ext.getStore("firstPopUp").data.items[iRowIdx];
@@ -163,22 +182,12 @@ Ext.define('MobileJudge.view.grade.JudgeAverageGrade', {
             flex: 1,
             items: [
                 {
-                    icon: '/resources/images/icons/favicon(2).ico',
+                    icon: '/resources/images/icons/Green.ico',
                     tooltip: 'Status',
                     handler: 'onStateChange'
                 } 
             ],
             renderer: function (value, metadata, record) {
-                // if (record.get('gradeStatus').toLowerCase() == "pending") {
-                //     this.items[0].tooltip = 'Pending';
-                //     this.items[0].icon = '/resources/images/icons/favicon(2).ico';
-                // }else if (record.get('gradeStatus').toLowerCase() == "accepted") {
-                //     this.items[0].tooltip = 'Accepted';
-                //     this.items[0].icon = '/resources/images/icons/favicon(4).ico';
-                // } else {
-                //     this.items[0].tooltip = 'Rejected';
-                //     this.items[0].icon = '/resources/images/icons/favicon(3).ico'; 
-                // }
             },
             width: 40,
             dataIndex: 'bool',
@@ -196,15 +205,10 @@ Ext.define('MobileJudge.view.grade.JudgeAverageGrade', {
 });
 
 Ext.create('Ext.data.Store', {
-    storeId:'mockData',
-    fields:['name', 'grade1', 'grade2','grade3', 'grade4', 'grade5',],
-    data:'',
-    proxy: {
-        type: 'memory',
-        reader: {
-            type: 'json',
-            root: 'items'
-        }
-    }
+    storeId:'studentDetailData',
+    fields:['judgeName', 'gradeAverage', 'status'],
+    data:[
+  {'judgeName':"Andres Villa"} 
+ ]
 });
 

@@ -11,12 +11,12 @@ Ext.define('MobileJudge.view.grade.Students', {
         'Ext.toolbar.Toolbar',
         'Ext.Viewport'
     ],
-
+    
     bind: '{studentgradesview}',
     userCls: 'big-50 small-100',
 
     references: 'gridStudents',
-
+    
     plugins: [
         Ext.create('Ext.grid.plugin.CellEditing', {
             clicksToEdit: 1
@@ -26,7 +26,10 @@ Ext.define('MobileJudge.view.grade.Students', {
         })
     ],
 
-    listeners: {
+    listeners: {    
+        afterrender: function(cmp) {
+            console.log(cmp);
+        },
         painted: 'loadStudentsGrades',
         cellclick: function (iView, iCellEl, iColIdx, iStore, iRowEl, iRowIdx, iEvent) {
             var zRec = iColIdx;
@@ -39,6 +42,7 @@ Ext.define('MobileJudge.view.grade.Students', {
 
     dockedItems: [
         {
+            id: 'top',
             xtype: 'toolbar',
             dock: 'top',
             items: [
@@ -85,31 +89,17 @@ Ext.define('MobileJudge.view.grade.Students', {
                 },
                 '->',
                 {
+                    id: 'topIcon',
                     xtype: 'image',
-                    flex: 1,
-                    src: '/resources/images/icons/favicon(2).ico',
-                    // items: [
-                    //             {
-                    //                 icon: '/resources/images/icons/favicon(2).ico',
-                    //                 handler: 'onStateChange'
-                    //             } 
-                    // ],
-                    renderer: function (value, metadata, record) {
-                        // if (record.get('gradeStatus').toLowerCase() == "pending") {
-                        //     this.items[0].tooltip = 'Pending';
-                        //     this.items[0].icon = '/resources/images/icons/favicon(2).ico';
-                        // }else if (record.get('gradeStatus').toLowerCase() == "accepted") {
-                        //     this.items[0].tooltip = 'Accepted';
-                        //     this.items[0].icon = '/resources/images/icons/favicon(4).ico';
-                        // } else {
-                        //     this.items[0].tooltip = 'Rejected';
-                        //     this.items[0].icon = '/resources/images/icons/favicon(3).ico'; 
-                        // }
-                    },
+                    hight: 30,
+                    src: '/resources/images/icons/Green.ico',
                     width: 40,
                     dataIndex: 'bool',
                     sortable: false,
-                    hideable: false
+                    hideable: false,
+                    listener:{
+                        
+                    }
                 },
                 {
                     ui: 'soft-blue',
@@ -171,12 +161,15 @@ Ext.define('MobileJudge.view.grade.Students', {
             renderer: function (value, metadata, record) {
                 if (record.get('gradeStatus').toLowerCase() == "pending") {
                     this.items[0].tooltip = 'Pending';
+                    yellow = true;
                     this.items[0].icon = '/resources/images/icons/Yellow.ico';
                 }else if (record.get('gradeStatus').toLowerCase() == "accepted") {
                     this.items[0].tooltip = 'Accepted';
+                    green = true;
                     this.items[0].icon = '/resources/images/icons/Green.ico';
                 } else {
                     this.items[0].tooltip = 'Rejected';
+                    red = true;
                     this.items[0].icon = '/resources/images/icons/Red.ico'; 
                 }
             },
@@ -264,22 +257,30 @@ Ext.define('MobileJudge.view.grade.Students', {
     ]
 });
 
-// Ext.override(Ext.grid.RowEditor, {
-//         completeEdit: function() {
-//         var me = this,
-//             form = me.getForm();
-
-//         if (!form.isValid()) {
-//             return false;
-//         }
+// Ext.onReady(function() {
         
-//         alert("Got it ");
+//         var mainStore = Ext.getStore('studentgradesview').reload();
         
-//         me.completing = true;
-//         form.updateRecord(me.context.record);
-//         me.hide();
-//         me.completing = false;
-//         return true;
-//      }
-//     });
+//         var green = false;
+//         var yellow = false;
+//         var red = false;
+        
+//         mainStore.forEach(function(item){
+//             if(green)
+//                 document.getElementById("topIcon").src = '/resources/images/icons/Green.ico';
+//             if(yellow)
+//                 document.getElementById("topIcon").src = '/resources/images/icons/Yellow.ico';
+//             if(red)
+//                 document.getElementById("topIcon").src = '/resources/images/icons/Red.ico' ;
+//             if(green && yellow)
+//                 document.getElementById("topIcon").src = '/resources/images/icons/YellowGreen.ico';
+//             if(green && red)
+//                 document.getElementById("topIcon").src = '/resources/images/icons/RedGreen.ico';
+//             if(red && yellow)
+//                 document.getElementById("topIcon").src = '/resources/images/icons/RedYellow.ico';
+//             if(red && yellow && green)
+//                 document.getElementById("topIcon").src = '/resources/images/icons/RedYellowGreen.ico';
+//         })
+    
+// });
 
