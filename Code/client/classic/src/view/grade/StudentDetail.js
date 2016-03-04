@@ -21,16 +21,12 @@ Ext.define('MobileJudge.view.grade.GradeStudentDetailWizard', {
     width: 600,
     height: 375,
     title: 'Student Grades by Judges', 
-    config: {
-    	student : null
-    },
     
     initComponent: function() {
         this.callParent(arguments);
     },
 
     loadData: function(record) {
-        this.getConfig().student = record;
         var requestData = {
             studentId : record.data.studentId
         }
@@ -156,25 +152,27 @@ Ext.define('MobileJudge.view.grade.JudgeAverageGrade', {
             var zRec = iColIdx;
             var data = Ext.getStore("studentDetailData").data.items[iRowIdx];
 
-            if (zRec < 2)
+            if (zRec < 2){
                 Ext.widget('acceptgradewizard').show().loadData(data);
+                
+            }
         }
     },
     columns: [
         {
-        xtype: 'gridcolumn',
-        text: 'Judge',
-        dataIndex: 'judgeName',
-        flex: 2,
-        width:120
-    },{
-        xtype: 'gridcolumn',
-        text: 'Grade',
-        dataIndex: 'gradeAverage',
-        flex: 2,
-        width:120
-    },
-    {
+            xtype: 'gridcolumn',
+            text: 'Judge',
+            dataIndex: 'judgeName',
+            flex: 2,
+            width:120
+        },{
+            xtype: 'gridcolumn',
+            text: 'Grade',
+            dataIndex: 'gradeAverage',
+            flex: 2,
+            width:120
+        },
+        {
             id: 'secondViewStatus',
             xtype: 'actioncolumn',
             text: 'Status',
@@ -187,6 +185,19 @@ Ext.define('MobileJudge.view.grade.JudgeAverageGrade', {
                 } 
             ],
             renderer: function (value, metadata, record) {
+                if (record.get('gradeStatus').toLowerCase() == "pending") {
+                    this.items[0].tooltip = 'Pending';
+                    yellow = true;
+                    this.items[0].icon = '/resources/images/icons/Yellow.ico';
+                }else if (record.get('gradeStatus').toLowerCase() == "accepted") {
+                    this.items[0].tooltip = 'Accepted';
+                    green = true;
+                    this.items[0].icon = '/resources/images/icons/Green.ico';
+                } else {
+                    this.items[0].tooltip = 'Rejected';
+                    red = true;
+                    this.items[0].icon = '/resources/images/icons/Red.ico'; 
+                }
             },
             width: 40,
             dataIndex: 'bool',

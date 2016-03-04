@@ -123,7 +123,7 @@ Ext.define('MobileJudge.view.grade.Students', {
             dock: 'bottom',
             displayInfo: true,
             bind: '{students}',
-            showPageCombo: true //This config enables the page size select combo box
+            showPageCombo: true 
         }
     ],
 
@@ -256,31 +256,3 @@ Ext.define('MobileJudge.view.grade.Students', {
         // }//,
     ]
 });
-
-// Ext.onReady(function() {
-        
-//         var mainStore = Ext.getStore('studentgradesview').reload();
-        
-//         var green = false;
-//         var yellow = false;
-//         var red = false;
-        
-//         mainStore.forEach(function(item){
-//             if(green)
-//                 document.getElementById("topIcon").src = '/resources/images/icons/Green.ico';
-//             if(yellow)
-//                 document.getElementById("topIcon").src = '/resources/images/icons/Yellow.ico';
-//             if(red)
-//                 document.getElementById("topIcon").src = '/resources/images/icons/Red.ico' ;
-//             if(green && yellow)
-//                 document.getElementById("topIcon").src = '/resources/images/icons/YellowGreen.ico';
-//             if(green && red)
-//                 document.getElementById("topIcon").src = '/resources/images/icons/RedGreen.ico';
-//             if(red && yellow)
-//                 document.getElementById("topIcon").src = '/resources/images/icons/RedYellow.ico';
-//             if(red && yellow && green)
-//                 document.getElementById("topIcon").src = '/resources/images/icons/RedYellowGreen.ico';
-//         })
-    
-// });
-

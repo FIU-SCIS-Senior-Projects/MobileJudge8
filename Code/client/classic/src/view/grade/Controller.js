@@ -141,7 +141,7 @@ Ext.define('MobileJudge.view.grade.Controller', {
             if(red && yellow && green)
                 document.getElementById("topIcon").src = '/resources/images/icons/RedYellowGreen.ico';
         })
-        // me.updateLayout();
+        me.updateLayout();
     },
 
 	onFilterChange: function(selModel, selections) {
