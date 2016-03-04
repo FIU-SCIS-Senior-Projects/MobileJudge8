@@ -90,8 +90,7 @@ Ext.define('MobileJudge.view.grade.GradeStudentDetailWizard', {
                                     xtype: 'label',
                                     text: 'Masoud Sadjadi',
                                     readOnly : true,
-                                    style:'padding:0px 0px 0px 30px',
-                                    //flex: 1
+                                    style:'padding:0px 0px 0px 30px'
                                 }
                           ]
                         },
@@ -137,7 +136,7 @@ Ext.define('MobileJudge.view.grade.GradeStudentDetailWizard', {
         {
             itemId: 'middle',
             xtype: 'judgeaveragegrade',
-            flex: 1,
+            flex: 1
         }
     ]
 });
@@ -155,7 +154,7 @@ Ext.define('MobileJudge.view.grade.JudgeAverageGrade', {
         },
         cellclick: function (iView, iCellEl, iColIdx, iStore, iRowEl, iRowIdx, iEvent) {
             var zRec = iColIdx;
-            var data = Ext.getStore("firstPopUp").data.items[iRowIdx];
+            var data = Ext.getStore("studentDetailData").data.items[iRowIdx];
 
             if (zRec < 2)
                 Ext.widget('acceptgradewizard').show().loadData(data);
@@ -201,7 +200,7 @@ Ext.define('MobileJudge.view.grade.JudgeAverageGrade', {
     closable: false,
     height: 500,
     width: 375,
-    renderTo: Ext.get('grademodal'),
+    renderTo: Ext.get('grademodal')
 });
 
 Ext.create('Ext.data.Store', {

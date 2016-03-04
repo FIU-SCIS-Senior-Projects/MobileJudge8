@@ -120,7 +120,7 @@ Ext.define('MobileJudge.view.grade.acceptGrade', {
         text: 'Question',
         dataIndex: 'question',
         flex: 2,
-        width:120,
+        width:120
     },{
         xtype: 'gridcolumn',
         text: 'Grade',
@@ -150,7 +150,7 @@ Ext.define('MobileJudge.view.grade.acceptGrade', {
     closable: false,
     height: 300,
     width: 400,
-    renderTo: Ext.get('acceptgrademodal'),
+    renderTo: Ext.get('acceptgrademodal')
 });
 
 Ext.create('Ext.data.Store', {
@@ -161,7 +161,7 @@ Ext.create('Ext.data.Store', {
         { 'question': 'Second Question',  "comment":"This is great comment is not too long",  "grade":9},
         { 'question': 'Thids Question',  "comment":"This is great comment is not too long",  "grade":9},
         { 'question': 'Fourth Question',  "comment":"This is great",  "grade":9},
-        { 'question': 'Fifth Question',  "comment":"This is great",  "grade":9},
+        { 'question': 'Fifth Question',  "comment":"This is great",  "grade":9}
     ]},
     proxy: {
         type: 'memory',
