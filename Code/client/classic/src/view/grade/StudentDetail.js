@@ -45,15 +45,20 @@ Ext.define('MobileJudge.view.grade.GradeStudentDetailWizard', {
                     })
                 })
                 data.students.forEach(function(student){
-                    var tempAverage = 1;
+                    var tempAverageCounter = 0;
+                    var gradeAverage = 0;
+                    student.grades = [];
                         data.grades.forEach(function(grade){
-                            if(student.judgeName == grade.judge && student.fullName == grade.student && student.project == grade.projectName)
+                            if(student.judgeId == grade.judgeId && student.studentId == grade.studentId)
                             {
-                                student.gradeAverage = student.gradeAverage + grade.grade;
-                                tempAverage ++;
+                                //student.gradeAverage = student.gradeAverage + grade.grade;
+                                gradeAverage = gradeAverage + grade.value;
+                                tempAverageCounter ++;
+                                student.grades.push(grade);
                             }    
                         })
-                        student.gradeAverage = student.gradeAverage / tempAverage;
+                        student.gradeAverage = gradeAverage / tempAverageCounter;
+                        student.questions = data.questions;
                     })
                 
                 this.dataArray = data;

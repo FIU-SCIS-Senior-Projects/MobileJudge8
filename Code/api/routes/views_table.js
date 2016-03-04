@@ -37,21 +37,29 @@ var epilogue = require('epilogue'),
                                 studentId: req.params.studentId
                             }
                         }),
-                        db.judges_grade.findAll({
+                        db.grade.findAll({
                             where: {
-                                student: req.params.fullName
+                                studentId: req.params.studentId
                             }
-                        }), 
+                        }),
+                        // db.judges_grade.findAll({
+                        //     where: {
+                        //         student: req.params.fullName
+                        //     }
+                        // }), 
                         db.user.findAll({
                             where: {
                                 role: 2
                             }
+                        }),
+                        db.question.findAll({
                         })
                     ]).then(function(arr){
                         res.json({
                             students: arr[0],
                             grades: arr[1],
-                            judges: arr[2]
+                            judges: arr[2],
+                            questions: arr[3]
 					   });
 					next();
                     })

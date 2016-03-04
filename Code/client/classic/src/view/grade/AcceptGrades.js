@@ -23,57 +23,20 @@ Ext.define('MobileJudge.view.grade.Wizard', {
     },
 
     loadData: function(record){
-        // accepted: 5
-        // fullName: "Diana Bone"
-        // gradeAverage: NaN
-        // graded: 5
-        // id: "extModel8-4"
-        // judgeId: 114
-        // judgeName: "Eric Johnson"
-        // location: "Location 3"
-        // profileImgUrl: "http://spws.cis.fiu.edu/Senior-Project-Web-Site-Ver-5/img/no-photo.jpeg"
-        // project: "Smart Building Ver 2.0"
-        // studentId: 1358788
-        // total: 5
-        var requestData = {
-            studentId : record.data.studentId
-        }
+        
         $("#judgeNameLabel").text(record.data.judgeName);
         $("#studentNameLabel").text(record.data.fullName);
         $("#projectNameLabel").text(record.data.project);
         $("#gradeNameLabel").text(record.data.grade);
         
-        Ext.Ajax.request({
-            url: '/api/views_table/judges',
-            success: function(response){
-                var data = JSON.parse(response.responseText)
-                data.judges.forEach(function(judge){
-                    data.students.forEach(function(student){
-                        if(student.judgeId == judge.id)
-                            student.judgeName = judge.fullName;
-                    })
-                })
-                data.students.forEach(function(student){
-                    var tempAverage = 1;
-                        data.grades.forEach(function(grade){
-                            if(student.judgeName == grade.judge && student.fullName == grade.student && student.project == grade.projectName)
-                            {
-                                student.gradeAverage = student.gradeAverage + grade.grade;
-                                tempAverage ++;
-                            }    
-                        })
-                        student.gradeAverage = student.gradeAverage / tempAverage;
-                    })
-                
-                this.dataArray = data;
-                
-                Ext.getStore('studentDetailData').loadData(data.students);
-            },
-            failure: this.updateError,
-            jsonData : requestData,
-            disableCaching:true,
-            method:'POST'		   
-        });
+        record.data.grades.forEach(function(grade){
+            record.data.questions.forEach(function(question){
+                if(grade.questionId == question.id)
+                    grade.questionName = question.text;
+            })
+        })
+        
+        Ext.getStore('judgeGrades').loadData(record.data.grades);
     },
     
     tbar: {
@@ -81,6 +44,7 @@ Ext.define('MobileJudge.view.grade.Wizard', {
             {
                 name: 'thePanel',
                 xtype: 'panel', 
+                width: 375,
                 items: [
                         {
                           items: [
@@ -102,7 +66,7 @@ Ext.define('MobileJudge.view.grade.Wizard', {
                           items: [
                                 {
                                     xtype: 'label',
-                                    text: 'Name:',
+                                    text: 'Student:',
                                     readOnly : true
                                 },
                                 {
@@ -162,7 +126,7 @@ Ext.define('MobileJudge.view.grade.Wizard', {
 Ext.define('MobileJudge.view.grade.acceptGrade', {
     extend: 'Ext.grid.Panel',
     alias: 'widget.acceptGrade',
-    store: 'testData',
+    store: 'judgeGrades',
     initComponent: function() {
          this.callParent()
     },
@@ -170,13 +134,13 @@ Ext.define('MobileJudge.view.grade.acceptGrade', {
         {
         xtype: 'gridcolumn',
         text: 'Question',
-        dataIndex: 'question',
+        dataIndex: 'questionName',
         flex: 2,
         width:120
     },{
         xtype: 'gridcolumn',
         text: 'Grade',
-        dataIndex: 'grade',
+        dataIndex: 'value',
         flex: 2,
         width:120,
         editor: {
@@ -206,7 +170,7 @@ Ext.define('MobileJudge.view.grade.acceptGrade', {
 });
 
 Ext.create('Ext.data.Store', {
-    storeId:'testData',
+    storeId:'judgeGrades',
     fields:['question', 'comment', 'grade'],
     data:{'items':[
         { 'question': 'First Question',  "comment":"This is great comment is not too long",  "grade":9},
