@@ -12,17 +12,65 @@ var epilogue = require('epilogue'),
 
 		db.term.getActiveTerm()
                 .then(function(term){
-                //console.log("Got here", term.id);
-                db.student_grade.findAll({
-                    where: {
-                        termId: 5//term.id
-                    }
-                }).then(function(grades){
-                    //console.log("This is printing the grades",grades);
-                res.json(grades);
-                next();
+                    Promise.all([
+                        db.student_grade.findAll({
+                            where: {
+                                termId: 5//term.id
+                            }
+                        }),
+                        db.grade.findAll({
+                            where: {
+                                termId: 5//term.id
+                            }
+                        }),
+                    ]).then(function(arr){
+                        var students = arr[0];
+                        var grades = arr[1];
+                        console.log("Git sstudents and grades");
+                        
+                            students.forEach(function(student){
+                                
+                                console.log("Checking data and Value");
+                                var acceptedGrades = false;
+                                var pendingGrades = false;
+                                var rejectedGrades = false;
+                                
+                                grades.forEach(function(grade){
+                                    if(student.studentId == grade.studentId){
+                                          switch(grade.state) {
+                                                    case 0:
+                                                        acceptedGrades = true;
+                                                        break;
+                                                    case 1:
+                                                        pendingGrades = true;
+                                                        break;
+                                                    case 2:
+                                                        rejectedGrades = true;
+                                                        break;
+                                                    default:
+                                                        pendingGrades = true;
+                                                }                                    
+                                    }
+                                })
+                                
+                                //Set an initial status
+                                student.gradeStatus = "Pending";
+                                
+                                //Check what states are present
+                                if(pendingGrades == false && rejectedGrades == false && student.acceptedGrades == true)
+                                    student.gradeStatus = "Accepted";
+                                if(acceptedGrades == false && rejectedGrades == false && student.pendingGrades == true)
+                                      student.gradeStatus = "Pending";
+                                if(acceptedGrades == false && pendingGrades == false && student.rejectedGrades == true)
+                                      student.gradeStatus = "Rejected";
+                                      
+                             
+                            })
+                                console.log("This is the end promise", students);
+                                res.json(students);
+                    })
+                    
                 })
-            });
      });
      
      server.post(apiPrefix + '/views_table/judges', function(req, res, next) {
@@ -30,7 +78,6 @@ var epilogue = require('epilogue'),
          
 		db.term.getActiveTerm()
                 .then(function(term){
-                    
                     Promise.all([
                         db.students_by_judge.findAll({
                             where: {
@@ -84,8 +131,7 @@ var epilogue = require('epilogue'),
                 }
                 
                 theModel.findById(req.params.id).then(function (user) {
-                    user.gradeStatus = value;
-                    user.save();
+                    
                     
                     db.grade.findAll({
                             where: {
@@ -94,11 +140,16 @@ var epilogue = require('epilogue'),
                         }).then(function(grades){
                             //console.log("Saved the grades", grades);
                             grades.forEach(function(grade){
+                                console.log("This is a grade +++++++++++++++++++++++++++++++++++++++++++++++++++++++=", grade.state);
+                                
                                 grade.state = state;
                                 grade.save();  
                             })
+                            user.gradeStatus = value;
+                            user.save();
                             res.json({result: true});
                         })
+                        
                 });
                 
                 next();
