@@ -133,7 +133,7 @@ Ext.define('MobileJudge.view.people.Controller', {
 			}
 		});
 	},
-
+	//function callled
 	doExportStudents: function(){
 
 		Ext.Ajax.request({
