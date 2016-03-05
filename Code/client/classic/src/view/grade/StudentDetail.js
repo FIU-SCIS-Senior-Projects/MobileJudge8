@@ -1,3 +1,19 @@
+Ext.create('Ext.data.Store', {
+    storeId:'studentDetailData',
+    listeners:{
+        load : function() {
+                var grid = Ext.getCmp("judgeaveragegrade");
+                grid.getView().refresh();
+				//grid.getSelectionModel().select(0);
+				console.log('userStore load fired')
+			}
+    },
+    fields:['judgeName', 'gradeAverage', 'status'],
+    data:[
+  {'judgeName':"Andres Villa"} 
+ ]
+});
+
 Ext.define('MobileJudge.view.grade.GradeStudentDetailWizard', {
     extend: 'Ext.window.Window',
     alias: 'widget.gradestudentdetailwizard',
@@ -150,7 +166,7 @@ Ext.define('MobileJudge.view.grade.JudgeAverageGrade', {
          this.callParent()
     },
     listeners: {
-        afterrender:function (){
+        afterrender:function (value, metadata, record){
           console.log("Got here")  
         },
         cellclick: function (iView, iCellEl, iColIdx, iStore, iRowEl, iRowIdx, iEvent) {
@@ -175,7 +191,7 @@ Ext.define('MobileJudge.view.grade.JudgeAverageGrade', {
             text: 'Grade',
             dataIndex: 'gradeAverage',
             flex: 2,
-            width:120
+            width:70
         },
         {
             id: 'secondViewStatus',
@@ -187,18 +203,20 @@ Ext.define('MobileJudge.view.grade.JudgeAverageGrade', {
                     icon: '/resources/images/icons/Green.ico',
                     tooltip: 'Status',
                     handler: 'onStateChange'
-                } 
+                }  
             ],
             renderer: function (value, metadata, record) {
-                if (record.get('gradeStatus').toLowerCase() == "pending") {
-                    this.items[0].tooltip = 'Pending';
-                    this.items[0].icon = '/resources/images/icons/Yellow.ico';
-                }else if (record.get('gradeStatus').toLowerCase() == "accepted") {
-                    this.items[0].tooltip = 'Accepted';
-                    this.items[0].icon = '/resources/images/icons/Green.ico';
-                } else {
-                    this.items[0].tooltip = 'Rejected';
-                    this.items[0].icon = '/resources/images/icons/Red.ico'; 
+                if(record.get('gradeStatus') != null){
+                    if (record.get('gradeStatus').toLowerCase() == "pending") {
+                        this.items[0].tooltip = 'Pending';
+                        this.items[0].icon = '/resources/images/icons/Yellow.ico';
+                    }else if (record.get('gradeStatus').toLowerCase() == "accepted") {
+                        this.items[0].tooltip = 'Accepted';
+                        this.items[0].icon = '/resources/images/icons/Green.ico';
+                    } else {
+                        this.items[0].tooltip = 'Rejected';
+                        this.items[0].icon = '/resources/images/icons/Red.ico'; 
+                    }
                 }
             },
             width: 40,
@@ -215,12 +233,3 @@ Ext.define('MobileJudge.view.grade.JudgeAverageGrade', {
     width: 375,
     renderTo: Ext.get('grademodal')
 });
-
-Ext.create('Ext.data.Store', {
-    storeId:'studentDetailData',
-    fields:['judgeName', 'gradeAverage', 'status'],
-    data:[
-  {'judgeName':"Andres Villa"} 
- ]
-});
-

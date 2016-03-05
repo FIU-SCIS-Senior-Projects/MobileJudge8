@@ -20,6 +20,19 @@ Ext.define('MobileJudge.view.grade.Controller', {
             return this.dataArray;
     },
     
+    saveIndependentGrade: function(data) {
+        Ext.Ajax.request({
+                url: '/api/views_table/saveData',
+                success: function(response){
+                    console.log("GOT INTO THE CALLBACK");
+                },
+                failure: this.updateError,
+                jsonData :data,
+                disableCaching:true,
+                method:'POST'		   
+        }); 
+    },
+    
     getData: function(data){
         console.log("Requesting data for the selected student");
             Ext.Ajax.request({
@@ -170,45 +183,48 @@ gfilter = filter;
 	
 	statusManager: function(){
 		console.log('testing function');
+        var states;
 		var mainStore = Ext.getStore('studentgradesview');
 		var changeTo = Ext.getCmp('allButton').text;
 		console.log(changeTo);
 		var dataArr = [];
 		mainStore.data.items.forEach(function(item){
 			if(changeTo==='Accept-All'){
-				item.data.gradeStatus = 'Accepted';
+				states = 'Pending';
 				dataArr.push(item);
 			}
 			if(changeTo ==='Pending-All'){
-				item.data.gradeStatus = 'Pending';
+				states = 'Rejected';
 				dataArr.push(item);
 			}
 			if(changeTo === 'Reject-All'){
-				item.data.gradeStatus = 'Rejected';
+				states = 'Accepted';
 				dataArr.push(item);
 			}
-			Ext.Ajax.request({
-				url: '/api/views_table/' + item.data.studentId,
-				success: function(){
-					Ext.getStore('studentgradesview').load();
-				},
-				failure: this.updateError,
-				jsonData: item.data,
-				disableCaching: true,
-				method: 'PUT'
-			});	
 		});
-		if(changeTo ==='Accept-All'){
-			Ext.getCmp('allButton').setText('Reject-All');
-		}
-		else if(changeTo ==='Reject-All'){
-			Ext.getCmp('allButton').setText('Pending-All');
-		}
-		else if(changeTo === 'Pending-All'){
-			Ext.getCmp('allButton').setText('Accept-All');
-		}
-		this.changeIcon();
-		mainStore.loadData(dataArr);
+        Ext.Ajax.request({
+            url: '/api/views_table/changeAll',
+            success: function(){
+                Ext.getStore('studentgradesview').load();
+                
+                if(changeTo ==='Accept-All'){
+                    Ext.getCmp('allButton').setText('Reject-All');
+                }
+                else if(changeTo ==='Reject-All'){
+                    Ext.getCmp('allButton').setText('Pending-All');
+                }
+                else if(changeTo === 'Pending-All'){
+                    Ext.getCmp('allButton').setText('Accept-All');
+                }
+                this.changeIcon();
+                mainStore.load();
+                
+            },
+            failure: this.updateError,
+            jsonData: states,
+            disableCaching: true,
+            method: 'PUT'
+        });
 	},
 
 	doExportStudents: function(){
@@ -232,76 +248,5 @@ gfilter = filter;
 
 });
 
-function JSONToCSVConvertor(JSONData, ReportTitle, ShowLabel) {
-	//If JSONData is not an object then JSON.parse will parse the JSON string in an Object
-	var arrData = typeof JSONData != 'object' ? JSON.parse(JSONData) : JSONData;
 
-	var CSV = '';
-	//Set Report title in first row or line
-
-	CSV += ReportTitle + '\r\n\n';
-
-	//This condition will generate the Label/Header
-	if (ShowLabel) {
-		var row = "";
-
-		//This loop will extract the label from 1st index of on array
-		for (var index in arrData[0]) {
-
-			//Now convert each value to string and comma-seprated
-			row += index + ',';
-		}
-
-		row = row.slice(0, -1);
-
-		//append Label row with line break
-		CSV += row + '\r\n';
-	}
-
-	//1st loop is to extract each row
-	for (var i = 0; i < arrData.length; i++) {
-		var row = "";
-
-		//2nd loop will extract each column and convert it in string comma-seprated
-		for (var index in arrData[i]) {
-			row += '"' + arrData[i][index] + '",';
-		}
-
-		row.slice(0, row.length - 1);
-
-		//add a line break after each row
-		CSV += row + '\r\n';
-	}
-
-	if (CSV == '') {
-		alert("Invalid data");
-		return;
-	}
-
-	//Generate a file name
-	var fileName = "Downloaded_";
-	//this will remove the blank-spaces from the title and replace it with an underscore
-	fileName += ReportTitle.replace(/ /g,"_");
-
-	//Initialize file format you want csv or xls
-	var uri = 'data:text/csv;charset=utf-8,' + escape(CSV);
-
-	// Now the little tricky part.
-	// you can use either>> window.open(uri);
-	// but this will not work in some browsers
-	// or you will not get the correct file extension
-
-	//this trick will generate a temp <a /> tag
-	var link = document.createElement("a");
-	link.href = uri;
-
-	//set the visibility hidden so it will not effect on your web-layout
-	link.style = "visibility:hidden";
-	link.download = fileName + ".csv";
-
-	//this part will append the anchor tag and remove it after automatic click
-	document.body.appendChild(link);
-	link.click();
-	document.body.removeChild(link);
-}
 

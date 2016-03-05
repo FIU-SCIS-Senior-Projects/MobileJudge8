@@ -103,8 +103,8 @@ Ext.define('MobileJudge.view.grade.Students', {
                 },
                 {
                     ui: 'soft-blue',
-		    id: 'allButton',
-		    xtype: 'button',
+                    id: 'allButton',
+                    xtype: 'button',
                     text: 'Accept-All',
                     handler: 'statusManager',
                     flex: 1

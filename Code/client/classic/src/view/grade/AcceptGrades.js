@@ -15,7 +15,7 @@ Ext.define('MobileJudge.view.grade.Wizard', {
     controller: 'grade',
     modal : true,
     
-    width: 500,
+    width: 600,
     height: 400,
     title: 'Student Grade by One Judge', 
     initComponent: function() {
@@ -27,6 +27,13 @@ Ext.define('MobileJudge.view.grade.Wizard', {
         $("#judgeNameLabel").text(record.data.judgeName);
         $("#studentNameLabel").text(record.data.fullName);
         $("#projectNameLabel").text(record.data.project);
+        var tempGrade = 0;
+        record.data.grades.forEach(function(grade){
+            tempGrade = tempGrade + grade.value;
+        })
+        
+        record.data.grade = tempGrade / record.data.graded;
+        
         $("#gradeNameLabel").text(record.data.grade);
         
         record.data.grades.forEach(function(grade){
@@ -127,6 +134,25 @@ Ext.define('MobileJudge.view.grade.acceptGrade', {
     extend: 'Ext.grid.Panel',
     alias: 'widget.acceptGrade',
     store: 'judgeGrades',
+    requires: [
+		'Ext.grid.plugin.RowEditing',
+		'Ext.grid.column.Action',
+		'Ext.form.field.Checkbox',
+		'Ext.form.field.Number',
+		'Ext.form.field.Text',
+		'Ext.toolbar.Toolbar'
+	],
+    plugins: [
+		{
+			ptype: 'rowediting',
+			pluginId: 'gridEditor',
+            listeners: {
+				edit: function(editor, e){//'saveIndependentGrade'
+                console.log(editor);
+                }
+			}
+		}
+	],
     initComponent: function() {
          this.callParent()
     },
@@ -136,36 +162,42 @@ Ext.define('MobileJudge.view.grade.acceptGrade', {
         text: 'Question',
         dataIndex: 'questionName',
         flex: 2,
-        width:120
+        width:200
     },{
         xtype: 'gridcolumn',
         text: 'Grade',
         dataIndex: 'value',
         flex: 2,
-        width:120,
+        width:70,
         editor: {
-				xtype: 'numberfield',
+				xtype: 'textfield',
 				minValue: 1,
 				maxValue: 10,
-				allowBlank: false
+				allowBlank: false,
+                
 			}
     },{
         xtype: 'gridcolumn',
         text: 'Comment',
         dataIndex: 'comment',
         flex: 2,
-        width:120,
+        width:300,
         editor: {
-				xtype: 'textField',
-				allowBlank: false
-			}
+				xtype: 'textfield',
+			},
+        listeners: {
+            change:function(iView, iCellEl, iColIdx, iRecord, iRowEl, iRowIdx, iEvent){
+                console.log(iRecord);
+            }
+        }
+            
     }],
     floating: false,
     draggable: false,
     modal: true,
     closable: false,
     height: 300,
-    width: 400,
+    width: 500,
     renderTo: Ext.get('acceptgrademodal')
 });
 
