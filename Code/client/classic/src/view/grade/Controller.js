@@ -129,22 +129,18 @@ Ext.define('MobileJudge.view.grade.Controller', {
 	},
 
 	doExportStudents: function(){
-
-		Ext.Ajax.request({
-			url: '/api/students',
-			success: function(resp) {
-				JSONToCSVConvertor(resp.responseText, "Student Report", true);
-			}
+		var records = Ext.getStore('students').getRange(), jsonData = [];
+		Ext.each(records, function (r, i, all) {
+			jsonData.push(r.data);
 		});
+		JSONToCSVConvertor(jsonData, "Student Report", true);
 	},
 	doExportJudges: function(){
-
-		Ext.Ajax.request({
-			url: '/api/judges',
-			success: function(resp) {
-				JSONToCSVConvertor(resp.responseText, "Judge List", true);
-			}
+		var records = Ext.getStore('students').getRange(), jsonData = [];
+		Ext.each(records, function (r, i, all) {
+			jsonData.push(r.data);
 		});
+		JSONToCSVConvertor(jsonData, "Judge Report", true);
 	}
 
 });

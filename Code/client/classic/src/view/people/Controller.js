@@ -96,12 +96,9 @@ Ext.define('MobileJudge.view.people.Controller', {
 							callback: function() {
 								btn.setText('Sync');
 								btn.setDisabled(false);
-								//getView().refresh();
 							},
 							success: function() {
-								//Ext.Msg.alert('Success', 'Changes applied!', function() {
-									me.model.getStore('students').reload();
-								//});
+								me.model.getStore('students').reload();
 							}
 						});
 					});
@@ -135,22 +132,18 @@ Ext.define('MobileJudge.view.people.Controller', {
 	},
 
 	doExportStudents: function(){
-
-		Ext.Ajax.request({
-			url: '/api/students',
-			success: function(resp) {
-				JSONToCSVConvertor(resp.responseText, "Student Report", true);
-			}
+		var records = Ext.getStore('students').getRange(), jsonData = [];
+		Ext.each(records, function (r, i, all) {
+			jsonData.push(r.data);
 		});
+		JSONToCSVConverter(jsonData, "Student Report", true);
 	},
 	doExportJudges: function(){
-
-		Ext.Ajax.request({
-			url: '/api/judges',
-			success: function(resp) {
-				JSONToCSVConvertor(resp.responseText, "Judge List", true);
-			}
+		var records = Ext.getStore('judge').getRange(), jsonData = [];
+		Ext.each(records, function (r, i, all) {
+			jsonData.push(r.data);
 		});
+		JSONToCSVConverter(jsonData, "Judge Report", true);
 	}
 
 });
