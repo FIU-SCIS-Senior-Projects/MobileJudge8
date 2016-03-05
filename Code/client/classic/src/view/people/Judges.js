@@ -1,6 +1,6 @@
 Ext.define('MobileJudge.view.people.Judges', {
 	extend: 'Ext.grid.Panel',
-	alias: 'widget.judges',
+	alias: ['widget.textclearfield', 'widget.judges'],
 
 	requires: [
 		'Ext.grid.plugin.RowEditing',
@@ -10,12 +10,22 @@ Ext.define('MobileJudge.view.people.Judges', {
 		'Ext.form.field.Text',
 		'Ext.toolbar.Toolbar'
 	],
+	
+	
 
 	bind: '{judges}',
+	
+	plugins: [
+		{
+			ptype: 'rowediting',
+			pluginId: 'gridEditor',
+			listeners: {
+				cancelEdit: 'onQuestionCancelEdit'
+			}
+		}
+	],
 
 	dockedItems: [
-
-
 		{
 			xtype: 'toolbar',
 			dock: 'top',
@@ -24,7 +34,6 @@ Ext.define('MobileJudge.view.people.Judges', {
 					xtype: 'checkboxfield',
 					checked   : true,
 					handler:'onCheckChange'
-
 				},
 				{
 					xtype: 'dataview',
@@ -119,29 +128,76 @@ Ext.define('MobileJudge.view.people.Judges', {
 			text: ''
 		},
 		{
-			dataIndex: 'fullName',
-			text: 'Name',
-			flex: 1
+			dataIndex: 'firstName',
+			text: 'First Name',
+			flex: 1,
+			editor: {
+				xtype: 'textfield'
+			}	
+		},
+		{
+			dataIndex: 'lastName',
+			text: 'Last Name',
+			flex: 1,
+			editor: {
+				xtype: 'textfield'
+			}	
 		},
 		{
 			dataIndex: 'email',
 			text: 'Email',
-			flex: 2
+			flex: 2,
+			editor: {
+				xtype: 'textfield'
+			}
+		},
+		{
+			text: 'Password',
+			dataIndex: 'password',
+			flex: 1,
+			renderer: function() {
+				return '<div style="color:#888888">Password not displayed</div>';
+			},
+			editor: {
+				xtype: 'textfield',
+				inputType:'password'
+			}
 		},
 		{
 			dataIndex: 'title',
 			text: 'Title',
-			flex: 1
+			flex: 1,
+			editor: {
+				xtype: 'textfield'
+			}
 		},
 		{
 			dataIndex: 'affiliation',
 			text: 'Affiliation',
-			flex: 1
+			flex: 1,
+			editor: {
+				xtype: 'textfield'
+			}
 		},
 		{
 			dataIndex: 'state',
 			text: 'State',
-			width: 120
+			width: 120,
+			editor: {
+                xtype: 'combo',
+                editable: false,
+                store: [
+                	'Prospective',
+                	'Invited',
+                	'Rejected',
+                	'Pending',
+                	'Registered',
+                	'Attended',
+                	'Started Grading',
+                	'Graded',
+                	'Removed'
+                ]
+            }
 		},
 		{
 			xtype: 'actioncolumn',

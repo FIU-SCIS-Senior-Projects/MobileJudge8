@@ -45,7 +45,6 @@ Ext.define('MobileJudge.view.profile.Profile', {
             },
             items: [
                 {
-
                     ui: 'google',
                     userCls: 'btn-oauth',
                     iconCls: 'x-fa fa-google-plus',
@@ -92,7 +91,8 @@ Ext.define('MobileJudge.view.profile.Profile', {
                 id: "google", 
                     html: '<div class="outer-div"><div class="seperator"></div></div>',
                     margin: '-5px 20px 20px 20px',
-              listeners: {afterrender: 'onRender'} 
+              	readOnly: true,
+		listeners: {afterrender: 'onRender'} 
             }, 
                 { 
             xtype: 'checkboxfield', 
@@ -162,6 +162,7 @@ Ext.define('MobileJudge.view.profile.Profile', {
         {
             xtype: 'textfield',
             inputType: 'password',
+            clearOnReset: true,
             bind: {
                 value: '{password}'
             }
@@ -173,6 +174,7 @@ Ext.define('MobileJudge.view.profile.Profile', {
         {
             xtype: 'textfield',
             inputType: 'password',
+            clearOnReset: true,
             bind: {
                 value: '{retypePassword}'
             }
@@ -183,7 +185,7 @@ Ext.define('MobileJudge.view.profile.Profile', {
         },
         {
             xtype: 'component',
-            html: 'You can upload any of your pictures online by pasting the URL in the field.'
+            html: 'You can upload any picture you have hosted online by pasting the URL in the field.'
         },
         {
             xtype: 'textfield',

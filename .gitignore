@@ -7,6 +7,9 @@ Code/client/classic.json
 Code/client/modern.json
 Code/client/sass/example/bootstrap.json
 Code/oauthd/
+Code/client/bootstrap.css
+Code/client/bootstrap.js
+Code/client/sass/example/bootstrap.js
 
 #Node Modules
 Code/api/node_modules/

@@ -85,7 +85,7 @@ Ext.define('MobileJudge.view.profile.Controller', {
 						OAuth.popup(provider, function(err, res) {
 							if (err) {
 								me.loginInProcess = false;
-								Ext.Msg.alert("Error", Ext.isString(err) ? err : err.message);
+								Ext.Msg.alert("Error", (Ext.isString(err) ? err : err.message) + " please ensure popups are not blocked");
 							}
 							else res.me().done(function (data) {
 								var email = data.email;
@@ -121,9 +121,7 @@ Ext.define('MobileJudge.view.profile.Controller', {
 		var me = this;
 		var profileModel = this.model;
 		
-		if(profileModel.data.firstName === undefined || profileModel.data.firstName == '' ||
-		profileModel.data.lastName === undefined || profileModel.data.lastName == '' ||
-		profileModel.data.email === undefined || profileModel.data.email == '') {
+		if(!profileModel.data.firstName || !profileModel.data.lastName || !profileModel.data.email) {
 			Ext.Msg.alert('','You have empty fields');
 			return;
 		}
@@ -134,9 +132,8 @@ Ext.define('MobileJudge.view.profile.Controller', {
 			email: profileModel.data.email,
 			profileImg: profileModel.data.profileImgUrl
 		}
-		if(profileModel.data.password === undefined) {
-			//do nothing
-		} else if (profileModel.data.password != ''){
+		
+		if(profileModel.data.password || profileModel.data.retypePassword) {
 			if(profileModel.data.password == profileModel.data.retypePassword)
 				data.password = profileModel.data.password;
 			else {
@@ -158,10 +155,15 @@ Ext.define('MobileJudge.view.profile.Controller', {
 					localStorage.setItem('userName', fullName);
 					localStorage.setItem('profilePic', profileModel.data.profileImgUrl);
 					Ext.GlobalEvents.fireEvent('loadProfile');
+					var fields = Ext.ComponentQuery.query('[clearOnReset=true]');
+					for (var ii = 0; ii < fields.length; ii++){
+						fields[ii].reset();
+					}
 					Ext.Msg.alert('','Profile updated!');
+					this.pw.value = '';
 				} else {
 					profileModel.data.password = '';
-					Ext.Msg.alert('','Something wrong, please try again');
+					Ext.Msg.alert('','Something went wrong, please try again');
 				}
 			}
 		});

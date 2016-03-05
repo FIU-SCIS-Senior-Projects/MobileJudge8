@@ -3,11 +3,12 @@ require('pmx').init({ http: true });
 var config = require('./config/server.json'),
 	crypt = require('./utils/crypt.js'),
 	restify = require('restify'),
+	morgan = require('morgan'),
 	formatters = require('./utils/formatters.js'),
 	server = restify.createServer({
 		formatters: formatters(restify)
 	});
-
+server.use(morgan('dev'));
 server.use(restify.acceptParser(server.acceptable));
 server.use(crypt.authToken());
 server.use(crypt.refreshToken());
