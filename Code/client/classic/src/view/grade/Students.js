@@ -12,7 +12,7 @@ Ext.define('MobileJudge.view.grade.Students', {
 	],
     listeners: {    
         afterrender: 'changeIcon',
-        painted: 'loadStudentsGrades',
+        painted: 'changeIcon',
         cellclick: function (iView, iCellEl, iColIdx, iStore, iRowEl, iRowIdx, iEvent) {
             var zRec = iColIdx;
             var data = Ext.getStore("studentgradesview").data.items[iRowIdx];
@@ -144,17 +144,17 @@ Ext.define('MobileJudge.view.grade.Students', {
             ],
             renderer: function (value, metadata, record) {
                 
+                var ctlr = this.up().up().up().getController();
+                ctlr.changeIcon();
+                
                 if (record.get('gradeStatus').toLowerCase() == "pending") {
                     this.items[0].tooltip = 'Pending';
-                    yellow = true;
                     this.items[0].icon = '/resources/images/icons/Yellow.ico';
                 }else if (record.get('gradeStatus').toLowerCase() == "accepted") {
                     this.items[0].tooltip = 'Accepted';
-                    green = true;
                     this.items[0].icon = '/resources/images/icons/Green.ico';
                 } else {
                     this.items[0].tooltip = 'Rejected';
-                    red = true;
                     this.items[0].icon = '/resources/images/icons/Red.ico'; 
                 }
     	    },

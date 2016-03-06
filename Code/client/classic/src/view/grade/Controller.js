@@ -144,7 +144,7 @@ Ext.define('MobileJudge.view.grade.Controller', {
         var me  =this;
         var items;
         
-        if(me.status === null)
+        if(me.status === null || !me.status)
             items = Ext.getStore('studentgradesview').data.items;
         else
             items = [{data:{gradeStatus: me.status}}];
@@ -153,34 +153,32 @@ Ext.define('MobileJudge.view.grade.Controller', {
         var yellow = false;
         var red = false;
         
-            items.forEach(function(item){
-            // while(!green || !yellow || !red){
-                if(item.data.gradeStatus ==  'Accepted'){
-                    Ext.getCmp('topIcon').setSrc('/resources/images/icons/Green.ico');
-                    green = true;
-                }
-                if(item.data.gradeStatus ==  'Pending'){
-                    Ext.getCmp('topIcon').setSrc('/resources/images/icons/Yellow.ico');
-                    yellow = true
-                }
-                if(item.data.gradeStatus ==  'Rejected'){
-                    Ext.getCmp('topIcon').setSrc('/resources/images/icons/Red.ico');
-                    red = true;
-                }
-                
-                if(green && yellow){
-                    Ext.getCmp('topIcon').setSrc('/resources/images/icons/YellowGreen.ico');
-                }
-                if(green && red){
-                    Ext.getCmp('topIcon').setSrc('/resources/images/icons/RedGreen.ico');
-                }
-                if(red && yellow){
-                    Ext.getCmp('topIcon').setSrc('/resources/images/icons/RedYellow.ico');
-                }
-                if(red && yellow && green){
-                    Ext.getCmp('topIcon').setSrc('/resources/images/icons/RedYellowGreen.ico');
-                }
-            //}
+        items.forEach(function(item){
+            if(item.data.gradeStatus ==  'Accepted'){
+                Ext.getCmp('topIcon').setSrc('/resources/images/icons/Green.ico');
+                green = true;
+            }
+            if(item.data.gradeStatus ==  'Pending'){
+                Ext.getCmp('topIcon').setSrc('/resources/images/icons/Yellow.ico');
+                yellow = true
+            }
+            if(item.data.gradeStatus ==  'Rejected'){
+                Ext.getCmp('topIcon').setSrc('/resources/images/icons/Red.ico');
+                red = true;
+            }
+            
+            if(green && yellow){
+                Ext.getCmp('topIcon').setSrc('/resources/images/icons/YellowGreen.ico');
+            }
+            if(green && red){
+                Ext.getCmp('topIcon').setSrc('/resources/images/icons/RedGreen.ico');
+            }
+            if(red && yellow){
+                Ext.getCmp('topIcon').setSrc('/resources/images/icons/RedYellow.ico');
+            }
+            if(red && yellow && green){
+                Ext.getCmp('topIcon').setSrc('/resources/images/icons/RedYellowGreen.ico');
+            }
 	   })
     },
 
@@ -250,6 +248,7 @@ gfilter = filter;
                 
                 me.changeIcon();
                 mainStore.load();
+                me.status = null;
                 
             },
             failure: this.updateError,

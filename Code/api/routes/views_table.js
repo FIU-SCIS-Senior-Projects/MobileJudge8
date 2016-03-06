@@ -132,7 +132,6 @@ module.exports = function(server, db) {
                     user.save();
                     res.json({result: true});
                 })
-                
         });
         next();
 	});
