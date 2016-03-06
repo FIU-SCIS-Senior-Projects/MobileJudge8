@@ -14,10 +14,27 @@ Ext.define('MobileJudge.view.grade.Controller', {
         var data = null;
         var text = 'Accept';
         var dataArray = null;
+        var status = null;
 	},
     
     returnData: function(){
             return this.dataArray;
+    },
+    
+    changeStatus: function(status){
+        var value;
+        if(status == "Pending"){
+            value = "Accepted";
+        }
+        else if(status == "Accepted"){
+            value = "Rejected";
+        }
+        else
+        {
+            value = "Pending";
+        }
+        
+        return value;
     },
     
     saveIndependentGrade: function(data) {
@@ -72,15 +89,12 @@ Ext.define('MobileJudge.view.grade.Controller', {
     loadStudentsGrades: function(){
          var students = Ext.getStore("students").data.items;
          var grades = Ext.getStore("studentGrades").data.items;
-         //console.log(students);
-         //console.log(grades);
          
          students.forEach(function(student){
              var counter = 0;
              
             grades.forEach(function(grade){
-                // console.log(students[0]);
-                // console.log(grade);
+                
                 if(grade.data.studentId == 1358788)//student.id)
                 {
                     console.log(student.data.grade);
@@ -96,11 +110,13 @@ Ext.define('MobileJudge.view.grade.Controller', {
     
     onStateChange:function(grid, rowIndex, colIndex){
         var me = this;
-        var store = grid.getStore(), id = store.getAt(rowIndex).data.studentId, data = store.getAt(rowIndex).data;
+        var store = grid.getStore(), id = store.getAt(rowIndex).data.studentId, data = store.getAt(rowIndex).data, index = rowIndex;
         console.log(id); 
         Ext.Ajax.request({
                 url: '/api/views_table/'+ id,
                 success: function(){
+                    var currentStatus = store.data.items[index].data.gradeStatus;
+                    store.data.items[index].data.gradeStatus = me.changeStatus(currentStatus);
                     store.load();
                     console.log("success");
                     me.changeIcon();
@@ -126,38 +142,46 @@ Ext.define('MobileJudge.view.grade.Controller', {
     changeIcon: function (){
 	    console.log('testing changeIcon');
         var me  =this;
-        var mainStore = Ext.getStore('studentgradesview');
+        var items;
+        
+        if(me.status === null)
+            items = Ext.getStore('studentgradesview').data.items;
+        else
+            items = [{data:{gradeStatus: me.status}}];
         
         var green = false;
         var yellow = false;
         var red = false;
         
-        mainStore.data.items.forEach(function(item){
-            if(item.data.gradeStatus ==  'Accepted'){
-                Ext.getCmp('topIcon').setSrc('/resources/images/icons/Green.ico');
-		green = true;
-            }
-            if(item.data.gradeStatus ==  'Pending'){
-		Ext.getCmp('topIcon').setSrc('/resources/images/icons/Yellow.ico');
-		yellow = true
-            }
-            if(item.data.gradeStatus ==  'Rejected'){
-                Ext.getCmp('topIcon').setSrc('/resources/images/icons/Red.ico');
-		red = true;
-            }
-            if(green && yellow){
-	        Ext.getCmp('topIcon').setSrc('/resources/images/icons/YellowGreen.ico');
-	    }
-	    if(green && red){
-		Ext.getCmp('topIcon').setSrc('/resources/images/icons/RedGreen.ico');
-	    }
-	    if(red && yellow){
-		Ext.getCmp('topIcon').setSrc('/resources/images/icons/RedYellow.ico');
-	    }
-	    if(red && yellow && green){
-		Ext.getCmp('topIcon').setSrc('/resources/images/icons/RedYellowGreen.ico');
-            }
-	})
+            items.forEach(function(item){
+            // while(!green || !yellow || !red){
+                if(item.data.gradeStatus ==  'Accepted'){
+                    Ext.getCmp('topIcon').setSrc('/resources/images/icons/Green.ico');
+                    green = true;
+                }
+                if(item.data.gradeStatus ==  'Pending'){
+                    Ext.getCmp('topIcon').setSrc('/resources/images/icons/Yellow.ico');
+                    yellow = true
+                }
+                if(item.data.gradeStatus ==  'Rejected'){
+                    Ext.getCmp('topIcon').setSrc('/resources/images/icons/Red.ico');
+                    red = true;
+                }
+                
+                if(green && yellow){
+                    Ext.getCmp('topIcon').setSrc('/resources/images/icons/YellowGreen.ico');
+                }
+                if(green && red){
+                    Ext.getCmp('topIcon').setSrc('/resources/images/icons/RedGreen.ico');
+                }
+                if(red && yellow){
+                    Ext.getCmp('topIcon').setSrc('/resources/images/icons/RedYellow.ico');
+                }
+                if(red && yellow && green){
+                    Ext.getCmp('topIcon').setSrc('/resources/images/icons/RedYellowGreen.ico');
+                }
+            //}
+	   })
     },
 
 	onFilterChange: function(selModel, selections) {
@@ -182,31 +206,36 @@ gfilter = filter;
 	},
 	
 	statusManager: function(){
-		console.log('testing function');
-        var states;
-		var mainStore = Ext.getStore('studentgradesview');
+        var me = this;
+        var data = {
+            ids: null,
+            state: null
+        };
+        var ids = [];
+        var mainStore = Ext.getStore('studentgradesview');
 		var changeTo = Ext.getCmp('allButton').text;
-		console.log(changeTo);
-		var dataArr = [];
-		mainStore.data.items.forEach(function(item){
-			if(changeTo==='Accept-All'){
-				states = 'Pending';
-				dataArr.push(item);
-			}
-			if(changeTo ==='Pending-All'){
-				states = 'Rejected';
-				dataArr.push(item);
-			}
-			if(changeTo === 'Reject-All'){
-				states = 'Accepted';
-				dataArr.push(item);
-			}
-		});
+        
+        //Getting the Ids to be modified
+        mainStore.data.items.forEach(function(row){
+            ids.push(row.data.studentId);
+        })
+        data['ids'] = ids;
+        
+        if(changeTo==='Accept-All'){
+            data['state'] = 'Accepted';
+        }
+        if(changeTo ==='Pending-All'){
+            data['state'] = 'Pending';
+        }
+        if(changeTo === 'Reject-All'){
+            data['state'] = 'Rejected';
+        }
+        
         Ext.Ajax.request({
-            url: '/api/views_table/changeAll',
+            url: '/api/views_table_changeAll',
             success: function(){
-                Ext.getStore('studentgradesview').load();
                 
+                //Changing the value of the button to reflect the next stage to change to
                 if(changeTo ==='Accept-All'){
                     Ext.getCmp('allButton').setText('Reject-All');
                 }
@@ -216,12 +245,15 @@ gfilter = filter;
                 else if(changeTo === 'Pending-All'){
                     Ext.getCmp('allButton').setText('Accept-All');
                 }
-                this.changeIcon();
+                //Little hack to get the Icon to update and not have to loop through the store when calling changeIcon
+                me.status = data['state'];
+                
+                me.changeIcon();
                 mainStore.load();
                 
             },
             failure: this.updateError,
-            jsonData: states,
+            jsonData: data,
             disableCaching: true,
             method: 'PUT'
         });

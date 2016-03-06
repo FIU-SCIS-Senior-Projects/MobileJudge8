@@ -1,35 +1,17 @@
 Ext.define('MobileJudge.view.grade.Students', {
-    extend: 'Ext.grid.Panel',
-    alias: 'widget.gradestudents',
+	extend: 'Ext.grid.Panel',
+	alias: 'widget.gradestudents',
 
-    requires: [
-        'Ext.grid.plugin.RowEditing',
-        'Ext.grid.column.Action',
-        'Ext.form.field.Checkbox',
-        'Ext.form.field.Number',
-        'Ext.form.field.Text',
-        'Ext.toolbar.Toolbar',
-        'Ext.Viewport'
-    ],
-    
-    bind: '{studentgradesview}',
-    userCls: 'big-50 small-100',
-
-    references: 'gridStudents',
-    
-    plugins: [
-        Ext.create('Ext.grid.plugin.CellEditing', {
-            clicksToEdit: 1
-        }),
-        Ext.create('Ext.grid.plugin.RowEditing', {
-            clicksToEdit: 1
-        })
-    ],
-
+	requires: [
+		'Ext.grid.plugin.RowEditing',
+		'Ext.grid.column.Action',
+		'Ext.form.field.Checkbox',
+		'Ext.form.field.Number',
+		'Ext.form.field.Text',
+		'Ext.toolbar.Toolbar'
+	],
     listeners: {    
-        afterrender: function(cmp) {
-            console.log(cmp);
-        },
+        afterrender: 'changeIcon',
         painted: 'loadStudentsGrades',
         cellclick: function (iView, iCellEl, iColIdx, iStore, iRowEl, iRowIdx, iEvent) {
             var zRec = iColIdx;
@@ -39,55 +21,72 @@ Ext.define('MobileJudge.view.grade.Students', {
                 Ext.widget('gradestudentdetailwizard').show().loadData(data);
         }
     },
+    
+	bind: '{studentgradesview}',
+	references: 'gridStudents',
+	plugins: [
+        Ext.create('Ext.grid.plugin.CellEditing', {
+            clicksToEdit: 1
+        }),
+        Ext.create('Ext.grid.plugin.RowEditing', {
+            clicksToEdit: 1
+        }),
+		{
+			ptype: 'rowediting',
+			pluginId: 'gridEditor',
+			listeners: {
+				cancelEdit: 'onQuestionCancelEdit'
+			}
+		}
+	],
+    
 
-    dockedItems: [
-        {
-            id: 'top',
-            xtype: 'toolbar',
-            dock: 'top',
-            items: [
-                {
-                    xtype: 'checkboxfield',
-                    checked: true,
-                    handler: 'onCheckChange'
-                    
-                },
-                {
-                    xtype: 'dataview',
-                    cls: 'stateSelector',
-                    loadMask: false,
-                    trackOver: false,
-                    itemSelector: '.stateSelector button',
-                    selectedItemCls: 'selected',
-                    selectionModel: {
-                        type: 'dataviewmodel',
-                        storeId: 'students',
-                        mode: 'SIMPLE'
-                    },
-                    tpl: [
-                        '<tpl for=".">',
-                        '<button type="button" title="{name}">{abbr}</button>',
-                        '</tpl>'
-                    ],
-                    bind: {
-                        selection: '{studentFilterSelection}',
-                        store: '{studentStates}'
-                    },
-                    listeners: {
-                        selectionchange: 'onFilterChange'
-                    }
-                },
-                '->',
-                {
-                    xtype: 'searchfilter',
-                    width: 400,
-                    fieldLabel: 'Search',
-                    labelWidth: 50,
-                    bind: {
-                        store: '{students}'
-                    }
-                },
-                '->',
+	dockedItems: [
+		{
+			xtype: 'toolbar',
+			dock: 'top',
+			items: [
+				{
+					xtype: 'checkboxfield',
+					checked   : true,
+					handler:'onCheckChange'
+				},
+				{
+					xtype: 'dataview',
+					cls: 'stateSelector',
+					loadMask: false,
+					trackOver: false,
+					itemSelector: '.stateSelector button',
+					selectedItemCls: 'selected',
+					selectionModel: {
+						type: 'dataviewmodel',
+						storeId: 'studentgradesview',
+						mode: 'SIMPLE'
+					},
+					tpl: [
+						'<tpl for=".">',
+						'<button type="button" title="{name}">{abbr}</button>',
+						'</tpl>'
+					],
+					bind: {
+						selection: '{studentFilterSelection}',
+						store: '{studentStates}'//Make sure this gets added
+					},
+					listeners: {
+						selectionchange: 'onFilterChange'
+					}
+				},
+				'->',
+				{
+					xtype: 'searchfilter',
+					width: 400,
+					fieldLabel: 'Search',
+					labelWidth: 50,
+					bind: {
+						store: '{studentgradesview}'
+					}
+				},
+				'->',
                 {
                     id: 'topIcon',
                     xtype: 'image',
@@ -97,11 +96,11 @@ Ext.define('MobileJudge.view.grade.Students', {
                     dataIndex: 'bool',
                     sortable: false,
                     hideable: false,
-                    listener:{
-                        
-                    }
+                    // listener:{
+                    //     change: 'onStateChange'
+                    // }
                 },
-                {
+				{
                     ui: 'soft-blue',
                     id: 'allButton',
                     xtype: 'button',
@@ -109,26 +108,10 @@ Ext.define('MobileJudge.view.grade.Students', {
                     handler: 'statusManager',
                     flex: 1
                 },
-                {
-                    ui: 'soft-blue',
-                    glyph: '',
-                    iconCls: 'x-fa fa-cloud-download',
-                    text: 'Export Grades',
-                    handler: 'doExportStudents',
-                    flex: 1
-                }
-            ]
-        },
-        {
-            xtype: 'pagingtoolbar',
-            dock: 'bottom',
-            displayInfo: true,
-            bind: '{students}',
-            showPageCombo: true 
-        }
-    ],
-
-    columns: [
+			]
+		},
+	],
+	columns: [
         {
             xtype: 'gridcolumn',
             dataIndex: 'projectName',
@@ -160,6 +143,7 @@ Ext.define('MobileJudge.view.grade.Students', {
                 } 
             ],
             renderer: function (value, metadata, record) {
+                
                 if (record.get('gradeStatus').toLowerCase() == "pending") {
                     this.items[0].tooltip = 'Pending';
                     yellow = true;
@@ -179,81 +163,5 @@ Ext.define('MobileJudge.view.grade.Students', {
             sortable: false,
             hideable: false
         }
-
-        // {
-        //     xtype: 'actioncolumn',
-        //     //dataIndex: 'gradeStatus',
-        //     text: 'Status',
-        //     flex: 1,
-        //     trackMouse: true,
-        //     // editor: {
-        //     //     xtype: 'combo',
-        //     //     editable: false,
-        //     //     store: [
-        //     //         'Accepted',
-        //     //         'Rejected',
-        //     //         'Pending'
-        //     //     ],
-        //     items: [
-        //         {
-        //             iconCls: 'fa fa-dot-circle-o',
-        //             tooltip: 'Status',
-        //             handler: 'onStateChange', 
-        //         }
-        //     ]
-        //         // listeners: {
-        //         //     change: function(iView, iCellEl, iColIdx, iRecord, iRowEl, iRowIdx, iEvent){
-        //         //         //console.log(gridPanel.getSelectionModel().getCurrentPosition());
-        //         //         console.log(iRecord); 
-        //         //     },
-        //         //     onCancel: function(iView, iCellEl, iColIdx, iRecord, iRowEl, iRowIdx, iEvent){
-        //         //         var grades = Ext.getStore("studentGrades").data.items;
-        //         //         grades.forEach(function(element) {
-        //         //             //if()
-        //         //         }, this);
-        //         //     },
-        //         //     // onItemUpdate: function(){
-        //         //     //     alert("It works");
-        //         //     // }
-        //         // }
-        //     //}
-        // }//,// {
-        //     xtype: 'actioncolumn',
-        //     //dataIndex: 'gradeStatus',
-        //     text: 'Status',
-        //     flex: 1,
-        //     trackMouse: true,
-        //     // editor: {
-        //     //     xtype: 'combo',
-        //     //     editable: false,
-        //     //     store: [
-        //     //         'Accepted',
-        //     //         'Rejected',
-        //     //         'Pending'
-        //     //     ],
-        //     items: [
-        //         {
-        //             iconCls: 'fa fa-dot-circle-o',
-        //             tooltip: 'Status',
-        //             handler: 'onStateChange', 
-        //         }
-        //     ]
-        //         // listeners: {
-        //         //     change: function(iView, iCellEl, iColIdx, iRecord, iRowEl, iRowIdx, iEvent){
-        //         //         //console.log(gridPanel.getSelectionModel().getCurrentPosition());
-        //         //         console.log(iRecord); 
-        //         //     },
-        //         //     onCancel: function(iView, iCellEl, iColIdx, iRecord, iRowEl, iRowIdx, iEvent){
-        //         //         var grades = Ext.getStore("studentGrades").data.items;
-        //         //         grades.forEach(function(element) {
-        //         //             //if()
-        //         //         }, this);
-        //         //     },
-        //         //     // onItemUpdate: function(){
-        //         //     //     alert("It works");
-        //         //     // }
-        //         // }
-        //     //}
-        // }//,
-    ]
+	]
 });

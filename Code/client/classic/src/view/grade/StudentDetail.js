@@ -3,15 +3,13 @@ Ext.create('Ext.data.Store', {
     listeners:{
         load : function() {
                 var grid = Ext.getCmp("judgeaveragegrade");
-                grid.getView().refresh();
-				//grid.getSelectionModel().select(0);
+                // grid.getView().refresh();
+				// grid.getSelectionModel().select(0);
 				console.log('userStore load fired')
 			}
     },
     fields:['judgeName', 'gradeAverage', 'status'],
-    data:[
-  {'judgeName':"Andres Villa"} 
- ]
+    data:[]
 });
 
 Ext.define('MobileJudge.view.grade.GradeStudentDetailWizard', {

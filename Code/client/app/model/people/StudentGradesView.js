@@ -1,10 +1,10 @@
 Ext.define('MobileJudge.model.people.StudentGradesView', {
 	extend: 'Ext.data.Model',
 
-    proxy: {
-		type: 'api',
-		url: '/api/views_table'
-	},
+    // proxy: {
+	// 	type: 'api',
+	// 	url: '/api/views_table'
+	// },
     
 	fields: [
         { name: 'id',               type: 'int', convert: null },
