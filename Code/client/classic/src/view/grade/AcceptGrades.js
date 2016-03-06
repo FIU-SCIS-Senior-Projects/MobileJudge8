@@ -144,8 +144,8 @@ Ext.define('MobileJudge.view.grade.acceptGrade', {
 	],
     plugins: [
 		{
-			ptype: 'rowediting',
-			pluginId: 'gridEditor',
+			ptype: 'cellediting',
+            clicksToEdit: 1,
             listeners: {
 				edit: function(editor, e){//'saveIndependentGrade'
                 console.log(editor);
@@ -153,6 +153,7 @@ Ext.define('MobileJudge.view.grade.acceptGrade', {
 			}
 		}
 	],
+    
     initComponent: function() {
          this.callParent()
     },

@@ -37,7 +37,7 @@ Ext.define('MobileJudge.view.grade.Students', {
 			listeners: {
 				cancelEdit: 'onQuestionCancelEdit'
 			}
-		}
+		},
 	],
     
 
@@ -84,7 +84,11 @@ Ext.define('MobileJudge.view.grade.Students', {
 					labelWidth: 50,
 					bind: {
 						store: '{studentgradesview}'
-					}
+					},
+                    listeners:{
+                        change: 'changeIcon'
+                    }
+                    
 				},
 				'->',
                 {

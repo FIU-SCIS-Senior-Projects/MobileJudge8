@@ -154,56 +154,45 @@ module.exports = function(server, db) {
             stateId = 0;
         }
         console.log("Started the DB Access");
-        db.term.getActiveTerm()
-                .then(function(term){
-                    console.log("Got the Term, ",term.id);
-                    fetch.Promise.all([
-                        db.user.findAll({
-                            where: {
-                                termId: 5,//term.id
-                                role: 1
-                            }
-                        }),
-                        db.grade.findAll({
-                            where: {
-                                termId: 5//term.id
-                            }
-                        })
-                    ]).then(function(arr){
-                        console.log("Got all the data needed");
-                        var users = arr[0];
-                        var grades = arr[1];
-                        
-                        //console.log(users[0]);
-                        ids.forEach(function(id){
-                            //console.log("Started the First Loop");
-                            users.forEach(function(student){
-                                if(id == student.id){
-                                    //console.log(id," -GradeStatus-- ", student.id);
-                                    student.gradeStatus = state;
-                                    //console.log("User gradeStatus", student.gradeStatus);
-                                    student.save();
-                                    //console.log("Saved the user");
-                                }
-                            })
-                        })
-                        // ids.forEach(function(id){
-                        //     //console.log("Started the Second Loop");
-                        //     grades.forEach(function(grade){
-                        //         if(id == grade.studentId){
-                        //             //console.log(id," -Grade- ", grade.studentId);
-                        //             grade.state = stateId;
-                        //             //console.log("User gradeStateId", grade.state);
-                        //             grade.save();
-                        //             //console.log("Saved the grade");
-                        //         }
-                        //     })
-                        // })
-                        res.json({result: true});
+        var count = 0;
+        ids.forEach(function(id){
+            fetch.Promise.all([
+                db.user.findAll({
+                    where: {
+                        id: id,
+                        role: 1
+                    }
+                }),
+                db.grade.findAll({
+                    where: {
+                        studentId: id
+                    }
+                })
+            ]).then(function(arr){
+                console.log("Got all the data needed");
+                var users = arr[0];
+                var grades = arr[1];
+                
+                    users.forEach(function(student){
+                        grades.forEach(function(grade){
+                        if(student.id == grade.studentId){
+                            grade.state = stateId;
+                            grade.save();
+                        }
                     })
-            });
-            next();
-     });
+                            student.gradeStatus = state;
+                            student.save();
+                        count++;
+                        if(count === ids.length)
+                        {
+                            res.json({result: true});
+                            console.log("Exiting the save all");
+                        }
+                    })
+            })
+        });
+        next();
+    });
     
 	return epilogue.resource({
 		model: db.student_grade,
