@@ -7,6 +7,8 @@ module.exports = function(sequelize, DataTypes) {
         projectName: DataTypes.STRING,
         comment: DataTypes.STRING,
 		accepted: DataTypes.STRING,
+        studentId: DataTypes.INTEGER,
+        judgeId: DataTypes.INTEGER,
 	}, {
 		timestamps: false,
 		tableName: 'judges_grades',

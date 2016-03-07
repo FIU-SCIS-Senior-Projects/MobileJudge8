@@ -129,6 +129,77 @@ Ext.define('MobileJudge.view.grade.Controller', {
         
     },
     
+    loadSecondViewData: function(data){
+        Ext.Ajax.request({
+            url: '/api/second_view',
+            success: function(response){
+                var data = JSON.parse(response.responseText)
+                Ext.getStore('studentDetailData').loadData(data);
+            },
+            failure: this.updateError,
+            jsonData : data,
+            disableCaching:true,
+            method:'POST'		   
+        });
+    },
+    
+    changeStatusSecondView: function(grid, rowIndex, colIndex){
+        var me = this;
+        var store = Ext.getStore('studentDetailData'), status;
+        var data = [];
+        var changeTo = Ext.getCmp('detailAllButton').text;
+        
+        if(!isNaN(rowIndex)){// != null){
+           data.push(store.data.items[rowIndex].data);
+           
+           if(data[0].gradeStatus === "Accepted")
+                status = "Rejected"
+           else if(data[0].gradeStatus === "Rejected")
+                status = "Pending";
+           else 
+                status = "Accepted"; 
+        }
+        else{
+            if(changeTo==='Accept-All'){
+                status = 'Accepted';
+                Ext.getCmp('detailAllButton').setText('Reject-All');
+            }
+            else if(changeTo ==='Pending-All'){
+                status = 'Pending';
+                Ext.getCmp('detailAllButton').setText('Accept-All');
+            }
+            else{
+                status = 'Rejected';
+                Ext.getCmp('detailAllButton').setText('Pending-All');
+            }
+            
+            store.data.items.forEach(function(item){
+                data.push(item.data);
+            })
+        }
+        
+        var sendData = {
+            data: data,
+            state: status
+        };
+        
+        Ext.Ajax.request({
+                url: '/api/second_view_save',
+                success: function(){
+                    // var currentStatus = store.data.items[index].data.gradeStatus;
+                    // store.data.items[index].data.gradeStatus = me.changeStatus(currentStatus);
+                    me.loadSecondViewData(data[0]);
+                    console.log("success");
+                    // me.changeIcon();
+                },
+                failure: this.updateError,
+                jsonData :sendData,
+                disableCaching:true,
+                method:'PUT'		   
+        }); 
+        
+    },
+    
     updateError: function () {
         console.log("Error updating")
     },
@@ -140,7 +211,7 @@ Ext.define('MobileJudge.view.grade.Controller', {
 	},
 
     changeIcon: function (){
-	    console.log('testing changeIcon');
+	    //console.log('testing changeIcon');
         var me  =this;
         var items;
         

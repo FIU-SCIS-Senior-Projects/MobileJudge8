@@ -3,8 +3,6 @@ Ext.create('Ext.data.Store', {
     listeners:{
         load : function() {
                 var grid = Ext.getCmp("judgeaveragegrade");
-                // grid.getView().refresh();
-				// grid.getSelectionModel().select(0);
 				console.log('userStore load fired')
 			}
     },
@@ -41,49 +39,14 @@ Ext.define('MobileJudge.view.grade.GradeStudentDetailWizard', {
     },
 
     loadData: function(record) {
-        var requestData = {
-            studentId : record.data.studentId
-        }
+        var ctrl = this.getController();
+        
         $("#nameLabel").text(record.data.fullName);
         $("#projectLabel").text(record.data.projectName);
         $("#gradeLabel").text(record.data.grade);
-    
-        Ext.Ajax.request({
-            url: '/api/views_table/judges',
-            success: function(response){
-                var data = JSON.parse(response.responseText)
-                data.judges.forEach(function(judge){
-                    data.students.forEach(function(student){
-                        if(student.judgeId == judge.id)
-                            student.judgeName = judge.fullName;
-                    })
-                })
-                data.students.forEach(function(student){
-                    var tempAverageCounter = 0;
-                    var gradeAverage = 0;
-                    student.grades = [];
-                        data.grades.forEach(function(grade){
-                            if(student.judgeId == grade.judgeId && student.studentId == grade.studentId)
-                            {
-                                //student.gradeAverage = student.gradeAverage + grade.grade;
-                                gradeAverage = gradeAverage + grade.value;
-                                tempAverageCounter ++;
-                                student.grades.push(grade);
-                            }    
-                        })
-                        student.gradeAverage = gradeAverage / tempAverageCounter;
-                        student.questions = data.questions;
-                    })
-                
-                this.dataArray = data;
-                
-                Ext.getStore('studentDetailData').loadData(data.students);
-            },
-            failure: this.updateError,
-            jsonData : requestData,
-            disableCaching:true,
-            method:'POST'		   
-        });
+        $("#idLabel").text(record.data.studentId);
+        ctrl.loadSecondViewData(record.data);
+        
     },
     
     tbar: {
@@ -142,6 +105,14 @@ Ext.define('MobileJudge.view.grade.GradeStudentDetailWizard', {
                           ]
                         }
                 ]
+            },
+            {
+                ui: 'soft-blue',
+                id: 'detailAllButton',
+                xtype: 'button',
+                text: 'Accept-All',
+                handler: 'changeStatusSecondView',
+                flex: 1
             }
         ],
         renderTo: Ext.getBody()
@@ -200,7 +171,7 @@ Ext.define('MobileJudge.view.grade.JudgeAverageGrade', {
                 {
                     icon: '/resources/images/icons/Green.ico',
                     tooltip: 'Status',
-                    handler: 'onStateChange'
+                    handler: 'changeStatusSecondView'
                 }  
             ],
             renderer: function (value, metadata, record) {

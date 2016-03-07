@@ -11,9 +11,7 @@ module.exports = function(server, db) {
 	var trim = /^\/|\/$/g;
 
     server.put(apiPrefix + '/views_table_changeAll', function(req, res, next) {
-        console.log(req.body)
         var state = req.body.state;
-        console.log(state);
         var ids = req.body.ids;
 		var stateId = 0;
         
@@ -27,7 +25,6 @@ module.exports = function(server, db) {
         {
             stateId = 0;
         }
-        console.log("Started the DB Access");
         var count = 0;
         ids.forEach(function(id){
             fetch.Promise.all([
@@ -43,7 +40,6 @@ module.exports = function(server, db) {
                     }
                 })
             ]).then(function(arr){
-                console.log("Got all the data needed");
                 var users = arr[0];
                 var grades = arr[1];
                 
@@ -60,13 +56,50 @@ module.exports = function(server, db) {
                         if(count === ids.length)
                         {
                             res.json({result: true});
-                            console.log("Exiting the save all");
                         }
                     })
             })
         });
         next();
     });
+    
+    server.put(apiPrefix + '/views_table/:id', function(req, res, next) {
+        
+		var value = req.body.gradeStatus;
+        var state = 0;
+        var theModel = db.user;
+        
+        if(value == "Pending"){
+            value = "Accepted";
+            state = 1;
+        }
+        else if(value == "Accepted"){
+            value = "Rejected";
+            state = 2;
+        }
+        else
+        {
+            value = "Pending";
+            state = 0;
+        }
+        
+        theModel.findById(req.params.id).then(function (user) {
+            db.grade.findAll({
+                    where: {
+                        studentId: req.params.studentId
+                    }
+                }).then(function(grades){
+                    grades.forEach(function(grade){
+                        grade.state = state;
+                        grade.save();  
+                    })
+                    user.gradeStatus = value;
+                    user.save();
+                    res.json({result: true});
+                })
+        });
+        next();
+	});
     
 	return epilogue.resource({
 		model: db.student_grade,
