@@ -40,7 +40,7 @@ module.exports = function(server, db) {
                     if(acc && !pen) obj.gradeStatus = "Accepted";
                     else if(!acc && rej && !pen) obj.gradeStatus = "Rejected";
                     else obj.gradeStatus = "Pending";
-                    obj.gradeAverage = obj.gradeAverage / count;
+                    obj.gradeAverage = obj.gradeAverage;//Average Not Needed / count;
                     response.push(obj);
                     acc, rej, pen = false;
                     count = 1;
@@ -104,6 +104,7 @@ module.exports = function(server, db) {
                     var grades = arr[1];
                     
                     users.forEach(function(user){
+                        console.log("Got here once");
                         grades.forEach(function(grade){
                             if(user.id == grade.studentId){;
                                 grade.state = stateId;

@@ -45,12 +45,14 @@ module.exports = function(server, db) {
                 
                     users.forEach(function(student){
                         grades.forEach(function(grade){
+                            console.log(student.id,"==", grade.studentId, "=================>", stateId);
                         if(student.id == grade.studentId){
                             grade.state = stateId;
                             grade.save();
                         }
                     })
-                            student.gradeStatus = state;
+                    student.gradeStatus = state;
+                    console.log("saving the status of all main page", student.gradeStatus);
                             student.save();
                         count++;
                         if(count === ids.length)

@@ -21,6 +21,20 @@ Ext.define('MobileJudge.view.grade.Controller', {
             return this.dataArray;
     },
     
+    getAverage: function(data){
+        var average = 0;
+        
+        data.forEach(function(item){
+            if(item.grade)
+                average = average + item.grade;
+            else if(item.gradeAverage)
+                average = average + item.gradeAverage;
+            else
+                average = average + item.value;
+        })
+        return (average / data.length);
+    },
+    
     changeStatus: function(status){
         var value;
         if(status == "Pending"){
@@ -151,11 +165,14 @@ Ext.define('MobileJudge.view.grade.Controller', {
     },
     
     loadSecondViewData: function(data){
+        var me = this;
         Ext.Ajax.request({
             url: '/api/second_view',
             success: function(response){
                 var data = JSON.parse(response.responseText)
                 Ext.getStore('studentDetailData').loadData(data);
+                var average = me.getAverage(data);
+                Ext.getCmp('gradeLabel').setText(average);
             },
             failure: this.updateError,
             jsonData : data,
