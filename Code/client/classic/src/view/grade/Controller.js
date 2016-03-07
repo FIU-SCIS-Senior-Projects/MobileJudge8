@@ -188,7 +188,6 @@ Ext.define('MobileJudge.view.grade.Controller', {
 		var filter = selections.map(function(r) { return r.get('abbr'); });
 		this.model.getStore(selModel.storeId).filter('abbr', Ext.isEmpty(filter) ? 'XX' : filter);
 		// update intermediate state
-gfilter = filter;
 	},
 
 	onCheckChange: function(checkbox) {

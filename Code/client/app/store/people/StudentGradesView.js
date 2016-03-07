@@ -7,11 +7,6 @@ Ext.define('MobileJudge.store.people.StudentGradesView', {
 	proxy: {
 		type: 'api',
 		url: '/api/views_table',
-        reader: {
-            type: 'json',
-            root: 'users',
-            totalProperty: 'total'
-        }
 	},
 
     autoSync: true,

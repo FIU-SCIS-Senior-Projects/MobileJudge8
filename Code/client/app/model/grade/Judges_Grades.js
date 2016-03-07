@@ -1,10 +1,5 @@
 Ext.define('MobileJudge.model.people.JudgesGrade', {
 	extend: 'Ext.data.Model',
-
-    // proxy: {
-	// 	type: 'api',
-	// 	url: '/api/judges_grades'
-	// },
     
 	fields: [
         { name: 'id',               type: 'int', convert: null },

@@ -99,10 +99,7 @@ Ext.define('MobileJudge.view.grade.Students', {
                     width: 40,
                     dataIndex: 'bool',
                     sortable: false,
-                    hideable: false,
-                    // listener:{
-                    //     change: 'onStateChange'
-                    // }
+                    hideable: false
                 },
 				{
                     ui: 'soft-blue',
@@ -114,11 +111,18 @@ Ext.define('MobileJudge.view.grade.Students', {
                 },
 			]
 		},
+		{
+			xtype: 'pagingtoolbar',
+			dock: 'bottom',
+			displayInfo: true,
+			bind: '{studentgradesview}',
+			showPageCombo: true //This config enables the page size select combo box
+		}
 	],
 	columns: [
         {
             xtype: 'gridcolumn',
-            dataIndex: 'projectName',
+            dataIndex: 'project',
             text: 'Project',
             flex: 1
         },
