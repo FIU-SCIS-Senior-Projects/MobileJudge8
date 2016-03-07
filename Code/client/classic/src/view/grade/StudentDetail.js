@@ -24,6 +24,9 @@ Ext.define('MobileJudge.view.grade.GradeStudentDetailWizard', {
   
     cls: 'wizardone',
     layout: 'card',
+    listeners: {
+      close: "updateMainStore"  
+    },
   
     bodyPadding: 10,
     scrollable: true,

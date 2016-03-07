@@ -200,8 +200,12 @@ Ext.define('MobileJudge.view.grade.Controller', {
         
     },
     
-    updateError: function () {
-        console.log("Error updating")
+    updateMainStore: function () {
+        //console.log("THIS IS GOING TO BE THE CLOSE ");
+        var me = this;
+        var mainStore = Ext.getStore('studentgradesview');
+        me.changeIcon();
+        mainStore.load();
     },
     
 
