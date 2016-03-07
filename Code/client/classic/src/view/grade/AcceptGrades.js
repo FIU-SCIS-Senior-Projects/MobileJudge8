@@ -14,42 +14,33 @@ Ext.define('MobileJudge.view.grade.Wizard', {
     scrollable: true,
     controller: 'grade',
     modal : true,
+    listeners: {
+      close: function(){
+         var ctrl = this.getController();
+         var grades = Ext.getStore("judgeGrades").data.items;
+         ctrl.loadSecondViewData(grades[0].data);
+      }  
+    },
     
-    width: 600,
-    height: 400,
+    width: 550,
+    height: 350,
     title: 'Student Grade by One Judge', 
     initComponent: function() {
         this.callParent(arguments);
     },
 
     loadData: function(record){
-        
-        $("#judgeNameLabel").text(record.data.judgeName);
-        $("#studentNameLabel").text(record.data.fullName);
-        $("#projectNameLabel").text(record.data.project);
-        var tempGrade = 0;
-        record.data.grades.forEach(function(grade){
-            tempGrade = tempGrade + grade.value;
-        })
-        
-        record.data.grade = tempGrade / record.data.graded;
-        
-        $("#gradeNameLabel").text(record.data.grade);
-        
-        record.data.grades.forEach(function(grade){
-            record.data.questions.forEach(function(question){
-                if(grade.questionId == question.id)
-                    grade.questionName = question.text;
-            })
-        })
-        
-        Ext.getStore('judgeGrades').loadData(record.data.grades);
+        var ctrl = this.getController();
+        $("#judgeThirdLabel").text(record.data.judgeName);
+        $("#studentThirdLabel").text(record.data.fullName);
+        $("#projectThirdLabel").text(record.data.project);
+        $("#gradeThirdLabel").text(record.data.gradeAverage);
+        ctrl.loadThirdViewData(record.data);
     },
     
     tbar: {
         items: [
             {
-                name: 'thePanel',
                 xtype: 'panel', 
                 width: 375,
                 items: [
@@ -61,7 +52,7 @@ Ext.define('MobileJudge.view.grade.Wizard', {
                                     readOnly : true
                                 },
                                 {
-                                    id: 'judgeNameLabel',
+                                    id: 'judgeThirdLabel',
                                     xtype: 'label',
                                     text: 'Masoud Sadjadi',
                                     readOnly : true,
@@ -77,7 +68,7 @@ Ext.define('MobileJudge.view.grade.Wizard', {
                                     readOnly : true
                                 },
                                 {
-                                    id: 'studentNameLabel',
+                                    id: 'studentThirdLabel',
                                     xtype: 'label',
                                     text: 'Rodolfo Viant',
                                     readOnly : true,
@@ -93,7 +84,7 @@ Ext.define('MobileJudge.view.grade.Wizard', {
                                     readOnly : true
                                 },
                                 {
-                                    id: 'projectNameLabel',
+                                    id: 'projectThirdLabel',
                                     xtype: 'label',
                                     text: 'Mobile Judge 8',
                                     readOnly : true,
@@ -109,7 +100,7 @@ Ext.define('MobileJudge.view.grade.Wizard', {
                                     readOnly : true
                                 },
                                 {
-                                    id: 'gradeNameLabel',
+                                    id: 'gradeThirdLabel',
                                     xtype: 'label',
                                     text: '8',
                                     readOnly : true,
@@ -118,6 +109,18 @@ Ext.define('MobileJudge.view.grade.Wizard', {
                           ]
                         }
                 ]
+            },
+            {
+                ui: 'soft-blue',
+                id: 'detailAllThirdButton',
+                xtype: 'button',
+                text: 'Accept-All',
+                handler: 'changeStatusThirdView',
+                width: 100,
+                layout: {
+                    pack: 'justify',
+                    align: 'right' // align center is the default
+                }
             }
         ],
         renderTo: Ext.getBody()
@@ -147,9 +150,7 @@ Ext.define('MobileJudge.view.grade.acceptGrade', {
 			ptype: 'cellediting',
             clicksToEdit: 1,
             listeners: {
-				edit: function(editor, e){//'saveIndependentGrade'
-                console.log(editor);
-                }
+				edit: "saveEditedData"
 			}
 		}
 	],
@@ -161,21 +162,21 @@ Ext.define('MobileJudge.view.grade.acceptGrade', {
         {
         xtype: 'gridcolumn',
         text: 'Question',
-        dataIndex: 'questionName',
+        dataIndex: 'question',
         flex: 2,
         width:200
     },{
         xtype: 'gridcolumn',
         text: 'Grade',
-        dataIndex: 'value',
+        dataIndex: 'grade',
         flex: 2,
         width:70,
+        clearOnReset: true,
         editor: {
 				xtype: 'textfield',
 				minValue: 1,
 				maxValue: 10,
-				allowBlank: false,
-                
+				allowBlank: false
 			}
     },{
         xtype: 'gridcolumn',
@@ -183,15 +184,40 @@ Ext.define('MobileJudge.view.grade.acceptGrade', {
         dataIndex: 'comment',
         flex: 2,
         width:300,
-        editor: {
-				xtype: 'textfield',
-			},
-        listeners: {
-            change:function(iView, iCellEl, iColIdx, iRecord, iRowEl, iRowIdx, iEvent){
-                console.log(iRecord);
-            }
-        }
+        // editor: {
+		// 		xtype: 'textfield'
+		// 	}
             
+    },
+    {
+        xtype: 'actioncolumn',
+        text: 'Status',
+        flex: 1,
+        items: [
+            {
+                icon: '/resources/images/icons/Green.ico',
+                tooltip: 'Status',
+                handler: 'changeStatusThirdView'
+            }  
+        ],
+        renderer: function (value, metadata, record) {
+            if(record.get('accepted') != null){
+                if (record.get('accepted').toLowerCase() == "pending") {
+                    this.items[0].tooltip = 'Pending';
+                    this.items[0].icon = '/resources/images/icons/Yellow.ico';
+                }else if (record.get('accepted').toLowerCase() == "accepted") {
+                    this.items[0].tooltip = 'Accepted';
+                    this.items[0].icon = '/resources/images/icons/Green.ico';
+                } else {
+                    this.items[0].tooltip = 'Rejected';
+                    this.items[0].icon = '/resources/images/icons/Red.ico'; 
+                }
+            }
+        },
+        width: 40,
+        dataIndex: 'bool',
+        sortable: false,
+        hideable: false
     }],
     floating: false,
     draggable: false,
@@ -199,6 +225,7 @@ Ext.define('MobileJudge.view.grade.acceptGrade', {
     closable: false,
     height: 300,
     width: 500,
+    scrollable: false,
     renderTo: Ext.get('acceptgrademodal')
 });
 

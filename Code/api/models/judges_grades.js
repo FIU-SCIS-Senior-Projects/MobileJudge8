@@ -9,6 +9,7 @@ module.exports = function(sequelize, DataTypes) {
 		accepted: DataTypes.STRING,
         studentId: DataTypes.INTEGER,
         judgeId: DataTypes.INTEGER,
+        questionId: DataTypes.INTEGER
 	}, {
 		timestamps: false,
 		tableName: 'judges_grades',

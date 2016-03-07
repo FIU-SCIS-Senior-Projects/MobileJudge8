@@ -5,67 +5,63 @@ var _ = require('lodash');
 
 module.exports = function(server, db) {
 	var trim = /^\/|\/$/g;
-    
-    server.post(apiPrefix + '/second_view', function(req, res, next) {
+
+server.post(apiPrefix + '/third_view', function(req, res, next) {
         
         db.judges_grade.findAll({
             where: {
                 studentId: req.params.studentId,
+                judgeId: req.params.judgeId
             }
         }).then(function(judge_grades){
-            var response = [];
-            var acc, rej, pen;
-            var count;
-            var obj = {
-                            judgeName: "",
-                            gradeAverage: 0,
-                            gradeStatus: "",
-                            studentId: null,
-                            judgeId: null  
-                    };
-            
-            judge_grades.forEach(function(jg){
-                if(obj.judgeName ==  ""){
-                    acc, rej, pen = false;
-                    count = 1;
-                    obj = {
-                            judgeName: jg.judge,
-                            gradeAverage: jg.grade,
-                            gradeStatus: "",
-                            studentId: jg.studentId,
-                            judgeId: jg.judgeId 
-                        }
-                }
-                else if(obj.judgeName != jg.judge){
-                    if(acc && !pen) obj.gradeStatus = "Accepted";
-                    else if(!acc && rej && !pen) obj.gradeStatus = "Rejected";
-                    else obj.gradeStatus = "Pending";
-                    obj.gradeAverage = obj.gradeAverage / count;
-                    response.push(obj);
-                    acc, rej, pen = false;
-                    count = 1;
-                    obj = {
-                            judgeName: jg.judge,
-                            gradeAverage: jg.grade,
-                            gradeStatus: "",  
-                            studentId: jg.studentId,
-                            judgeId: jg.judgeId
-                        }
-                }
-                else{
-                    obj.gradeAverage = obj.gradeAverage + jg.grade;
-                    if(jg.accepted == "Accepted") acc = true;
-                    else if(jg.accepted == "Pending") pen = true;
-                    else rej = true;
-                    count ++;
-                }
+                res.json(judge_grades);
             })
-            res.json(response);
-        })
         next();
 	});
     
-    server.put(apiPrefix + '/second_view_save', function(req, res, next) {
+    server.post(apiPrefix + '/third_view_save_edited', function(req, res, next) {
+        console.log(req.params[0].studentId);
+        var data = req.params;
+        //console.log(data);
+        data.forEach(function(clientData){
+            fetch.Promise.all([
+                db.grade.findAll({
+                            where: {
+                                studentId: obj.studentId,
+                                judgeId: obj.judgeId
+                            }
+                        })
+                ]).then(function(arr){
+                    console.log(arr);
+                })
+        })
+        // fetch.Promise.all([
+        //     db.grade.findAll({
+        //                 where: {
+        //                     studentId: obj.studentId,
+        //                     judgeId: obj.judgeId,
+        //                     questionId: obj.questionId
+        //                 }
+        //             })
+        // ]).then(function(arr){
+        //     console.log("THIS IS THE END");
+        //     // console.log(arr[0].length) 
+        //         // var grades = judge_grades;
+        //         // grades.forEach(function(grade){
+        //         //     data.forEach(function(clientGrade){
+        //         //         if(grade.questionId === clientGrade.questionId){
+        //         //             grade.value = clientGrade.grade;
+        //         //             grade.save();
+        //         //             console.log("saved");
+        //         //         }
+        //         //     })
+        //         // })
+        //         // res.json(judge_grades);
+        //     })
+        next();
+	});   
+       
+    server.put(apiPrefix + '/third_view_save', function(req, res, next) {
         console.log(req.params);
 
         var stateId = 0;
@@ -96,7 +92,8 @@ module.exports = function(server, db) {
                     db.grade.findAll({
                         where: {
                             studentId: obj.studentId,
-                            judgeId: obj.judgeId
+                            judgeId: obj.judgeId,
+                            questionId: obj.questionId
                         }
                     })
                 ]).then(function(arr){
@@ -110,6 +107,8 @@ module.exports = function(server, db) {
                                 grade.save();
                             }
                         })
+                        if(stateId == 0)
+                            user.gradeStatus = "Pending";
                         count++;
                         if(count === data.length)
                         {
@@ -161,6 +160,6 @@ module.exports = function(server, db) {
     
 	return epilogue.resource({
 		model: db.judges_grade,
-        endpoints: [apiPrefix + '/second_view']
+        endpoints: [apiPrefix + '/third_view']
 	});
 };

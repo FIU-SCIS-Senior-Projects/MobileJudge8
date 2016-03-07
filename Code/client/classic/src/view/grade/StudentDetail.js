@@ -34,7 +34,7 @@ Ext.define('MobileJudge.view.grade.GradeStudentDetailWizard', {
     modal : true,
     
     width: 600,
-    height: 375,
+    height: 450,
     title: 'Student Grades by Judges', 
     
     initComponent: function() {
@@ -47,7 +47,6 @@ Ext.define('MobileJudge.view.grade.GradeStudentDetailWizard', {
         $("#nameLabel").text(record.data.fullName);
         $("#projectLabel").text(record.data.projectName);
         $("#gradeLabel").text(record.data.grade);
-        $("#idLabel").text(record.data.studentId);
         ctrl.loadSecondViewData(record.data);
         
     },
@@ -115,7 +114,11 @@ Ext.define('MobileJudge.view.grade.GradeStudentDetailWizard', {
                 xtype: 'button',
                 text: 'Accept-All',
                 handler: 'changeStatusSecondView',
-                flex: 1
+                width: 100,
+                layout: {
+                    pack: 'justify',
+                    align: 'right' // align center is the default
+                }
             }
         ],
         renderTo: Ext.getBody()
