@@ -147,21 +147,29 @@ Ext.define('MobileJudge.view.grade.Controller', {
         var me = this;
         var store = Ext.getStore('judgeGrades');
         var data = [];
+        var outOfBounds = false;
         store.data.items.forEach(function(obj){
+            if(obj.data.grade > 10 || obj.data.grade < 0)
+                outOfBounds = true;
             data.push(obj.data);
         })
-        Ext.Ajax.request({
-            url: '/api/third_view_save_edited',
-            success: function(response){
-                var data = JSON.parse(response.responseText)
-                //store.loadData(data);
-                me.loadThirdViewData(data[0]);
-            },
-            failure: this.updateError,
-            jsonData : data,
-            disableCaching:true,
-            method:'POST'		   
-        });
+        
+        if(outOfBounds){
+            me.loadThirdViewData(data[0]);
+        }
+        else{
+            Ext.Ajax.request({
+                url: '/api/third_view_save_edited',
+                success: function(response){
+                    var data = JSON.parse(response.responseText)
+                    me.loadThirdViewData(data.data[0]);
+                },
+                failure: this.updateError,
+                jsonData : data,
+                disableCaching:true,
+                method:'POST'		   
+            });
+        }
     },
     
     loadSecondViewData: function(data){
@@ -200,16 +208,22 @@ Ext.define('MobileJudge.view.grade.Controller', {
         var store = Ext.getStore('judgeGrades'), status;
         var data = [];
         var changeTo = Ext.getCmp('detailAllThirdButton').text;
+        var tempObj;
         
         if(!isNaN(rowIndex)){
-           data.push(store.data.items[rowIndex].data);
+            tempObj = {
+                studentId: store.data.items[rowIndex].data.studentId,
+                judgeId: store.data.items[rowIndex].data.judgeId,
+                questionId: store.data.items[rowIndex].data.questionId
+            };
+           data.push(tempObj);
            
-           if(data[0].accepted === "Accepted")
+           if(store.data.items[rowIndex].data.accepted === "Accepted")
                 status = "Rejected"
-           else if(data[0].accepted === "Rejected")
+           else if(store.data.items[rowIndex].data.accepted === "Rejected")
                 status = "Pending";
            else 
-                status = "Accepted"; 
+                status = "Accepted";  
         }
         else{
             if(changeTo==='Accept-All'){
@@ -226,7 +240,12 @@ Ext.define('MobileJudge.view.grade.Controller', {
             }
             
             store.data.items.forEach(function(item){
-                data.push(item.data);
+                tempObj = {
+                    studentId: item.data.studentId,
+                    judgeId: item.data.judgeId,
+                    questionId: item.data.questionId
+                };
+                data.push(tempObj);
             })
         }
         var sendData = {
@@ -251,13 +270,18 @@ Ext.define('MobileJudge.view.grade.Controller', {
         var store = Ext.getStore('studentDetailData'), status;
         var data = [];
         var changeTo = Ext.getCmp('detailAllButton').text;
+        var tempObj;
         
         if(!isNaN(rowIndex)){
-           data.push(store.data.items[rowIndex].data);
+            tempObj = {
+                studentId: store.data.items[rowIndex].data.studentId,
+                judgeId: store.data.items[rowIndex].data.judgeId
+            };
+           data.push(tempObj);
            
-           if(data[0].gradeStatus === "Accepted")
+           if(store.data.items[rowIndex].data.gradeStatus === "Accepted")
                 status = "Rejected"
-           else if(data[0].gradeStatus === "Rejected")
+           else if(store.data.items[rowIndex].data.gradeStatus === "Rejected")
                 status = "Pending";
            else 
                 status = "Accepted"; 
@@ -277,7 +301,11 @@ Ext.define('MobileJudge.view.grade.Controller', {
             }
             
             store.data.items.forEach(function(item){
-                data.push(item.data);
+                tempObj = {
+                    studentId: item.data.studentId,
+                    judgeId: item.data.judgeId
+                };
+                data.push(tempObj);
             })
         }
         

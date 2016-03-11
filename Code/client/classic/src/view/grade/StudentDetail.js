@@ -29,12 +29,12 @@ Ext.define('MobileJudge.view.grade.GradeStudentDetailWizard', {
     },
   
     bodyPadding: 10,
-    scrollable: true,
+    scrollable: false,
     controller: 'grade',
     modal : true,
     
     width: 600,
-    height: 450,
+    height: 500,
     title: 'Student Grades by Judges', 
     
     initComponent: function() {

@@ -17,24 +17,83 @@ server.post(apiPrefix + '/third_view', function(req, res, next) {
                 res.json(judge_grades);
             })
         next();
+	});   
+       
+    server.put(apiPrefix + '/third_view_save', function(req, res, next) {
+        var stateId = 0;
+        var count = 0;
+        var data = req.params.data;
+//         { data: [ { studentId: 105658, judgeId: 123, questionId: 16 } ],
+//   state: 'Accepted' }
+        
+        
+        if(req.params.state == "Accepted"){
+            stateId = 1;
+        }
+        else if(req.params.state == "Rejected"){
+            stateId = 2;
+        }
+        else
+        {
+            stateId = 0;
+        }
+        
+        data.forEach(function(obj){
+            fetch.Promise.all([
+                db.grade.update({state: stateId}, {
+                    where: {
+                        studentId: obj.studentId,
+                        judgeId: obj.judgeId,
+                        questionId: obj.questionId
+                    }
+                }),
+            ]).then(function(arr){
+                    count++;
+                    if(count === data.length)
+                    {
+                        res.json({result: true});
+                    }
+                })
+        });
 	});
     
     server.post(apiPrefix + '/third_view_save_edited', function(req, res, next) {
-        console.log(req.params[0].studentId);
+        //console.log(req.params);
         var data = req.params;
-        //console.log(data);
-        data.forEach(function(clientData){
+        var count = 0;
+        data.forEach(function(obj){
             fetch.Promise.all([
-                db.grade.findAll({
-                            where: {
-                                studentId: obj.studentId,
-                                judgeId: obj.judgeId
-                            }
-                        })
-                ]).then(function(arr){
-                    console.log(arr);
+                db.grade.update({value: obj.grade}, {
+                    where: {
+                        studentId: obj.studentId,
+                        judgeId: obj.judgeId,
+                        questionId: obj.questionId
+                    }
+                }),
+            ]).then(function(arr){
+                    count++;
+                    if(count === data.length)
+                    {
+                        res.json({result: true, data: data});
+                    }
                 })
-        })
+        });
+        
+        
+        
+        // console.log(data);
+        // data.forEach(function(clientData){
+        //     fetch.Promise.all([
+        //         db.grade.findAll({
+        //                     where: {
+        //                         studentId: obj.studentId,
+        //                         judgeId: obj.judgeId
+        //                     }
+        //                 })
+        //         ]).then(function(arr){
+        //             console.log(arr);
+        //         })
+        // })
         // fetch.Promise.all([
         //     db.grade.findAll({
         //                 where: {
@@ -58,103 +117,6 @@ server.post(apiPrefix + '/third_view', function(req, res, next) {
         //         // })
         //         // res.json(judge_grades);
         //     })
-        next();
-	});   
-       
-    server.put(apiPrefix + '/third_view_save', function(req, res, next) {
-        console.log(req.params);
-
-        var stateId = 0;
-        var count = 0;
-        var data = req.params.data;
-        var acc, pen, rej = 0;
-        
-        if(req.params.state == "Accepted"){
-            stateId = 1;
-        }
-        else if(req.params.state == "Rejected"){
-            stateId = 2;
-        }
-        else
-        {
-            stateId = 0;
-        }
-        if(data.length == 1){
-            data.forEach(function(obj){
-                fetch.Promise.all([
-                    //Intentionally done this way
-                    db.user.findAll({
-                        where: {
-                            id: obj.studentId,
-                            role: 1
-                        }
-                    }),
-                    db.grade.findAll({
-                        where: {
-                            studentId: obj.studentId,
-                            judgeId: obj.judgeId,
-                            questionId: obj.questionId
-                        }
-                    })
-                ]).then(function(arr){
-                    var users = arr[0];
-                    var grades = arr[1];
-                    
-                    users.forEach(function(user){
-                        grades.forEach(function(grade){
-                            if(user.id == grade.studentId){;
-                                grade.state = stateId;
-                                grade.save();
-                            }
-                        })
-                        if(stateId == 0)
-                            user.gradeStatus = "Pending";
-                        count++;
-                        if(count === data.length)
-                        {
-                            res.json({result: true});
-                        }
-                    })
-                })
-            });
-        }
-        else{
-            data.forEach(function(obj){
-                fetch.Promise.all([
-                    //Intentionally done this way
-                    db.user.findAll({
-                        where: {
-                            id: obj.studentId,
-                            role: 1
-                        }
-                    }),
-                    db.grade.findAll({
-                        where: {
-                            studentId: obj.studentId
-                        }
-                    })
-                ]).then(function(arr){
-                    var users = arr[0];
-                    var grades = arr[1];
-                    
-                    users.forEach(function(user){
-                        grades.forEach(function(grade){
-                            if(user.id == grade.studentId){
-                                grade.state = stateId;
-                                grade.save();
-                            }
-                        })
-                        user.gradeStatus = req.body.state;
-                        user.save();
-                        count++;
-                        if(count === data.length)
-                        {
-                            res.json({result: true});
-                        }
-                    })
-                })
-            });
-        }
         next();
 	});
     

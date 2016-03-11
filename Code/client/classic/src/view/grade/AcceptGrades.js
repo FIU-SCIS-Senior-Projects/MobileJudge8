@@ -23,7 +23,7 @@ Ext.define('MobileJudge.view.grade.Wizard', {
     },
     
     width: 550,
-    height: 350,
+    height: 450,
     title: 'Student Grade by One Judge', 
     initComponent: function() {
         this.callParent(arguments);
