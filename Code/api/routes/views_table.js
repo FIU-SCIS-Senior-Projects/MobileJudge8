@@ -79,7 +79,7 @@ module.exports = function(server, db) {
 		actions: ['list'],
 		search: {
 			param: 'query',
-			attributes: [ 'fullName' ]
+			attributes: [ 'fullName', 'gradeStatus' ]
 		},
         endpoints: [apiPrefix + '/views_table']
 	});
