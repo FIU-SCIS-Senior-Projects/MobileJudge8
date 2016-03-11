@@ -23,9 +23,6 @@ server.post(apiPrefix + '/third_view', function(req, res, next) {
         var stateId = 0;
         var count = 0;
         var data = req.params.data;
-//         { data: [ { studentId: 105658, judgeId: 123, questionId: 16 } ],
-//   state: 'Accepted' }
-        
         
         if(req.params.state == "Accepted"){
             stateId = 1;
@@ -58,7 +55,6 @@ server.post(apiPrefix + '/third_view', function(req, res, next) {
 	});
     
     server.post(apiPrefix + '/third_view_save_edited', function(req, res, next) {
-        //console.log(req.params);
         var data = req.params;
         var count = 0;
         data.forEach(function(obj){
@@ -78,45 +74,6 @@ server.post(apiPrefix + '/third_view', function(req, res, next) {
                     }
                 })
         });
-        
-        
-        
-        // console.log(data);
-        // data.forEach(function(clientData){
-        //     fetch.Promise.all([
-        //         db.grade.findAll({
-        //                     where: {
-        //                         studentId: obj.studentId,
-        //                         judgeId: obj.judgeId
-        //                     }
-        //                 })
-        //         ]).then(function(arr){
-        //             console.log(arr);
-        //         })
-        // })
-        // fetch.Promise.all([
-        //     db.grade.findAll({
-        //                 where: {
-        //                     studentId: obj.studentId,
-        //                     judgeId: obj.judgeId,
-        //                     questionId: obj.questionId
-        //                 }
-        //             })
-        // ]).then(function(arr){
-        //     console.log("THIS IS THE END");
-        //     // console.log(arr[0].length) 
-        //         // var grades = judge_grades;
-        //         // grades.forEach(function(grade){
-        //         //     data.forEach(function(clientGrade){
-        //         //         if(grade.questionId === clientGrade.questionId){
-        //         //             grade.value = clientGrade.grade;
-        //         //             grade.save();
-        //         //             console.log("saved");
-        //         //         }
-        //         //     })
-        //         // })
-        //         // res.json(judge_grades);
-        //     })
         next();
 	});
     

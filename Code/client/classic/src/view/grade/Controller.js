@@ -23,16 +23,20 @@ Ext.define('MobileJudge.view.grade.Controller', {
     
     getAverage: function(data){
         var average = 0;
+        var count = 0;
         
         data.forEach(function(item){
-            if(item.grade)
-                average = average + item.grade;
-            else if(item.gradeAverage)
-                average = average + item.gradeAverage;
-            else
-                average = average + item.value;
+            if((item.accepted && item.accepted == "Accepted") || (item.gradeStatus && item.gradeStatus == "Accepted")){
+                if(item.grade)
+                    average = average + item.grade;
+                else if(item.gradeAverage)
+                    average = average + item.gradeAverage;
+                else
+                    average = average + item.value;
+                    count++;
+            }
         })
-        return (average / data.length);
+        return (average / count).toFixed(2);
     },
     
     changeStatus: function(status){
@@ -180,6 +184,7 @@ Ext.define('MobileJudge.view.grade.Controller', {
                 var data = JSON.parse(response.responseText)
                 Ext.getStore('studentDetailData').loadData(data);
                 var average = me.getAverage(data);
+                
                 Ext.getCmp('gradeLabel').setText(average);
             },
             failure: this.updateError,
@@ -190,11 +195,23 @@ Ext.define('MobileJudge.view.grade.Controller', {
     },
     
     loadThirdViewData: function(data){
+        var me  = this;
         Ext.Ajax.request({
             url: '/api/third_view',
             success: function(response){
                 var data = JSON.parse(response.responseText)
                 Ext.getStore('judgeGrades').loadData(data);
+                var sum = 0;
+                data.forEach(function(item){
+                    if(item.accepted == "Accepted"){
+                        sum = item.grade + sum;
+                        $("#gradeThirdLabel").text(sum);
+                    }
+                })
+                
+                $("#judgeThirdLabel").text(data[0].judge);
+                $("#studentThirdLabel").text(data[0].student);
+                $("#projectThirdLabel").text(data[0].projectName);
             },
             failure: this.updateError,
             jsonData : data,

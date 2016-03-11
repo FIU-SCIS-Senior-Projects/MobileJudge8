@@ -42,7 +42,7 @@ module.exports = function(server, db) {
                     count = 1;
                     obj = {
                             judgeName: jg.judge,
-                            gradeAverage: jg.grade,
+                            gradeAverage: 0,
                             gradeStatus: "",  
                             studentId: jg.studentId,
                             judgeId: jg.judgeId
@@ -50,11 +50,14 @@ module.exports = function(server, db) {
                 }
                 else{
                     console.log(acc, pen, rej);
-                    obj.gradeAverage = obj.gradeAverage + jg.grade;
-                    if(jg.accepted == "Accepted") acc = true;
+                    if(jg.accepted == "Accepted"){
+                        acc = true;
+                        count ++;
+                        obj.gradeAverage = obj.gradeAverage + jg.grade;
+                        
+                    } 
                     else if(jg.accepted == "Pending") pen = true;
                     else rej = true;
-                    count ++;
                 }
                 iteration++;
                 if(iteration == judge_grades.length){

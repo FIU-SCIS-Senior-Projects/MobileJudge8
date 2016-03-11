@@ -45,7 +45,7 @@ Ext.define('MobileJudge.view.grade.GradeStudentDetailWizard', {
         var ctrl = this.getController();
         
         $("#nameLabel").text(record.data.fullName);
-        $("#projectLabel").text(record.data.projectName);
+        $("#projectLabel").text(record.data.project);
         $("#gradeLabel").text(record.data.grade);
         ctrl.loadSecondViewData(record.data);
         

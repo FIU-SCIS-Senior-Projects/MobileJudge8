@@ -72,7 +72,7 @@ Ext.define('MobileJudge.view.grade.Wizard', {
                                     xtype: 'label',
                                     text: 'Rodolfo Viant',
                                     readOnly : true,
-                                    style:'padding:0px 0px 0px 30px'
+                                    style:'padding:0px 0px 0px 22px'
                                 }
                           ]
                         },
@@ -88,7 +88,7 @@ Ext.define('MobileJudge.view.grade.Wizard', {
                                     xtype: 'label',
                                     text: 'Mobile Judge 8',
                                     readOnly : true,
-                                    style:'padding:0px 0px 0px 25px'
+                                    style:'padding:0px 0px 0px 23px'
                                 }
                           ]
                         },
