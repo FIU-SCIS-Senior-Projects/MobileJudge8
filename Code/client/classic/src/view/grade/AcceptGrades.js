@@ -111,15 +111,22 @@ Ext.define('MobileJudge.view.grade.Wizard', {
                 ]
             },
             {
-                ui: 'soft-blue',
                 id: 'detailAllThirdButton',
-                xtype: 'button',
-                text: 'Accept-All',
-                handler: 'changeStatusThirdView',
-                width: 100,
+                xtype: 'image',
+                hight: 30,
+                src: '/resources/images/icons/Green.ico',
+                width: 40,
+                dataIndex: 'bool',
+                sortable: false,
+                hideable: false,
+                listeners: {
+                    el: {
+                        click: 'changeStatusThirdView'
+                    }
+                },
+                tooltip: 'Accept-All',
                 layout: {
-                    pack: 'justify',
-                    align: 'right' // align center is the default
+                    align: 'right' 
                 }
             }
         ],

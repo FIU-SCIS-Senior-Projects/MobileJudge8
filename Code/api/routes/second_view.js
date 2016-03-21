@@ -14,55 +14,49 @@ module.exports = function(server, db) {
         }).then(function(judge_grades){
             var iteration = 0;
             var response = [];
-            var acc = false;
-            var rej = false;
-            var pen = false;
-            var count = 1;
+            //var count = 1;
             var obj = {
                             judgeName: judge_grades[0].judge,
                             gradeAverage: 0,
-                            gradeStatus: "",
                             studentId: judge_grades[0].studentId,
-                            judgeId: judge_grades[0].judgeId 
+                            judgeId: judge_grades[0].judgeId,
+                            accepted: false,
+                            rejected: false,
+                            pending: false
                         };
             
             judge_grades.forEach(function(jg){
                 if(obj.judgeId != jg.judgeId){
-                    
-                    if(pen) obj.gradeStatus = "Pending";
-                    else if(acc) obj.gradeStatus = "Accepted";
-                    else obj.gradeStatus = "Rejected";
-                    
-                    
-                    obj.gradeAverage = obj.gradeAverage;
+                    console.log("The judge is ", jg.judge);
+                    //obj.gradeAverage = obj.gradeAverage;
                     response.push(obj);
-                    acc = false;
-                    rej = false;
-                    pen = false;
-                    count = 1;
+                    //count = 1;
                     obj = {
-                            judgeName: jg.judge,
-                            gradeAverage: 0,
-                            gradeStatus: "",  
-                            studentId: jg.studentId,
-                            judgeId: jg.judgeId
-                        }
+                                judgeName: jg.judge,
+                                gradeAverage: 0, 
+                                studentId: jg.studentId,
+                                judgeId: jg.judgeId,
+                                accepted: false,
+                                rejected: false,
+                                pending: false
+                            };
                 }
                 else{
-                    console.log(acc, pen, rej);
                     if(jg.accepted == "Accepted"){
-                        acc = true;
-                        count ++;
+                        obj.accepted = true;
+                        //count ++;
                         obj.gradeAverage = obj.gradeAverage + jg.grade;
                         
                     } 
-                    else if(jg.accepted == "Pending") pen = true;
-                    else rej = true;
+                    else if(jg.accepted == "Pending") obj.pending = true;
+                    else obj.rejected = true;
                 }
                 iteration++;
-                if(iteration == judge_grades.length){
+                if(iteration === judge_grades.length){
+                    response.push(obj);
                     res.json(response);
                 }
+                console.log(iteration, judge_grades.length);
             })
         })
         next();
@@ -95,7 +89,6 @@ module.exports = function(server, db) {
                     }
                 }),
             ]).then(function(arr){
-                //console.log("returned from the fetch");
                     var grades = arr[0];
                     data.forEach(function(obj){
                         grades.forEach(function(grade){

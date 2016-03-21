@@ -109,14 +109,22 @@ Ext.define('MobileJudge.view.grade.GradeStudentDetailWizard', {
                 ]
             },
             {
-                ui: 'soft-blue',
                 id: 'detailAllButton',
-                xtype: 'button',
-                text: 'Accept-All',
-                handler: 'changeStatusSecondView',
-                width: 100,
+                xtype: 'image',
+                hight: 30,
+                src: '/resources/images/icons/Green.ico',
+                width: 40,
+                dataIndex: 'bool',
+                sortable: false,
+                hideable: false,
+                listeners: {
+                    el: {
+                        click: 'changeStatusSecondView'
+                    }
+                },
+                tooltip: 'Accept-All',
                 layout: {
-                    pack: 'justify',
+                    //pack: 'justify',
                     align: 'right' // align center is the default
                 }
             }
@@ -181,18 +189,46 @@ Ext.define('MobileJudge.view.grade.JudgeAverageGrade', {
                 }  
             ],
             renderer: function (value, metadata, record) {
-                if(record.get('gradeStatus') != null){
-                    if (record.get('gradeStatus').toLowerCase() == "pending") {
+                
+                if(record.get('accepted') != null){
+                    var green = false;
+                    var red = false;
+                    var yellow = false;
+                    
+                    //var ctlr = this.up().up().up().getController();
+                    //ctlr.changeIcon();
+                    
+                    if (record.get('pending') == true) {
                         this.items[0].tooltip = 'Pending';
                         this.items[0].icon = '/resources/images/icons/Yellow.ico';
-                    }else if (record.get('gradeStatus').toLowerCase() == "accepted") {
+                        yellow = true;
+                    }
+                    if (record.get('accepted') == true) {
                         this.items[0].tooltip = 'Accepted';
                         this.items[0].icon = '/resources/images/icons/Green.ico';
-                    } else {
+                        green = true;
+                    } 
+                    if(record.get('rejected') == true){
                         this.items[0].tooltip = 'Rejected';
                         this.items[0].icon = '/resources/images/icons/Red.ico'; 
+                        red = true;
+                    }
+                    
+                    if (green && red && yellow) {
+                        this.items[0].tooltip = 'Acc && Pen && Rej';
+                        this.items[0].icon = '/resources/images/icons/RedYellowGreen.ico'; 
+                    }else if(green && red) {
+                        this.items[0].tooltip = 'Acc && Rej';
+                        this.items[0].icon = '/resources/images/icons/RedGreen.ico'; 
+                    }else if(green && yellow) {
+                        this.items[0].tooltip = 'Acc && Pen && Rej';
+                        this.items[0].icon = '/resources/images/icons/YellowGreen.ico'; 
+                    }else if(yellow && red) {
+                        this.items[0].tooltip = 'Acc && Pen && Rej';
+                        this.items[0].icon = '/resources/images/icons/RedYellow.ico'; 
                     }
                 }
+                
             },
             width: 40,
             dataIndex: 'bool',
