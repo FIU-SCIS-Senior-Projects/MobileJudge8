@@ -184,16 +184,16 @@ Ext.define('MobileJudge.view.grade.Students', {
                 
                 if (green && red && yellow) {
                     this.items[0].tooltip = 'Acc && Pen && Rej';
-                    this.items[0].icon = '/resources/images/icons/Red.ico'; 
+                    this.items[0].icon = '/resources/images/icons/RedYellowGreen.ico'; 
                 }else if(green && red) {
                     this.items[0].tooltip = 'Acc && Rej';
                     this.items[0].icon = '/resources/images/icons/RedGreen.ico'; 
                 }else if(green && yellow) {
                     this.items[0].tooltip = 'Acc && Pen && Rej';
-                    this.items[0].icon = '/resources/images/icons/RedYellow.ico'; 
+                    this.items[0].icon = '/resources/images/icons/YellowGreen.ico'; 
                 }else if(yellow && red) {
                     this.items[0].tooltip = 'Acc && Pen && Rej';
-                    this.items[0].icon = '/resources/images/icons/RedYellowGreen.ico'; 
+                    this.items[0].icon = '/resources/images/icons/RedYellow.ico'; 
                 }
     	    },
             width: 40,
