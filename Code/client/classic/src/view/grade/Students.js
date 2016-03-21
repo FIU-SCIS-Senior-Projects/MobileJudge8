@@ -99,16 +99,23 @@ Ext.define('MobileJudge.view.grade.Students', {
                     width: 40,
                     dataIndex: 'bool',
                     sortable: false,
-                    hideable: false
-                },
-				{
-                    ui: 'soft-blue',
-                    id: 'allButton',
-                    xtype: 'button',
-                    text: 'Accept-All',
-                    handler: 'statusManager',
-                    flex: 1
-                },
+                    hideable: false,
+                    listeners: {
+                        el: {
+                            click: 'statusManager'
+                        }
+                    },
+                    tooltip: 'Accept-All',
+                }//,
+				// {
+                //     ui: 'soft-blue',
+                //     id: 'topIcon',
+                //     xtype: 'button',
+                //     text: 'Accept-All',
+                //     handler: 'statusManager',
+                //     flex: 1,
+                //     icon: '/resources/images/icons/Green.ico'
+                // },
 			]
 		},
 		{
@@ -116,7 +123,7 @@ Ext.define('MobileJudge.view.grade.Students', {
 			dock: 'bottom',
 			displayInfo: true,
 			bind: '{studentgradesview}',
-			showPageCombo: true //This config enables the page size select combo box
+			showPageCombo: true 
 		}
 	],
 	columns: [
@@ -152,18 +159,41 @@ Ext.define('MobileJudge.view.grade.Students', {
             ],
             renderer: function (value, metadata, record) {
                 
+                var green = false;
+                var red = false;
+                var yellow = false;
+                
                 var ctlr = this.up().up().up().getController();
                 ctlr.changeIcon();
                 
-                if (record.get('gradeStatus').toLowerCase() == "pending") {
+                if (record.get('pending') == true) {
                     this.items[0].tooltip = 'Pending';
                     this.items[0].icon = '/resources/images/icons/Yellow.ico';
-                }else if (record.get('gradeStatus').toLowerCase() == "accepted") {
+                    yellow = true;
+                }
+                if (record.get('accepted') == true) {
                     this.items[0].tooltip = 'Accepted';
                     this.items[0].icon = '/resources/images/icons/Green.ico';
-                } else {
+                    green = true;
+                } 
+                if(record.get('rejected') == true){
                     this.items[0].tooltip = 'Rejected';
                     this.items[0].icon = '/resources/images/icons/Red.ico'; 
+                    red = true;
+                }
+                
+                if (green && red && yellow) {
+                    this.items[0].tooltip = 'Acc && Pen && Rej';
+                    this.items[0].icon = '/resources/images/icons/Red.ico'; 
+                }else if(green && red) {
+                    this.items[0].tooltip = 'Acc && Rej';
+                    this.items[0].icon = '/resources/images/icons/RedGreen.ico'; 
+                }else if(green && yellow) {
+                    this.items[0].tooltip = 'Acc && Pen && Rej';
+                    this.items[0].icon = '/resources/images/icons/RedYellow.ico'; 
+                }else if(yellow && red) {
+                    this.items[0].tooltip = 'Acc && Pen && Rej';
+                    this.items[0].icon = '/resources/images/icons/RedYellowGreen.ico'; 
                 }
     	    },
             width: 40,

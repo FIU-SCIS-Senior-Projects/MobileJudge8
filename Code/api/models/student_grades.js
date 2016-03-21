@@ -9,7 +9,9 @@ module.exports = function(sequelize, DataTypes) {
         project: DataTypes.STRING,
 		grade: DataTypes.DECIMAL,
 		max: DataTypes.DECIMAL,
-        gradeStatus: DataTypes.STRING,
+        accepted: DataTypes.BOOLEAN,
+        pending: DataTypes.BOOLEAN,
+        rejected: DataTypes.BOOLEAN,
 	}, {
 		timestamps: false,
 		tableName: 'student_grades_detailed',

@@ -46,21 +46,22 @@ module.exports = function(server, db) {
     
     server.put(apiPrefix + '/views_table/:id', function(req, res, next) {
         
-		var value = req.body.gradeStatus;
+		var acc = req.body.accepted;
+        var pen = req.body.pending;
+        var rej = req.body.rejected;
         var stateId = 0;
-        
-        if(value == "Pending"){
-            value = "Accepted";
+        if(acc && !pen && !rej) {
+            stateId = 2;
+        }
+        else if(!acc && pen && !rej) {
             stateId = 1;
         }
-        else if(value == "Accepted"){
-            value = "Rejected";
-            stateId = 2;
+        else if(!acc && !pen && rej) {
+            stateId = 0;
         }
         else
         {
-            value = "Pending";
-            stateId = 0;
+            stateId = 1;
         }
         fetch.Promise.all([
             db.grade.update({state: stateId}, {
@@ -79,7 +80,7 @@ module.exports = function(server, db) {
 		actions: ['list'],
 		search: {
 			param: 'query',
-			attributes: [ 'fullName', 'gradeStatus' ]
+			attributes: [ 'fullName' ]
 		},
         endpoints: [apiPrefix + '/views_table']
 	});

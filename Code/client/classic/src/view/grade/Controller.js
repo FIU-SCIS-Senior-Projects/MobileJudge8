@@ -372,15 +372,15 @@ Ext.define('MobileJudge.view.grade.Controller', {
         var red = false;
         
         items.forEach(function(item){
-            if(item.data.gradeStatus ==  'Accepted'){
+            if(item.data.accepted ==  true){
                 Ext.getCmp('topIcon').setSrc('/resources/images/icons/Green.ico');
                 green = true;
             }
-            if(item.data.gradeStatus ==  'Pending'){
+            if(item.data.pending ==  true){
                 Ext.getCmp('topIcon').setSrc('/resources/images/icons/Yellow.ico');
                 yellow = true
             }
-            if(item.data.gradeStatus ==  'Rejected'){
+            if(item.data.rejected ==  true){
                 Ext.getCmp('topIcon').setSrc('/resources/images/icons/Red.ico');
                 red = true;
             }
@@ -428,7 +428,7 @@ Ext.define('MobileJudge.view.grade.Controller', {
         };
         var ids = [];
         var mainStore = Ext.getStore('studentgradesview');
-		var changeTo = Ext.getCmp('allButton').text;
+		var changeTo = Ext.getCmp('topIcon').tooltip;
         
         //Getting the Ids to be modified
         mainStore.data.items.forEach(function(row){
@@ -450,15 +450,15 @@ Ext.define('MobileJudge.view.grade.Controller', {
             url: '/api/views_table_changeAll',
             success: function(){
                 
-                //Changing the value of the button to reflect the next stage to change to
+                //TODO, Change the setText to tooltip for the icon
                 if(changeTo ==='Accept-All'){
-                    Ext.getCmp('allButton').setText('Reject-All');
+                    Ext.getCmp('topIcon').tooltip = 'Reject-All';
                 }
                 else if(changeTo ==='Reject-All'){
-                    Ext.getCmp('allButton').setText('Pending-All');
+                    Ext.getCmp('topIcon').tooltip = 'Pending-All';
                 }
                 else if(changeTo === 'Pending-All'){
-                    Ext.getCmp('allButton').setText('Accept-All');
+                    Ext.getCmp('topIcon').tooltip = 'Accept-All';
                 }
                 //Little hack to get the Icon to update and not have to loop through the store when calling changeIcon
                 me.status = data['state'];

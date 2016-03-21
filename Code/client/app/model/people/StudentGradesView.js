@@ -10,7 +10,9 @@ Ext.define('MobileJudge.model.people.StudentGradesView', {
         { name: 'fullName',          type: 'string' },
         { name: 'grade_display',          type: 'string' },
         { name: 'project',          type: 'string' },
-        { name: 'gradeStatus',          type: 'string' },
+        { name: 'accepted',          type: 'boolean' },
+        { name: 'pending',          type: 'boolean' },
+        { name: 'rejected',          type: 'boolean' },
 		{ name: 'grade',              type: 'float', convert: null },
 		{ name: 'max',                type: 'float', persist: false }
 	]
