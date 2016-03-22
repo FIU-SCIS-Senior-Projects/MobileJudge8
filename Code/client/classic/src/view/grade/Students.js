@@ -94,6 +94,7 @@ Ext.define('MobileJudge.view.grade.Students', {
                 {
                     id: 'topIcon',
                     xtype: 'image',
+                    alt:'StatusIndicator',
                     hight: 30,
                     src: '/resources/images/icons/Green.ico',
                     width: 40,
@@ -187,7 +188,8 @@ Ext.define('MobileJudge.view.grade.Students', {
                     this.items[0].icon = '/resources/images/icons/RedYellow.ico'; 
                 }
     	    },
-            width: 40,
+            height: 16,
+            width: 16,
             dataIndex: 'bool',
             sortable: false,
             hideable: false

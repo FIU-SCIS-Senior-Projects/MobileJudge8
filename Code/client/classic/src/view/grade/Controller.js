@@ -36,7 +36,7 @@ Ext.define('MobileJudge.view.grade.Controller', {
                     count++;
             }
         })
-        return (average / count).toFixed(2);
+        return (average / count).toFixed(2) != null? (average / count).toFixed(2): 0 ;
     },
     
     changeStatus: function(status){
@@ -197,6 +197,7 @@ Ext.define('MobileJudge.view.grade.Controller', {
                 var data = JSON.parse(response.responseText)
                 Ext.getStore('judgeGrades').loadData(data);
                 var sum = 0;
+                $("#gradeThirdLabel").text(0);
                 data.forEach(function(item){
                     if(item.accepted == "Accepted"){
                         sum = item.grade + sum;
