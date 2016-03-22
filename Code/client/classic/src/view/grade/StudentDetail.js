@@ -124,8 +124,7 @@ Ext.define('MobileJudge.view.grade.GradeStudentDetailWizard', {
                 },
                 tooltip: 'Accept-All',
                 layout: {
-                    //pack: 'justify',
-                    align: 'right' // align center is the default
+                    align: 'right'
                 }
             }
         ],
@@ -194,9 +193,6 @@ Ext.define('MobileJudge.view.grade.JudgeAverageGrade', {
                     var green = false;
                     var red = false;
                     var yellow = false;
-                    
-                    //var ctlr = this.up().up().up().getController();
-                    //ctlr.changeIcon();
                     
                     if (record.get('pending') == true) {
                         this.items[0].tooltip = 'Pending';

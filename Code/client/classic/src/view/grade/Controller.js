@@ -26,13 +26,13 @@ Ext.define('MobileJudge.view.grade.Controller', {
         var count = 0;
         
         data.forEach(function(item){
-            if((item.accepted && item.accepted == "Accepted") || (item.gradeStatus && item.gradeStatus == "Accepted")){
+            if((item.accepted && item.accepted == true)) {
                 if(item.grade)
                     average = average + item.grade;
                 else if(item.gradeAverage)
                     average = average + item.gradeAverage;
                 else
-                    average = average + item.value;
+                    average = average + item.gradeAverage;
                     count++;
             }
         })
@@ -59,7 +59,6 @@ Ext.define('MobileJudge.view.grade.Controller', {
         Ext.Ajax.request({
                 url: '/api/views_table/saveData',
                 success: function(response){
-                    console.log("GOT INTO THE CALLBACK");
                 },
                 failure: this.updateError,
                 jsonData :data,
@@ -69,7 +68,6 @@ Ext.define('MobileJudge.view.grade.Controller', {
     },
     
     getData: function(data){
-        console.log("Requesting data for the selected student");
             Ext.Ajax.request({
                 url: '/api/views_table/judges',
                 success: function(response){
@@ -115,13 +113,11 @@ Ext.define('MobileJudge.view.grade.Controller', {
                 
                 if(grade.data.studentId == 1358788)//student.id)
                 {
-                    console.log(student.data.grade);
                     student.data.grade = student.data.grade + grade.data.value;
                     counter ++;
                 }
              })
              student.data.grade = student.data.grade / counter;
-             //console.log(student.data.grade);
          })
          Ext.getStore("students").loadData(students, [false]);
 	},
@@ -129,14 +125,12 @@ Ext.define('MobileJudge.view.grade.Controller', {
     onStateChange:function(grid, rowIndex, colIndex){
         var me = this;
         var store = grid.getStore(), id = store.getAt(rowIndex).data.studentId, data = store.getAt(rowIndex).data, index = rowIndex;
-        console.log(id); 
         Ext.Ajax.request({
                 url: '/api/views_table/'+ id,
                 success: function(){
                     var currentStatus = store.data.items[index].data.gradeStatus;
                     store.data.items[index].data.gradeStatus = me.changeStatus(currentStatus);
                     store.load();
-                    console.log("success");
                     me.changeIcon();
                 },
                 failure: this.updateError,
@@ -349,7 +343,6 @@ Ext.define('MobileJudge.view.grade.Controller', {
     },
     
     updateMainStore: function () {
-        //console.log("THIS IS GOING TO BE THE CLOSE ");
         var me = this;
         var mainStore = Ext.getStore('studentgradesview');
         me.changeIcon();
@@ -362,7 +355,6 @@ Ext.define('MobileJudge.view.grade.Controller', {
 	},
 
     changeIcon: function (){
-	    //console.log('testing changeIcon');
         var me  =this;
         var items;
         
@@ -405,7 +397,6 @@ Ext.define('MobileJudge.view.grade.Controller', {
     },
     
     changeIconSecondView: function (){
-	    //console.log('testing changeIcon');
         var me  =this;
         var items;
         
@@ -448,7 +439,6 @@ Ext.define('MobileJudge.view.grade.Controller', {
     },
     
     changeIconThirdView: function (){
-	    //console.log('testing changeIcon');
         var me  =this;
         var items;
         

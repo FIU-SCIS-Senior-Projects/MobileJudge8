@@ -60,17 +60,11 @@ Ext.define('MobileJudge.view.grade.Model', {
 		},
         studentgradesview: {
 			type: 'studentgradesview',
-			storeId: 'studentgradesview'//,
-            // listeners: {
-			// 	load: 'loadStudentsGrades'
-			// }
+			storeId: 'studentgradesview'
 		},
         judgesgrades: {
 			type: 'judgesgrades',
-			storeId: 'judgesgrades'//,
-            // listeners: {
-			// 	load: 'loadStudentsGrades'
-			// }
+			storeId: 'judgesgrades'
 		}
 	}
 });

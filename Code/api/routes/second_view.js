@@ -14,7 +14,6 @@ module.exports = function(server, db) {
         }).then(function(judge_grades){
             var iteration = 0;
             var response = [];
-            //var count = 1;
             var obj = {
                             judgeName: judge_grades[0].judge,
                             gradeAverage: 0,
@@ -27,13 +26,10 @@ module.exports = function(server, db) {
             
             judge_grades.forEach(function(jg){
                 if(obj.judgeId != jg.judgeId){
-                    console.log("The judge is ", jg.judge);
-                    //obj.gradeAverage = obj.gradeAverage;
                     response.push(obj);
-                    //count = 1;
                     obj = {
                                 judgeName: jg.judge,
-                                gradeAverage: 0, 
+                                gradeAverage: jg.accepted == "Accepted" ? jg.grade:0, 
                                 studentId: jg.studentId,
                                 judgeId: jg.judgeId,
                                 accepted: false,
@@ -44,19 +40,17 @@ module.exports = function(server, db) {
                 else{
                     if(jg.accepted == "Accepted"){
                         obj.accepted = true;
-                        //count ++;
                         obj.gradeAverage = obj.gradeAverage + jg.grade;
                         
                     } 
-                    else if(jg.accepted == "Pending") obj.pending = true;
-                    else obj.rejected = true;
+                    else if(jg.accepted == "Pending") {obj.pending = true; console.log("Pending");}
+                    else {obj.rejected = true; console.log("Rejected");}
                 }
                 iteration++;
                 if(iteration === judge_grades.length){
                     response.push(obj);
                     res.json(response);
                 }
-                console.log(iteration, judge_grades.length);
             })
         })
         next();

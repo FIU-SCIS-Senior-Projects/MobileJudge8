@@ -70,7 +70,7 @@ Ext.define('MobileJudge.view.grade.Students', {
 					],
 					bind: {
 						selection: '{studentFilterSelection}',
-						store: '{studentStates}'//Make sure this gets added
+						store: '{studentStates}'
 					},
 					listeners: {
 						selectionchange: 'onFilterChange'
@@ -106,16 +106,7 @@ Ext.define('MobileJudge.view.grade.Students', {
                         }
                     },
                     tooltip: 'Accept-All',
-                }//,
-				// {
-                //     ui: 'soft-blue',
-                //     id: 'topIcon',
-                //     xtype: 'button',
-                //     text: 'Accept-All',
-                //     handler: 'statusManager',
-                //     flex: 1,
-                //     icon: '/resources/images/icons/Green.ico'
-                // },
+                }
 			]
 		},
 		{
