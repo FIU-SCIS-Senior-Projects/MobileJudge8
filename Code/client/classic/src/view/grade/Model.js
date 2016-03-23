@@ -61,10 +61,6 @@ Ext.define('MobileJudge.view.grade.Model', {
         studentgradesview: {
 			type: 'studentgradesview',
 			storeId: 'studentgradesview'
-		},
-        judgesgrades: {
-			type: 'judgesgrades',
-			storeId: 'judgesgrades'
 		}
 	}
 });

@@ -59,7 +59,7 @@ server.post(apiPrefix + '/third_view', function(req, res, next) {
         var count = 0;
         data.forEach(function(obj){
             fetch.Promise.all([
-                db.grade.update({value: obj.grade}, {
+                db.grade.update({value: obj.grade, comment:obj.comment}, {
                     where: {
                         studentId: obj.studentId,
                         judgeId: obj.judgeId,

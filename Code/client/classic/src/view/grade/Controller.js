@@ -128,8 +128,6 @@ Ext.define('MobileJudge.view.grade.Controller', {
         Ext.Ajax.request({
                 url: '/api/views_table/'+ id,
                 success: function(){
-                    var currentStatus = store.data.items[index].data.gradeStatus;
-                    store.data.items[index].data.gradeStatus = me.changeStatus(currentStatus);
                     store.load();
                     me.changeIcon();
                 },
