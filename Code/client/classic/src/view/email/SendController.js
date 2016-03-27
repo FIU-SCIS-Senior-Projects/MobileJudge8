@@ -67,6 +67,11 @@ Ext.define('MobileJudge.view.email.SendController', {
 		for(i=0; i<this.model.get('uncheckedStudents').length; i++){
 			if(index.id === this.model.get('uncheckedStudents')[i].id){
 				objectIndex = i;
+				for(j=0; j<this.model.get('studentsStart').length; j++){
+					if(index.id === this.model.get('studentsStart')[j].id){
+						this.model.set('studentNum', this.model.get('studentNum') + 1); 
+					}
+				}
 			}
 		}
 		if (objectIndex >=0){
@@ -79,6 +84,11 @@ Ext.define('MobileJudge.view.email.SendController', {
 		for(i=0; i<this.model.get('uncheckedJudges').length; i++){
 			if(index.id === this.model.get('uncheckedJudges')[i].id){
 				judgeIndex = i;
+				for(j=0; j < this.model.get('judgesStart').length; j++){
+					if(index.id === this.model.get('judgesStart')[j].id){
+						this.model.set('judgeNum', this.model.get('judgeNum') + 1);
+					}
+				}
 			}
 		}
 		if(judgeIndex >=0){
@@ -89,15 +99,41 @@ Ext.define('MobileJudge.view.email.SendController', {
 	},
 
 	onUnchecked: function(record, index){
+		
 		this.model.get('uncheckedStudents').push(index);
 		this.model.get('uncheckedJudges').push(index);
+		
+		for(i=0; i < this.model.get('studentsStart').length; i++){
+			if(index.id === this.model.get('studentsStart')[i].id){
+				this.model.set('studentNum', this.model.get('studentNum') - 1);
+			}
+		}
+		
+		for(j=0; j < this.model.get('judgesStart').length; j++){
+			if(index.id === this.model.get('judgesStart')[j].id){
+				this.model.set('judgeNum', this.model.get('judgeNum') - 1);  
+			}
+		}
+
 	},
 
 	onJudgePageLoad: function(store, records) {
+		if(!this.model.get('judgesAdded')){
+			this.model.set('judgesStart',records);
+			this.model.set('judgesAdded', true);
+			this.model.set('judgeNum', this.model.get('judgesStart').length);
+
+		}
+				
 		this.model.set('selectedJudges', records);
 	},
 	
 	onStudentPageLoad: function (store, records) {
+		if(!this.model.get('studentsAdded')){
+			this.model.set('studentsStart', records);
+			this.model.set('studentsAdded', true);
+			this.model.set('studentNum', this.model.get('studentsStart').length);
+		}
 		this.model.set('selectedStudents', records);
 
 		//need to uncheck the students that should be checked...
@@ -291,6 +327,10 @@ Ext.define('MobileJudge.view.email.SendController', {
 			this.model.set('selectedJudges', []);
 			this.model.set('fullStudents', []);
 			this.model.set('fullJudges', []);
+			this.model.set('studentsAdded', false);
+			this.model.set('judgesAdded', false);
+			this.model.set('studentsStart', []);
+			this.model.set('judgesStart', []);
 			this.model.set('fieldLabelText', 'Search:');
 			this.view.down('searchfilterwizard').onClearClick();
 			

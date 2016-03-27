@@ -46,11 +46,17 @@ Ext.define('MobileJudge.view.email.SendModel', {
 	
 		fullStudents: [],
 		fullJudges: [],
+		judgesStart: [],
+		studentsStart: [],
+		studentsAdded: false,
+		judgesAdded: false,
 		uncheckedStudents: [],
 		uncheckedJudges: [],
 		selectedStudents: [],
 		selectedJudges: [],
 		selectedExtra: [],
+		judgeNum: 0,
+		studentNum: 0,
 		
 		template: '',
 		preview: {
