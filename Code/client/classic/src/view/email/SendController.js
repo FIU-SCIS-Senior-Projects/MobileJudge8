@@ -126,6 +126,19 @@ Ext.define('MobileJudge.view.email.SendController', {
 		}
 				
 		this.model.set('selectedJudges', records);
+		if(this.view.down('searchfilterwizard').triggers.clear.hidden === false)
+		{
+			this.model.set('hasSearched',true);
+			this.model.set('canMoveNext', false);
+			this.model.set('fieldLabelText','Search <span style="color: red;font-weight: bold;">(must be cleared to proceed to next)</span>');
+		}
+		else
+		{
+			this.model.set('hasSearched',false);
+			this.model.set('canMoveNext',true);
+			this.model.set('fieldLabelText', 'Search:');
+
+		}
 	},
 	
 	onStudentPageLoad: function (store, records) {
@@ -134,13 +147,6 @@ Ext.define('MobileJudge.view.email.SendController', {
 			this.model.set('studentsAdded', true);
 			this.model.set('studentNum', this.model.get('studentsStart').length);
 		}
-		this.model.set('selectedStudents', records);
-
-		//need to uncheck the students that should be checked...
-	},
-
-	onStudentsLoaded: function(selModel, records) {
-	
 		this.model.set('selectedStudents', records);
 		if(this.view.down('searchfilterwizard').triggers.clear.hidden === false)
 		{
@@ -155,25 +161,19 @@ Ext.define('MobileJudge.view.email.SendController', {
 			this.model.set('fieldLabelText', 'Search:');
 		}
 
+		//need to uncheck the students that should be checked...
+	},
+
+	onStudentsLoaded: function(selModel, records) {
+	
+		this.model.set('selectedStudents', records);
+
 		console.log(this.model.get('hasSearched'));
 		console.log(this.model.get('canMoveNext'));
 	},
 
 	onJudgesLoaded: function(store, records) {
 		this.model.set('selectedJudges', records);
-		if(this.view.down('searchfilterwizard').triggers.clear.hidden === false)
-		{
-			this.model.set('hasSearched',true);
-			this.model.set('canMoveNext', false);
-			this.model.set('fieldLabelText','Search <span style="color: red;font-weight: bold;">(must be cleared to proceed to next)</span>');
-		}
-		else
-		{
-			this.model.set('hasSearched',false);
-			this.model.set('canMoveNext',true);
-			this.model.set('fieldLabelText', 'Search:');
-
-		}
 
 		console.log(this.model.get('hasSearched'));
 		console.log(this.model.get('canMoveNext'));
@@ -401,6 +401,7 @@ Ext.define('MobileJudge.view.email.SendController', {
 						this.model.get('selectedExtra').map(getRecord)
 					)
 				};
+			console.log(batch.emails);
 			Ext.getBody().mask();
 			panel.up('window').close();
 			Ext.Ajax.request({
