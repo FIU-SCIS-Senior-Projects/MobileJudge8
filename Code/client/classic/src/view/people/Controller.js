@@ -25,7 +25,7 @@ Ext.define('MobileJudge.view.people.Controller', {
 		var filter = selections.map(function(r) { return r.get('abbr'); });
 		this.model.getStore(selModel.storeId).filter('abbr', Ext.isEmpty(filter) ? 'XX' : filter);
 		// update intermediate state
-gfilter = filter;
+		gfilter = filter;
 	},
 
 	onCheckChange: function(checkbox) {
@@ -136,12 +136,6 @@ gfilter = filter;
 
 	doExportStudents: function(){
         var store = this.model.getStore('students');
-		//Ext.Ajax.request({
-		//	url: '/api/students',
-		//	success: function(resp) {
-		//		JSONToCSVConvertor(resp.responseText, "Student Report", true, store);
-		//	}
-		//});
 		console.log("new code!!")
 		var  records= Ext.getStore('students').getRange(),jsonData=[];
 		Ext.each(records, function (r, i, all){jsonData.push(r.data)});
@@ -161,8 +155,6 @@ gfilter = filter;
 function JSONToCSVConvertor(JSONData, ReportTitle, ShowLabel, store1) {
 	//If JSONData is not an object then JSON.parse will parse the JSON string in an Object
 	var arrData = typeof JSONData != 'object' ? JSON.parse(JSONData) : JSONData;
-    //alert('ggg');
-
 
 	console.log(arrData);
 
@@ -180,7 +172,7 @@ function JSONToCSVConvertor(JSONData, ReportTitle, ShowLabel, store1) {
 
 	var amc = new Ext.util.MixedCollection();
 	amc.addAll(arrData);
-var amc2 = amc.filter(mfilter);
+	var amc2 = amc.filter(mfilter);
 	console.log(amc2.items);
 
 	arrData = amc2.items;
