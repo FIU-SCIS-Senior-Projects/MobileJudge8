@@ -135,8 +135,7 @@ Ext.define('MobileJudge.view.people.Controller', {
 	},
 
 	doExportStudents: function(){
-        var store = this.model.getStore('students');
-		console.log("new code!!")
+        	var store = this.model.getStore('students');
 		var  records= Ext.getStore('students').getRange(),jsonData=[];
 		Ext.each(records, function (r, i, all){jsonData.push(r.data)});
 
@@ -173,8 +172,6 @@ function JSONToCSVConvertor(JSONData, ReportTitle, ShowLabel, store1) {
 	var amc = new Ext.util.MixedCollection();
 	amc.addAll(arrData);
 	var amc2 = amc.filter(mfilter);
-	console.log(amc2.items);
-
 	arrData = amc2.items;
 	var CSV = '';
 	//Set Report title in first row or line
