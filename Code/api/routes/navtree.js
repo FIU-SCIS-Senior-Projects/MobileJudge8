@@ -89,6 +89,14 @@ module.exports = function(server, db) {
 							leaf: true
 						},
 						{
+							text: 'Grade',
+							iconCls: 'x-fa fa-bar-chart',
+							viewType: 'grade',
+                            rowCls: 'nav-tree-badge nav-tree-badge-new',
+							routeId: 'grade',
+							leaf: true
+						},
+                        {
 							text: 'Stats',
 							iconCls: 'x-fa fa-bar-chart',
 							viewType: 'pageblank', //'charts',

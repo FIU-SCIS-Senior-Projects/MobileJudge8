@@ -12,7 +12,15 @@ module.exports = function(sequelize, DataTypes) {
 			type: DataTypes.INTEGER(3),
 			allowNull: false,
 			defaultValue: 0
-		}
+		},
+        	studentId: {
+			type: DataTypes.INTEGER(3),
+			allowNull: false
+		},
+        	judgeId: {
+			type: DataTypes.INTEGER(3),
+			allowNull: false
+		},
 	}, {
 		classMethods: {
 			associate: function (models) {

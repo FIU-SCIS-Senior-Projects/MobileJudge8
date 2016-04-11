@@ -1,6 +1,9 @@
+/**
+ * Created by rodolfo on 1/29/16.
+ */
 Ext.define('MobileJudge.view.grade.Index', {
 	extend: 'Ext.tab.Panel',
-	xtype: 'grade',
+	alias: 'widget.grade',
 
 	requires: [
 		'Ext.view.View',
@@ -20,7 +23,6 @@ Ext.define('MobileJudge.view.grade.Index', {
 	cls: 'shadow',
 	activeTab: 0,
 	margin: 20,
-
 	defaults: {
 		cls: 'user-grid',
 		viewConfig: {
@@ -32,7 +34,6 @@ Ext.define('MobileJudge.view.grade.Index', {
 		headerBorders: false,
 		rowLines: false
 	},
-
 	items: [
 		{
 			xtype: 'gradestudents',
