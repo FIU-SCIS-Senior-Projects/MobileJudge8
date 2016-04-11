@@ -13,11 +13,11 @@ module.exports = function(sequelize, DataTypes) {
 			allowNull: false,
 			defaultValue: 0
 		},
-        studentId: {
+        	studentId: {
 			type: DataTypes.INTEGER(3),
 			allowNull: false
 		},
-        judgeId: {
+        	judgeId: {
 			type: DataTypes.INTEGER(3),
 			allowNull: false
 		},
