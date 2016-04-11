@@ -46,17 +46,7 @@ module.exports = function(sequelize, DataTypes) {
 		oauth: {
 			type: DataTypes.STRING,
 		    allowNull: true
-			/*get: function() {
-				return JSON.parse(this.getDataValue('oauth'));
-			},
-			set: function(value) {
-				this.setDataValue('oauth', JSON.stringify(value));
-			}*/
 		},
-		/*token: {
-			type: DataTypes.STRING,
-			allowNull: true
-		},*/
 		profileImgUrl: {
 			type: DataTypes.STRING,
 			allowNull: true
