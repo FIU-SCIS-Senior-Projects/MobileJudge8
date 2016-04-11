@@ -29,7 +29,7 @@ module.exports = function(server, db) {
                     response.push(obj);
                     obj = {
                                 judgeName: jg.judge,
-                                gradeAverage: jg.accepted == "Accepted" ? jg.grade:0, 
+                                gradeAverage: jg.accepted === "Accepted" ? jg.grade:0, 
                                 studentId: jg.studentId,
                                 judgeId: jg.judgeId,
                                 accepted: false,
