@@ -191,6 +191,10 @@ Ext.define('MobileJudge.view.grade.acceptGrade', {
         dataIndex: 'comment',
         flex: 2,
         width:300,
+        editor: {
+				xtype: 'textfield',
+				allowBlank: true
+			}
             
     },
     {

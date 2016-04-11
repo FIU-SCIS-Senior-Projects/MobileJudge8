@@ -25,7 +25,7 @@ Ext.define('MobileJudge.view.people.Controller', {
 		var filter = selections.map(function(r) { return r.get('abbr'); });
 		this.model.getStore(selModel.storeId).filter('abbr', Ext.isEmpty(filter) ? 'XX' : filter);
 		// update intermediate state
-
+		gfilter = filter;
 	},
 
 	onCheckChange: function(checkbox) {
@@ -135,30 +135,44 @@ Ext.define('MobileJudge.view.people.Controller', {
 	},
 
 	doExportStudents: function(){
+        	var store = this.model.getStore('students');
+		var  records= Ext.getStore('students').getRange(),jsonData=[];
+		Ext.each(records, function (r, i, all){jsonData.push(r.data)});
 
-		Ext.Ajax.request({
-			url: '/api/students',
-			success: function(resp) {
-				JSONToCSVConvertor(resp.responseText, "Student Report", true);
-			}
-		});
+		JSONToCSVConvertor(jsonData, "Student Report", true);
 	},
 	doExportJudges: function(){
 
-		Ext.Ajax.request({
-			url: '/api/judges',
-			success: function(resp) {
-				JSONToCSVConvertor(resp.responseText, "Judge List", true);
-			}
-		});
+		var  records= Ext.getStore('judges').getRange(),jsonData=[];
+		Ext.each(records, function (r, i, all){jsonData.push(r.data)});
+
+		JSONToCSVConvertor(jsonData, "Judge Report", true);
 	}
 
 });
 
-function JSONToCSVConvertor(JSONData, ReportTitle, ShowLabel) {
+function JSONToCSVConvertor(JSONData, ReportTitle, ShowLabel, store1) {
 	//If JSONData is not an object then JSON.parse will parse the JSON string in an Object
 	var arrData = typeof JSONData != 'object' ? JSON.parse(JSONData) : JSONData;
 
+	console.log(arrData);
+
+	var mfilter = new Ext.util.Filter({
+		filterFn: function(item){
+			if(!gfilter) return true;
+
+			for(var i=0;i<gfilter.length;i++){
+				if(item.abbr==gfilter[i]) return true;
+			}
+
+			return false;
+		}
+	});
+
+	var amc = new Ext.util.MixedCollection();
+	amc.addAll(arrData);
+	var amc2 = amc.filter(mfilter);
+	arrData = amc2.items;
 	var CSV = '';
 	//Set Report title in first row or line
 
@@ -227,3 +241,5 @@ function JSONToCSVConvertor(JSONData, ReportTitle, ShowLabel) {
 	link.click();
 	document.body.removeChild(link);
 }
+
+var gfilter ;

@@ -128,8 +128,6 @@ Ext.define('MobileJudge.view.grade.Controller', {
         Ext.Ajax.request({
                 url: '/api/views_table/'+ id,
                 success: function(){
-                    var currentStatus = store.data.items[index].data.gradeStatus;
-                    store.data.items[index].data.gradeStatus = me.changeStatus(currentStatus);
                     store.load();
                     me.changeIcon();
                 },
@@ -558,21 +556,17 @@ Ext.define('MobileJudge.view.grade.Controller', {
 
 	doExportStudents: function(){
 
-		Ext.Ajax.request({
-			url: '/api/students',
-			success: function(resp) {
-				JSONToCSVConvertor(resp.responseText, "Student Report", true);
-			}
-		});
+		var  records= Ext.getStore('students').getRange(),jsonData=[];
+		Ext.each(records, function (r, i, all){jsonData.push(r.data)});
+
+		JSONToCSVConvertor(jsonData, "Student Report", true);
 	},
 	doExportJudges: function(){
 
-		Ext.Ajax.request({
-			url: '/api/judges',
-			success: function(resp) {
-				JSONToCSVConvertor(resp.responseText, "Judge List", true);
-			}
-		});
+		var  records= Ext.getStore('judges').getRange(),jsonData=[];
+		Ext.each(records, function (r, i, all){jsonData.push(r.data)});
+
+		JSONToCSVConvertor(jsonData, "Judge Report", true);
 	}
 
 });
