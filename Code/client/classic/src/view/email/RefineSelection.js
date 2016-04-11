@@ -70,7 +70,7 @@ Ext.define('MobileJudge.view.email.RefineSelection', {
 					bind: {
 						store: '{students}',
 						selection: '{checkedStudentsSelection}',
-						title: 'Students ({selectedStudents.length})'
+						title: 'Students ({studentNum})'
 					},
 					listeners: {
 						selectionchange: 'onStudentsLoaded'
@@ -81,7 +81,7 @@ Ext.define('MobileJudge.view.email.RefineSelection', {
 					bind: {
 						store: '{judges}',
 						selection: '{checkedJudgesSelection}',
-						title: 'Judges ({selectedJudges.length})'
+						title: 'Judges ({judgeNum})'
 					},
 					listeners: {
 						selectionchange: 'onJudgesLoaded'
