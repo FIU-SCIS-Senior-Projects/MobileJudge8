@@ -69,7 +69,7 @@ Ext.define('MobileJudge.view.email.SendController', {
 				objectIndex = i;
 				for(j=0; j<this.model.get('studentsStart').length; j++){
 					if(index.id === this.model.get('studentsStart')[j].id){
-						this.model.set('studentNum', this.model.get('studentNum') + 1); 
+						this.model.set('studentNum', this.model.get('studentNum') + 1);
 					}
 				}
 			}
@@ -79,7 +79,7 @@ Ext.define('MobileJudge.view.email.SendController', {
 			var removed = arr.splice(objectIndex, 1);
 			this.model.set('uncheckedStudents', arr);
 		}
-		
+
 		var judgeIndex = -1
 		for(i=0; i<this.model.get('uncheckedJudges').length; i++){
 			if(index.id === this.model.get('uncheckedJudges')[i].id){
@@ -99,19 +99,19 @@ Ext.define('MobileJudge.view.email.SendController', {
 	},
 
 	onUnchecked: function(record, index){
-		
+
 		this.model.get('uncheckedStudents').push(index);
 		this.model.get('uncheckedJudges').push(index);
-		
+
 		for(i=0; i < this.model.get('studentsStart').length; i++){
 			if(index.id === this.model.get('studentsStart')[i].id){
 				this.model.set('studentNum', this.model.get('studentNum') - 1);
 			}
 		}
-		
+
 		for(j=0; j < this.model.get('judgesStart').length; j++){
 			if(index.id === this.model.get('judgesStart')[j].id){
-				this.model.set('judgeNum', this.model.get('judgeNum') - 1);  
+				this.model.set('judgeNum', this.model.get('judgeNum') - 1);
 			}
 		}
 
@@ -124,7 +124,7 @@ Ext.define('MobileJudge.view.email.SendController', {
 			this.model.set('judgeNum', this.model.get('judgesStart').length);
 
 		}
-				
+
 		this.model.set('selectedJudges', records);
 		if(this.view.down('searchfilterwizard').triggers.clear.hidden === false)
 		{
@@ -140,7 +140,7 @@ Ext.define('MobileJudge.view.email.SendController', {
 
 		}
 	},
-	
+
 	onStudentPageLoad: function (store, records) {
 		if(!this.model.get('studentsAdded')){
 			this.model.set('studentsStart', records);
@@ -165,7 +165,7 @@ Ext.define('MobileJudge.view.email.SendController', {
 	},
 
 	onStudentsLoaded: function(selModel, records) {
-	
+
 		this.model.set('selectedStudents', records);
 
 		console.log(this.model.get('hasSearched'));
@@ -333,7 +333,9 @@ Ext.define('MobileJudge.view.email.SendController', {
 			this.model.set('judgesStart', []);
 			this.model.set('fieldLabelText', 'Search:');
 			this.view.down('searchfilterwizard').onClearClick();
-			
+			this.model.set('studentNum', 0);
+			this.model.set('judgeNum', 0);
+
 
 			me.model.get('filters').forEach(function(f){
 				var fs = f.split(','),
@@ -361,14 +363,14 @@ Ext.define('MobileJudge.view.email.SendController', {
 			students.removeAll(); judges.removeAll(); extra.removeAll();
 
 			if (!Ext.Object.isEmpty(stdParams)){
-			       	students.proxy.extraParams = { 'filter': Ext.encode(stdParams) };
+				students.proxy.extraParams = { 'filter': Ext.encode(stdParams) };
 				students.load();
 			}
 			if (!Ext.Object.isEmpty(judParams)){
-			       	judges.proxy.extraParams = { 'filter': Ext.encode(judParams) };
+				judges.proxy.extraParams = { 'filter': Ext.encode(judParams) };
 				judges.load();
 			}
-			
+
 
 			var extraEmails = this.model.get('extraEmailArray');
 			if (extraEmails.length > 0)	{
@@ -425,15 +427,15 @@ Ext.define('MobileJudge.view.email.SendController', {
 	onPreviousClick: function(button) {
 		var me = this;
 		Ext.Msg.confirm('Previous','Navigating to previous tab will remove all changes made to this tab, Continue?',
-				function(choice){
-					if(choice !='yes') return;
-		var panel = button.up('panel');
-		me.model.set('hasSearched',false);
-		me.model.set('canMoveNext',true);
-		me.model.set('fieldLabelText', 'Search:');
-		me.model.set('atEnd', false);
-		me.navigate(button, panel, 'prev');
-	});
+			function(choice){
+				if(choice !='yes') return;
+				var panel = button.up('panel');
+				me.model.set('hasSearched',false);
+				me.model.set('canMoveNext',true);
+				me.model.set('fieldLabelText', 'Search:');
+				me.model.set('atEnd', false);
+				me.navigate(button, panel, 'prev');
+			});
 	},
 
 	navigate: function(button, panel, direction) {
