@@ -93,8 +93,8 @@ Ext.define('MobileJudge.ux.form.WizardSearchField', {
             //var studentGrid =  Ext.ComponentQuery.query('[name=[studentGrid]');
             //studentGrid.scrollRowIntoView(studentIndex);
             // console.log('filter ' , me.storeStudents.filters);
-            console.log('students count ', me.OrigStudentSize);
-            console.log('judge count ', me.OrigJudgeSize);
+            //console.log('students count ', me.OrigStudentSize);
+            //console.log('judge count ', me.OrigJudgeSize);
             if(me.OrigStudentSize > 0)
                 me.storeStudents.getFilters().add(me.activeFilter);
             if(me.OrigJudgeSize > 0)

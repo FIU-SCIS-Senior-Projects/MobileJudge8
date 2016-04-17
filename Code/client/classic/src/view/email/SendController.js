@@ -168,15 +168,15 @@ Ext.define('MobileJudge.view.email.SendController', {
 
 		this.model.set('selectedStudents', records);
 
-		console.log(this.model.get('hasSearched'));
-		console.log(this.model.get('canMoveNext'));
+		//console.log(this.model.get('hasSearched'));
+		//console.log(this.model.get('canMoveNext'));
 	},
 
 	onJudgesLoaded: function(store, records) {
 		this.model.set('selectedJudges', records);
 
-		console.log(this.model.get('hasSearched'));
-		console.log(this.model.get('canMoveNext'));
+		//console.log(this.model.get('hasSearched'));
+		//console.log(this.model.get('canMoveNext'));
 	},
 
 	onExtraSelectionChange: function(store, records) {
